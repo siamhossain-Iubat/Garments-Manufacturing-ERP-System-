@@ -93,6 +93,14 @@ This is a high-level overview; actual process order and approval requirements ma
 ## 🚀 Live Demo
 
 🔗 **Live Website:** [GManufacturing ERP](http://gmanufacturingerp.runasp.net/)
+### Admin Demo Login
+- Email: admin@gmanufacturing.com
+- Password: Admin@12345
+
+### Instructions
+Login using the Admin demo account to explore the
+GManufacturing ERP system, manage users, approve requests,
+and access the available ERP workflows.
 
 ## 💻 Technologies Used
 
