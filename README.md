@@ -91,6 +91,26 @@ Invoice & Payment
 
 This is a high-level overview; actual process order and approval requirements may vary by transaction and status.
 
+## Screenshots
+
+### Login Page
+![Login Page](screenshots/login.JPG)
+
+### Admin Dashboard
+![Admin Dashboard](screenshots/admin.JPG)
+
+### Buyer Portal
+![Buyer Portal](screenshots/buyer.JPG)
+
+### Operations Manager Dashboard
+![Operations Manager Dashboard](screenshots/operations.JPG)
+
+### Finance & Logistics Dashboard
+![Finance & Logistics Dashboard](screenshots/finance.JPG)
+
+### Sales & Buyer Manager Dashboard
+![Sales & Buyer Manager Dashboard](screenshots/sales.JPG)
+
 ## Getting Started
 
 ### Prerequisites
