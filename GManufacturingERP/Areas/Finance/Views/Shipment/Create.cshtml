@@ -1,0 +1,261 @@
+﻿@model GManufacturingERP.ViewModels.CreateShipmentViewModel
+
+@{
+    ViewData["Title"] = "Create Shipment";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+}
+
+<div class="page-header mb-4">
+    <small class="text-muted">Finance & Logistics / Shipment / Create</small>
+    <h1>Create Shipment</h1>
+    <p class="text-muted">
+        Create a shipment from packed finished goods.
+    </p>
+</div>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <div asp-validation-summary="All"></div>
+    </div>
+}
+
+<div class="row g-4">
+
+    <div class="col-lg-5">
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-box-seam me-2"></i>
+                    Packing Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label class="form-label text-muted">
+                        Packing Number
+                    </label>
+
+                    <input class="form-control"
+                           value="@Model.PackingNumber"
+                           readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted">
+                        Product
+                    </label>
+
+                    <input class="form-control"
+                           value="@Model.ProductName"
+                           readonly />
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">
+                            Packed Quantity
+                        </label>
+
+                        <input class="form-control"
+                               value="@Model.PackedQuantity.ToString("N2") @Model.Unit"
+                               readonly />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">
+                            Already Shipped
+                        </label>
+
+                        <input class="form-control"
+                               value="@Model.AlreadyShippedQuantity.ToString("N2") @Model.Unit"
+                               readonly />
+                    </div>
+
+                </div>
+
+                <div class="alert alert-success mb-0">
+                    <div class="d-flex justify-content-between">
+                        <strong>Remaining Quantity</strong>
+
+                        <strong>
+                            @Model.RemainingQuantity.ToString("N2")
+                            @Model.Unit
+                        </strong>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-7">
+
+        <form asp-action="Create" method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="PackingId" type="hidden" />
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-truck me-2"></i>
+                        Shipment Details
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ShipmentQuantity"
+                                   class="form-label">
+                                Shipment Quantity
+                            </label>
+
+                            <div class="input-group">
+                                <input asp-for="ShipmentQuantity"
+                                       class="form-control" />
+
+                                <span class="input-group-text">
+                                    @Model.Unit
+                                </span>
+                            </div>
+
+                            <span asp-validation-for="ShipmentQuantity"
+                                  class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TotalCartons"
+                                   class="form-label">
+                                Total Cartons
+                            </label>
+
+                            <input asp-for="TotalCartons"
+                                   class="form-control" />
+
+                            <span asp-validation-for="TotalCartons"
+                                  class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ShipmentDate"
+                               class="form-label">
+                            Shipment Date
+                        </label>
+
+                        <input asp-for="ShipmentDate"
+                               type="date"
+                               class="form-control" />
+
+                        <span asp-validation-for="ShipmentDate"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ShippingAddress"
+                               class="form-label">
+                            Shipping Address
+                        </label>
+
+                        <textarea asp-for="ShippingAddress"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Enter shipping address"></textarea>
+
+                        <span asp-validation-for="ShippingAddress"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TransportName"
+                                   class="form-label">
+                                Transport / Courier
+                            </label>
+
+                            <input asp-for="TransportName"
+                                   class="form-control"
+                                   placeholder="e.g. Sundarban Courier" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="VehicleNumber"
+                                   class="form-label">
+                                Vehicle Number
+                            </label>
+
+                            <input asp-for="VehicleNumber"
+                                   class="form-control"
+                                   placeholder="e.g. DHAKA-METRO-TA-1234" />
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="TrackingNumber"
+                               class="form-label">
+                            Tracking Number
+                        </label>
+
+                        <input asp-for="TrackingNumber"
+                               class="form-control"
+                               placeholder="Enter tracking number" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Remarks"
+                               class="form-label">
+                            Remarks
+                        </label>
+
+                        <textarea asp-for="Remarks"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Optional remarks"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="card-footer bg-white d-flex justify-content-between">
+
+                    <a asp-area="Finance"
+                       asp-controller="Packing"
+                       asp-action="Details"
+                       asp-route-id="@Model.PackingId"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i>
+                        Back
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i>
+                        Create Shipment
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

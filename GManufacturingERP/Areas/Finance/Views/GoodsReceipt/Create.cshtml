@@ -1,0 +1,354 @@
+﻿@model GManufacturingERP.ViewModels.CreateGoodsReceiptViewModel
+
+@{
+    ViewData["Title"] = "Create Goods Receipt";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Finance & Logistics / Receiving</small>
+
+        <h1>Create Goods Receipt</h1>
+
+        <p>
+            Record received materials against the approved Purchase Order.
+        </p>
+
+    </div>
+
+
+    <a asp-area="Finance"
+       asp-controller="GoodsReceipt"
+       asp-action="SelectPurchaseOrder"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back
+
+    </a>
+
+</div>
+
+
+<form asp-area="Finance"
+      asp-controller="GoodsReceipt"
+      asp-action="Create"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+
+    <input asp-for="PurchaseOrderId"
+           type="hidden" />
+
+
+    <div asp-validation-summary="ModelOnly"
+         class="alert alert-danger">
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- PURCHASE ORDER INFORMATION -->
+    <!-- ===================================================== -->
+
+    <div class="content-card mb-4">
+
+        <div class="card-title mb-3">
+
+            <i class="bi bi-cart-check me-2"></i>
+
+            Purchase Order Information
+
+        </div>
+
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+
+                <label asp-for="PurchaseOrderNumber"
+                       class="form-label">
+
+                    Purchase Order Number
+
+                </label>
+
+                <input asp-for="PurchaseOrderNumber"
+                       class="form-control"
+                       readonly />
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label asp-for="ReceiptDate"
+                       class="form-label">
+
+                    Receipt Date
+
+                </label>
+
+                <input asp-for="ReceiptDate"
+                       type="date"
+                       class="form-control" />
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- DELIVERY INFORMATION -->
+    <!-- ===================================================== -->
+
+    <div class="content-card mb-4">
+
+        <div class="card-title mb-3">
+
+            <i class="bi bi-truck me-2"></i>
+
+            Delivery Information
+
+        </div>
+
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+
+                <label asp-for="DeliveryChallanNumber"
+                       class="form-label">
+
+                    Delivery Challan Number
+
+                </label>
+
+                <input asp-for="DeliveryChallanNumber"
+                       class="form-control"
+                       placeholder="Enter challan number" />
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label asp-for="Remarks"
+                       class="form-label">
+
+                    Remarks
+
+                </label>
+
+                <input asp-for="Remarks"
+                       class="form-control"
+                       placeholder="Optional remarks" />
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- RECEIVED MATERIALS -->
+    <!-- ===================================================== -->
+
+    <div class="content-card mb-4">
+
+        <div class="card-title mb-3">
+
+            <i class="bi bi-box-seam me-2"></i>
+
+            Received Materials
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Material
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Unit
+                        </th>
+
+                        <th>
+                            Ordered
+                        </th>
+
+                        <th>
+                            Received
+                        </th>
+
+                        <th>
+                            Accepted
+                        </th>
+
+                        <th>
+                            Rejected
+                        </th>
+
+                        <th>
+                            Remarks
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @for (int i = 0;
+                                        i < Model.Items.Count;
+                                        i++)
+                    {
+                        <tr>
+
+                            <td>
+
+                                <input asp-for="Items[i].MaterialName"
+                                       class="form-control"
+                                       readonly />
+
+                            </td>
+
+
+                            <td>
+
+                                <input asp-for="Items[i].MaterialCategory"
+                                       class="form-control"
+                                       readonly />
+
+                            </td>
+
+
+                            <td>
+
+                                <input asp-for="Items[i].Unit"
+                                       class="form-control"
+                                       readonly />
+
+                            </td>
+
+
+                            <td>
+
+                                <input asp-for="Items[i].OrderedQuantity"
+                                       class="form-control"
+                                       readonly />
+
+                            </td>
+
+
+                            <td>
+
+                                <input asp-for="Items[i].ReceivedQuantity"
+                                       type="number"
+                                       step="0.01"
+                                       min="0"
+                                       class="form-control"
+                                       required />
+
+                            </td>
+
+
+                            <td>
+
+                                <input asp-for="Items[i].AcceptedQuantity"
+                                       type="number"
+                                       step="0.01"
+                                       min="0"
+                                       class="form-control"
+                                       required />
+
+                            </td>
+
+
+                            <td>
+
+                                <input asp-for="Items[i].RejectedQuantity"
+                                       type="number"
+                                       step="0.01"
+                                       min="0"
+                                       class="form-control"
+                                       required />
+
+                            </td>
+
+
+                            <td>
+
+                                <input asp-for="Items[i].Remarks"
+                                       class="form-control"
+                                       placeholder="Optional" />
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ACTIONS -->
+    <!-- ===================================================== -->
+
+    <div class="d-flex justify-content-end gap-2">
+
+        <a asp-area="Finance"
+           asp-controller="GoodsReceipt"
+           asp-action="Index"
+           class="btn btn-light border">
+
+            Cancel
+
+        </a>
+
+
+        <button type="submit"
+                class="btn btn-primary">
+
+            <i class="bi bi-save me-1"></i>
+
+            Save Draft GRN
+
+        </button>
+
+    </div>
+
+</form>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

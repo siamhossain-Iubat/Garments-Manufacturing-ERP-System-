@@ -1,0 +1,273 @@
+﻿@model GManufacturingERP.Models.Entities.ApplicationUser
+
+@{
+    ViewData["Title"] = "Buyer Details";
+    Layout = "~/Areas/Sales/Views/Shared/_SalesLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+        <small>Sales & Buyer Manager</small>
+
+        <h1>Buyer Details</h1>
+
+        <p>
+            View complete buyer company information.
+        </p>
+    </div>
+
+    <div>
+        <a href="@Url.Action(
+                   "Index",
+                   "Buyers",
+                   new { area = "Sales" })"
+           class="btn btn-outline-primary">
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Buyers
+
+        </a>
+    </div>
+
+</div>
+
+
+<div class="row g-4">
+
+    <!-- Company Information -->
+    <div class="col-lg-8">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-building"></i>
+                    Company Information
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted">
+                            Company Name
+                        </label>
+
+                        <h6>
+                            @Model.CompanyName
+                        </h6>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted">
+                            Contact Person
+                        </label>
+
+                        <h6>
+                            @Model.FullName
+                        </h6>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted">
+                            Email Address
+                        </label>
+
+                        <h6>
+                            @Model.Email
+                        </h6>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted">
+                            Phone Number
+                        </label>
+
+                        <h6>
+                            @Model.PhoneNumber
+                        </h6>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted">
+                            Country
+                        </label>
+
+                        <h6>
+                            @Model.Country
+                        </h6>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted">
+                            User Type
+                        </label>
+
+                        <h6>
+                            @Model.UserType
+                        </h6>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="text-muted">
+                            Company Address
+                        </label>
+
+                        <h6>
+                            @Model.CompanyAddress
+                        </h6>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Account Status -->
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-person-check"></i>
+                    Account Status
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-4">
+
+                    <label class="text-muted">
+                        Current Status
+                    </label>
+
+                    <div class="mt-2">
+
+                        @if (Model.AccountStatus == "Approved")
+                        {
+                            <span class="badge bg-success fs-6">
+                                Approved
+                            </span>
+                        }
+                        else if (Model.AccountStatus == "Rejected")
+                        {
+                            <span class="badge bg-danger fs-6">
+                                Rejected
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark fs-6">
+                                Pending Approval
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="mb-4">
+
+                    <label class="text-muted">
+                        Account Active
+                    </label>
+
+                    <h6>
+                        @if (Model.IsActive)
+                        {
+                            <span class="text-success">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Yes
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">
+                                <i class="bi bi-x-circle-fill"></i>
+                                No
+                            </span>
+                        }
+                    </h6>
+
+                </div>
+
+
+                <div class="mb-4">
+
+                    <label class="text-muted">
+                        Email Confirmed
+                    </label>
+
+                    <h6>
+                        @if (Model.EmailConfirmed)
+                        {
+                            <span class="text-success">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Confirmed
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">
+                                <i class="bi bi-x-circle-fill"></i>
+                                Not Confirmed
+                            </span>
+                        }
+                    </h6>
+
+                </div>
+
+
+                <div>
+
+                    <label class="text-muted">
+                        Registered At
+                    </label>
+
+                    <h6>
+                        @Model.CreatedAt.ToLocalTime().ToString("dd MMM yyyy hh:mm tt")
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

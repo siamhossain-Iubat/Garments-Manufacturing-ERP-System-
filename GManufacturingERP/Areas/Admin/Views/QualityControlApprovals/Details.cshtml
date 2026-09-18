@@ -1,0 +1,449 @@
+﻿@model GManufacturingERP.Models.Entities.QualityInspection
+
+@{
+    ViewData["Title"] = "QC Approval Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <small>
+            Admin / Quality Control / Review
+        </small>
+
+        <h1>
+            @Model.InspectionNumber
+        </h1>
+
+        <p>
+            Review quality inspection before approval.
+        </p>
+
+    </div>
+
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back
+
+    </a>
+
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+
+<!-- Inspection Information -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-clipboard-check me-2"></i>
+
+            Inspection Information
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <small class="text-muted d-block">
+                    Inspection Number
+                </small>
+
+                <strong>
+                    @Model.InspectionNumber
+                </strong>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <small class="text-muted d-block">
+                    Production Reference
+                </small>
+
+                <strong>
+                    @Model.ProductionReference
+                </strong>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <small class="text-muted d-block">
+                    Product
+                </small>
+
+                <strong>
+                    @Model.ProductName
+                </strong>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <small class="text-muted d-block">
+                    Inspected By
+                </small>
+
+                <strong>
+                    @Model.InspectedBy
+                </strong>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <small class="text-muted d-block">
+                    Inspection Date
+                </small>
+
+                <strong>
+                    @(Model.InspectionDate
+                                        .ToLocalTime()
+                                        .ToString("dd MMM yyyy HH:mm"))
+                </strong>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <small class="text-muted d-block">
+                    Status
+                </small>
+
+                @if (Model.Status == "Submitted")
+                {
+                    <span class="badge bg-warning text-dark">
+                        Pending Approval
+                    </span>
+                }
+                else if (Model.Status == "Approved")
+                {
+                    <span class="badge bg-success">
+                        Approved
+                    </span>
+                }
+                else if (Model.Status == "Rejected")
+                {
+                    <span class="badge bg-danger">
+                        Rejected
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">
+                        @Model.Status
+                    </span>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Quantity Summary -->
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    Produced
+                </small>
+
+                <h3>
+                    @Model.ProducedQuantity
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    Inspected
+                </small>
+
+                <h3>
+                    @Model.InspectedQuantity
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    Passed
+                </small>
+
+                <h3 class="text-success">
+                    @Model.PassedQuantity
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-3">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+                    Failed
+                </small>
+
+                <h3 class="text-danger">
+                    @Model.FailedQuantity
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Result -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <h5>
+            Inspection Result
+        </h5>
+
+        @if (Model.InspectionResult == "Passed")
+        {
+            <span class="badge bg-success fs-6">
+                Passed
+            </span>
+        }
+        else if (Model.InspectionResult == "Failed")
+        {
+            <span class="badge bg-danger fs-6">
+                Failed
+            </span>
+        }
+        else
+        {
+            <span class="badge bg-warning text-dark fs-6">
+                @Model.InspectionResult
+            </span>
+        }
+
+    </div>
+
+</div>
+
+
+<!-- Quality Details -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+            Quality Details
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (!string.IsNullOrWhiteSpace(
+                Model.DefectDescription))
+        {
+            <div class="mb-3">
+
+                <small class="text-muted d-block">
+                    Defect Description
+                </small>
+
+                <p class="mb-0">
+                    @Model.DefectDescription
+                </p>
+
+            </div>
+        }
+
+
+        @if (!string.IsNullOrWhiteSpace(
+                Model.Remarks))
+        {
+            <div>
+
+                <small class="text-muted d-block">
+                    Remarks
+                </small>
+
+                <p class="mb-0">
+                    @Model.Remarks
+                </p>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+<!-- Admin Actions -->
+@if (Model.Status == "Submitted")
+{
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <h5 class="mb-3">
+                Admin Decision
+            </h5>
+
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <!-- Approve -->
+
+                <form asp-action="Approve"
+                      asp-route-id="@Model.Id"
+                      method="post"
+                      class="d-inline">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-success"
+                            onclick="return confirm('Approve this QC inspection and update Finished Goods?');">
+
+                        <i class="bi bi-check-circle me-1"></i>
+
+                        Approve QC
+
+                    </button>
+
+                </form>
+
+
+                <!-- Reject -->
+
+                <form asp-action="Reject"
+                      asp-route-id="@Model.Id"
+                      method="post"
+                      class="d-inline">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="text"
+                           name="rejectionReason"
+                           class="form-control d-inline-block"
+                           style="width: 280px;"
+                           placeholder="Rejection reason" />
+
+                    <button type="submit"
+                            class="btn btn-danger"
+                            onclick="return confirm('Reject this QC inspection?');">
+
+                        <i class="bi bi-x-circle me-1"></i>
+
+                        Reject QC
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+else if (Model.Status == "Approved")
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle me-2"></i>
+
+        This QC inspection has been approved and
+        Finished Goods has been updated.
+
+    </div>
+}
+else if (Model.Status == "Rejected")
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-x-circle me-2"></i>
+
+        This QC inspection has been rejected.
+
+    </div>
+}

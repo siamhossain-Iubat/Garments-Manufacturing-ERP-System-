@@ -1,0 +1,50 @@
+﻿@model GManufacturingERP.Models.Entities.AdvancePayment
+
+@{
+    ViewData["Title"] = "Payment Result";
+    Layout = "~/Areas/Buyer/Views/Shared/_BuyerLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3>Payment Result</h3>
+
+            <p>
+                <strong>Transaction ID:</strong>
+                @Model.TransactionId
+            </p>
+
+            <p>
+                <strong>Amount:</strong>
+                @Model.Amount.ToString("N2") BDT
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                @Model.Status
+            </p>
+
+            @if (Model.Status == "Paid")
+            {
+                <div class="alert alert-success">
+                    Payment verified successfully.
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    Payment is not verified yet.
+                </div>
+            }
+
+            <a asp-area="Buyer"
+               asp-controller="Quotation"
+               asp-action="Details"
+               asp-route-id="@Model.QuotationId"
+               class="btn btn-secondary">
+                Back to Quotation
+            </a>
+        </div>
+    </div>
+</div>

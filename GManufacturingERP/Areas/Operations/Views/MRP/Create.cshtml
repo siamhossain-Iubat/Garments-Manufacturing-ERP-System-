@@ -1,0 +1,167 @@
+﻿@model GManufacturingERP.ViewModels.CreateMRPViewModel
+
+@{
+    ViewData["Title"] = "Create MRP";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+        <small>Operations Manager / Material Planning</small>
+        <h1>Create MRP</h1>
+        <p>Create a material requirement plan for production.</p>
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="MRP"
+       asp-action="ProductionPlans"
+       class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left"></i>
+        Back
+    </a>
+
+</div>
+
+<div class="card dashboard-card">
+
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="bi bi-box-seam-fill"></i>
+            MRP Information
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <form asp-area="Operations"
+              asp-controller="MRP"
+              asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="ProductionPlanId" type="hidden" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger">
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Production Plan Number -->
+                <div class="col-md-6">
+
+                    <label asp-for="PlanNumber"
+                           class="form-label">
+                        Production Plan Number
+                    </label>
+
+                    <input asp-for="PlanNumber"
+                           class="form-control"
+                           readonly />
+
+                </div>
+
+                <!-- Buyer Company -->
+                <div class="col-md-6">
+
+                    <label asp-for="BuyerCompany"
+                           class="form-label">
+                        Buyer Company
+                    </label>
+
+                    <input asp-for="BuyerCompany"
+                           class="form-control"
+                           readonly />
+
+                </div>
+
+                <!-- Planned Quantity -->
+                <div class="col-md-6">
+
+                    <label asp-for="PlannedQuantity"
+                           class="form-label">
+                        Planned Quantity
+                    </label>
+
+                    <div class="input-group">
+
+                        <input asp-for="PlannedQuantity"
+                               class="form-control"
+                               readonly />
+
+                        <span class="input-group-text">
+                            Pieces
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- Product Description -->
+                <div class="col-12">
+
+                    <label asp-for="ProductDescription"
+                           class="form-label">
+                        Product Description
+                    </label>
+
+                    <textarea asp-for="ProductDescription"
+                              class="form-control"
+                              rows="3"
+                              readonly></textarea>
+
+                </div>
+
+                <!-- Remarks -->
+                <div class="col-12">
+
+                    <label asp-for="Remarks"
+                           class="form-label">
+                    </label>
+
+                    <textarea asp-for="Remarks"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Write MRP remarks..."></textarea>
+
+                    <span asp-validation-for="Remarks"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="alert alert-info mt-4">
+                <i class="bi bi-info-circle"></i>
+                The MRP will initially be created with
+                <strong>Draft</strong> status.
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <a asp-area="Operations"
+                   asp-controller="MRP"
+                   asp-action="ProductionPlans"
+                   class="btn btn-light">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Create MRP
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

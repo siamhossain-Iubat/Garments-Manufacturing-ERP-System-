@@ -1,0 +1,344 @@
+﻿@using GManufacturingERP.Models.Entities
+
+@{
+    ViewData["Title"] = "GRN Approvals";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var pendingReceipts =
+        ViewBag.PendingReceipts
+        as IEnumerable<GoodsReceipt>;
+
+    var historyReceipts =
+        ViewBag.HistoryReceipts
+        as IEnumerable<GoodsReceipt>;
+}
+
+
+<div class="page-header">
+
+    <div>
+
+        <small>Admin / Approvals</small>
+
+        <h1>GRN Approvals</h1>
+
+        <p>
+            Review and approve Goods Receipts submitted by Finance & Logistics.
+        </p>
+
+    </div>
+
+</div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle me-2"></i>
+
+        @TempData["SuccessMessage"]
+
+    </div>
+}
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-exclamation-triangle me-2"></i>
+
+        @TempData["ErrorMessage"]
+
+    </div>
+}
+
+
+<!-- ========================================================= -->
+<!-- PENDING GRNs -->
+<!-- ========================================================= -->
+
+<div class="content-card mb-4">
+
+    <div class="mb-3">
+
+        <h4>
+            Pending GRN Approvals
+        </h4>
+
+        <p class="text-muted mb-0">
+            Goods Receipts submitted by Finance & Logistics.
+        </p>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th>GRN Number</th>
+
+                    <th>Purchase Order</th>
+
+                    <th>Receipt Date</th>
+
+                    <th>Received By</th>
+
+                    <th>Status</th>
+
+                    <th class="text-end">
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @if (pendingReceipts != null &&
+                                pendingReceipts.Any())
+                {
+                    foreach (var receipt in pendingReceipts)
+                    {
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    @receipt.GRNNumber
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                @(receipt.PurchaseOrder
+                                                        ?.PurchaseOrderNumber ?? "-")
+
+                            </td>
+
+
+                            <td>
+
+                                @(receipt.ReceiptDate.ToString(
+                                                        "dd MMM yyyy"))
+
+                    </td>
+
+
+                            <td>
+                                @receipt.ReceivedBy
+                            </td>
+
+
+                            <td>
+
+                                <span class="badge bg-info">
+                                    Pending Approval
+                                </span>
+
+                            </td>
+
+
+                            <td class="text-end">
+
+                                <a asp-area="Admin"
+                                   asp-controller="GoodsReceiptApprovals"
+                                   asp-action="Details"
+                                   asp-route-id="@receipt.Id"
+                                   class="btn btn-sm btn-primary">
+
+                                    <i class="bi bi-eye me-1"></i>
+
+                                    Review
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                                }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center py-5">
+
+                            <i class="bi bi-check2-circle display-5 text-success"></i>
+
+                            <h5 class="mt-3">
+                                No Pending GRN Approvals
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                All submitted Goods Receipts have been processed.
+                            </p>
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- GRN HISTORY -->
+<!-- ========================================================= -->
+
+<div class="content-card">
+
+    <div class="mb-3">
+
+        <h4>
+            GRN Approval History
+        </h4>
+
+        <p class="text-muted mb-0">
+            Previously approved or rejected Goods Receipts.
+        </p>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th>GRN Number</th>
+
+                    <th>Purchase Order</th>
+
+                    <th>Received By</th>
+
+                    <th>Receipt Date</th>
+
+                    <th>Status</th>
+
+                    <th class="text-end">
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @if (historyReceipts != null &&
+                                historyReceipts.Any())
+                {
+                    foreach (var receipt in historyReceipts)
+                    {
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    @receipt.GRNNumber
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                @(receipt.PurchaseOrder
+                                                        ?.PurchaseOrderNumber ?? "-")
+
+                            </td>
+
+
+                            <td>
+                                @receipt.ReceivedBy
+                            </td>
+
+
+                            <td>
+
+                                @(receipt.ReceiptDate.ToString(
+                                                        "dd MMM yyyy"))
+
+                    </td>
+
+
+                            <td>
+
+                        @if (receipt.ReceiptStatus == "Approved")
+                                {
+                                    <span class="badge bg-success">
+                                        Approved
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Rejected
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <td class="text-end">
+
+                                <a asp-area="Admin"
+                                   asp-controller="GoodsReceiptApprovals"
+                                   asp-action="Details"
+                                   asp-route-id="@receipt.Id"
+                                   class="btn btn-sm btn-outline-primary">
+
+                                    <i class="bi bi-eye me-1"></i>
+
+                                    View
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center py-4 text-muted">
+
+                            No GRN approval history available.
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

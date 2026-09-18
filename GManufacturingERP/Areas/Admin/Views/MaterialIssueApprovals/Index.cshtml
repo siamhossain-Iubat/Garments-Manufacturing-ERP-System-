@@ -1,0 +1,324 @@
+﻿@using GManufacturingERP.Models.Entities
+
+@{
+    ViewData["Title"] = "Material Issue Approvals";
+
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var pendingIssues =
+        ViewBag.PendingIssues as IEnumerable<MaterialIssue>
+        ?? Enumerable.Empty<MaterialIssue>();
+
+    var history =
+        ViewBag.History as IEnumerable<MaterialIssue>
+        ?? Enumerable.Empty<MaterialIssue>();
+}
+
+
+<div class="page-header">
+
+    <div>
+
+        <small>Admin / Approvals</small>
+
+        <h1>
+            Material Issue Approvals
+        </h1>
+
+        <p>
+            Review and approve material issue requests
+            submitted by Operations.
+        </p>
+
+    </div>
+
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Error"]
+    </div>
+}
+
+
+<!-- Pending -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-hourglass-split me-2"></i>
+
+            Pending Material Issue Approvals
+
+            <span class="badge bg-warning text-dark ms-2">
+                @pendingIssues.Count()
+            </span>
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Issue Number</th>
+
+                        <th>Production Reference</th>
+
+                        <th>Requested By</th>
+
+                        <th>Date</th>
+
+                        <th>Items</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (!pendingIssues.Any())
+                    {
+                        <tr>
+
+                            <td colspan="8"
+                                class="text-center text-muted py-4">
+
+                                <i class="bi bi-check-circle fs-3 d-block mb-2"></i>
+
+                                No pending material issue approvals.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        int count = 1;
+
+                        foreach (var item in pendingIssues)
+                        {
+                            <tr>
+
+                                <td>
+                                    @count
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @item.IssueNumber
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @item.ProductionReference
+                                </td>
+
+                                <td>
+                                    @item.RequestedBy
+                                </td>
+
+                                <td>
+                                    @(item.IssueDate
+                                                                .ToLocalTime()
+                                                                .ToString("dd MMM yyyy"))
+                        </td>
+
+                                <td>
+                                    @item.Items.Count
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-warning text-dark">
+                                        Pending Approval
+                                    </span>
+                                </td>
+
+                                <td>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-primary">
+
+                                        <i class="bi bi-eye me-1"></i>
+
+                                        Review
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                                        count++;
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- History -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-clock-history me-2"></i>
+
+            Approval History
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Issue Number</th>
+
+                        <th>Production Reference</th>
+
+                        <th>Requested By</th>
+
+                        <th>Date</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (!history.Any())
+                    {
+                        <tr>
+
+                            <td colspan="6"
+                                class="text-center text-muted py-4">
+
+                                No approval history found.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in history)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        @item.IssueNumber
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @item.ProductionReference
+                                </td>
+
+                                <td>
+                                    @item.RequestedBy
+                                </td>
+
+                                <td>
+                                    @(item.IssueDate
+                                                                .ToLocalTime()
+                                                                .ToString("dd MMM yyyy"))
+                        </td>
+
+                                <td>
+
+                            @if (item.Status == "Approved")
+                                    {
+                                        <span class="badge bg-success">
+                                            Approved
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">
+                                            Rejected
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        Details
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

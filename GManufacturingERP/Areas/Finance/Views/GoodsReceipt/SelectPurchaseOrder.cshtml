@@ -1,0 +1,198 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.PurchaseOrder>
+
+@{
+    ViewData["Title"] = "Select Purchase Order";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Finance & Logistics / Receiving</small>
+
+        <h1>Select Purchase Order</h1>
+
+        <p>
+            Select an approved Purchase Order to create a Goods Receipt.
+        </p>
+
+    </div>
+
+
+    <a asp-area="Finance"
+       asp-controller="GoodsReceipt"
+       asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back
+
+    </a>
+
+</div>
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-exclamation-triangle me-2"></i>
+
+        @TempData["ErrorMessage"]
+
+    </div>
+}
+
+
+<div class="content-card">
+
+    <div class="mb-4">
+
+        <h4 class="mb-1">
+            Approved Purchase Orders
+        </h4>
+
+        <p class="text-muted mb-0">
+            Only Admin-approved Purchase Orders can be received.
+        </p>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        PO Number
+                    </th>
+
+                    <th>
+                        Supplier
+                    </th>
+
+                    <th>
+                        Order Date
+                    </th>
+
+                    <th>
+                        Expected Delivery
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th class="text-end">
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var po in Model)
+                    {
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    @po.PurchaseOrderNumber
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                @po.SupplierName
+
+                            </td>
+
+
+                            <td>
+
+                                @(po.OrderDate.ToString(
+                                                        "dd MMM yyyy"))
+
+                            </td>
+
+
+                            <td>
+
+                                @(po.ExpectedDeliveryDate.ToString(
+                                                        "dd MMM yyyy"))
+
+                    </td>
+
+
+                            <td>
+
+                                <span class="badge bg-success">
+                                    Approved
+                                </span>
+
+                            </td>
+
+
+                            <td class="text-end">
+
+                                <a asp-area="Finance"
+                                   asp-controller="GoodsReceipt"
+                                   asp-action="Create"
+                                   asp-route-purchaseOrderId="@po.Id"
+                                   class="btn btn-sm btn-primary">
+
+                                    <i class="bi bi-box-seam me-1"></i>
+
+                                    Create GRN
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                                }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center py-5">
+
+                            <i class="bi bi-cart-x display-5 text-muted"></i>
+
+                            <h5 class="mt-3">
+                                No Approved Purchase Orders
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                An Admin-approved Purchase Order is required
+                                before creating a GRN.
+                            </p>
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

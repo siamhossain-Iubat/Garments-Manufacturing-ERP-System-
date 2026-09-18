@@ -1,0 +1,485 @@
+﻿@model GManufacturingERP.Models.Entities.Delivery
+
+@{
+    ViewData["Title"] = "Delivery Approval";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var badgeClass =
+        Model.Status switch
+        {
+            "Pending" =>
+                "bg-warning text-dark",
+
+            "Approved" =>
+                "bg-primary",
+
+            "Delivered" =>
+                "bg-success",
+
+            "Rejected" =>
+                "bg-danger",
+
+            "Cancelled" =>
+                "bg-secondary",
+
+            _ =>
+                "bg-secondary"
+        };
+}
+
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <small class="text-muted">
+            Admin / Delivery Approval / Details
+        </small>
+
+        <h1 class="mb-1">
+            @Model.DeliveryNumber
+        </h1>
+
+        <p class="text-muted mb-0">
+            Review delivery before authorizing goods release.
+        </p>
+
+    </div>
+
+
+    <span class="badge @badgeClass fs-6 px-3 py-2">
+        @Model.Status
+    </span>
+
+</div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+
+        <i class="bi bi-check-circle me-2"></i>
+
+        @TempData["SuccessMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        <i class="bi bi-exclamation-triangle me-2"></i>
+
+        @TempData["ErrorMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+<div class="row g-4">
+
+    <!-- =====================================================
+         DELIVERY INFORMATION
+    ====================================================== -->
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-box2-heart me-2"></i>
+
+                    Delivery Information
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Delivery Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.DeliveryNumber
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Dispatch Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @(Model.Dispatch?.DispatchNumber ?? "-")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Shipment Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @(Model.Dispatch?.Shipment?.ShipmentNumber ?? "-")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Product
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.ProductName
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Quantity
+                        </small>
+
+                        <div class="fw-semibold">
+
+                            @Model.Quantity.ToString("N2")
+                            @Model.Unit
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Total Cartons
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.TotalCartons
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Delivery Date
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.DeliveryDate
+                            .ToString("dd MMM yyyy")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Receiver
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.ReceiverName
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Receiver Phone
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.ReceiverPhone)
+                                                        ? "Not specified"
+                                                        : Model.ReceiverPhone)
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Created By
+                        </small>
+
+                        <div>
+                            @Model.DeliveredBy
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <small class="text-muted">
+                            Delivery Address
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.DeliveryAddress)
+                                                        ? "Not specified"
+                                                        : Model.DeliveryAddress)
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <small class="text-muted">
+                            Remarks
+                        </small>
+
+                        <div>
+
+                            @(string.IsNullOrWhiteSpace(Model.Remarks)
+                                                        ? "No remarks"
+                                                        : Model.Remarks)
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ADMIN ACTION
+    ====================================================== -->
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-shield-check me-2"></i>
+
+                    Admin Authorization
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                @if (Model.Status == "Pending")
+                {
+                    <div class="alert alert-warning">
+
+                        <i class="bi bi-exclamation-circle me-2"></i>
+
+                        This delivery is waiting for Admin approval.
+
+                    </div>
+
+
+                    <!-- APPROVE -->
+
+                    <form asp-action="Approve"
+                          method="post"
+                          class="mb-3"
+                          onsubmit="return confirm('Approve this delivery?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-success w-100">
+
+                            <i class="bi bi-check-circle me-2"></i>
+
+                            Approve Delivery
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- REJECT -->
+
+                    <form asp-action="Reject"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Rejection Reason
+                            </label>
+
+                            <textarea name="rejectionReason"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Enter reason for rejection..."></textarea>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="btn btn-outline-danger w-100"
+                                onclick="return confirm('Reject this delivery?');">
+
+                            <i class="bi bi-x-circle me-2"></i>
+
+                            Reject Delivery
+
+                        </button>
+
+                    </form>
+                }
+
+
+                @if (Model.Status == "Approved")
+                {
+                    <div class="alert alert-primary">
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        <strong>
+                            Admin Approved
+                        </strong>
+
+                        <div class="mt-1">
+
+                            Finance can now confirm the delivery.
+
+                        </div>
+
+                    </div>
+                }
+
+
+                @if (Model.Status == "Delivered")
+                {
+                    <div class="alert alert-success">
+
+                        <i class="bi bi-check-circle-fill me-2"></i>
+
+                        <strong>
+                            Delivery Completed
+                        </strong>
+
+                        <div class="mt-1">
+
+                            The goods have been confirmed as delivered.
+
+                        </div>
+
+                    </div>
+                }
+
+
+                @if (Model.Status == "Rejected")
+                {
+                    <div class="alert alert-danger">
+
+                        <i class="bi bi-x-circle-fill me-2"></i>
+
+                        <strong>
+                            Delivery Rejected
+                        </strong>
+
+                        <div class="mt-2">
+
+                            @(string.IsNullOrWhiteSpace(Model.Remarks)
+                                                    ? "No rejection reason provided."
+                                                    : Model.Remarks)
+
+                    </div>
+
+                    </div>
+                                }
+
+
+                @if (Model.Status == "Cancelled")
+                {
+                    <div class="alert alert-secondary">
+
+                        <i class="bi bi-x-circle me-2"></i>
+
+                        This delivery has been cancelled.
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="mt-4">
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back to Delivery Approvals
+
+    </a>
+
+</div>

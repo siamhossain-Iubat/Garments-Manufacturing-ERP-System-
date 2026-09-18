@@ -1,0 +1,520 @@
+﻿@model GManufacturingERP.ViewModels.PrepareQuotationViewModel
+
+@{
+    ViewData["Title"] = "Prepare Quotation";
+    Layout = "~/Areas/Sales/Views/Shared/_SalesLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Sales & Buyer Manager</small>
+        <h1>Prepare Quotation</h1>
+        <p>
+            Set pricing, discount, tax and quotation terms.
+        </p>
+    </div>
+
+    <a asp-area="Sales"
+       asp-controller="Quotation"
+       asp-action="Details"
+       asp-route-id="@Model.Id"
+       class="btn btn-outline-primary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to Details
+    </a>
+</div>
+
+<div asp-validation-summary="ModelOnly"
+     class="alert alert-danger">
+</div>
+
+<form asp-area="Sales"
+      asp-controller="Quotation"
+      asp-action="Prepare"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="QuotationNumber" type="hidden" />
+    <input asp-for="CompanyName" type="hidden" />
+    <input asp-for="ContactPerson" type="hidden" />
+    <input asp-for="BuyerEmail" type="hidden" />
+    <input asp-for="BuyerPhone" type="hidden" />
+    <input asp-for="ProductDescription" type="hidden" />
+    <input asp-for="Quantity" type="hidden" />
+    <input asp-for="Unit" type="hidden" />
+    <input asp-for="RequiredDeliveryDate" type="hidden" />
+    <input asp-for="ShippingCountry" type="hidden" />
+    <input asp-for="ShippingAddress" type="hidden" />
+
+    <div class="row g-4">
+
+        <!-- Buyer Information -->
+
+        <div class="col-lg-6">
+
+            <div class="card dashboard-card h-100">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-vcard"></i>
+                        Buyer Information
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+                        <strong>Quotation:</strong>
+                        @Model.QuotationNumber
+                    </p>
+
+                    <p>
+                        <strong>Company:</strong>
+                        @Model.CompanyName
+                    </p>
+
+                    <p>
+                        <strong>Contact:</strong>
+                        @Model.ContactPerson
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong>
+                        @(Model.BuyerEmail ?? "-")
+                    </p>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        @(Model.BuyerPhone ?? "-")
+                    </p>
+
+                    <hr />
+
+                    <p>
+                        <strong>Product:</strong>
+                        @Model.ProductDescription
+                    </p>
+
+                    <p>
+                        <strong>Quantity:</strong>
+                        @Model.Quantity @Model.Unit
+                    </p>
+
+                    <p>
+                        <strong>Required Delivery:</strong>
+                        @(Model.RequiredDeliveryDate?.ToString("dd MMM yyyy") ?? "-")
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing -->
+
+        <div class="col-lg-6">
+
+            <div class="card dashboard-card h-100">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-currency-dollar"></i>
+                        Pricing
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Unit Price -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="UnitPrice"
+                               class="form-label">
+                            Unit Price
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <input asp-for="UnitPrice"
+                               class="form-control"
+                               type="number"
+                               step="0.01"
+                               min="0.01"
+                               id="unitPrice" />
+
+                        <span asp-validation-for="UnitPrice"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- Discount -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Discount"
+                               class="form-label">
+                            Discount
+                        </label>
+
+                        <input asp-for="Discount"
+                               class="form-control"
+                               type="number"
+                               step="0.01"
+                               min="0"
+                               id="discount" />
+
+                        <span asp-validation-for="Discount"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- Tax -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="Tax"
+                               class="form-label">
+                            Tax
+                        </label>
+
+                        <input asp-for="Tax"
+                               class="form-control"
+                               type="number"
+                               step="0.01"
+                               min="0"
+                               id="tax" />
+
+                        <span asp-validation-for="Tax"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <!-- Advance Payment Terms -->
+
+                    <div class="mb-3">
+
+                        <label asp-for="AdvancePaymentPercentage"
+                               class="form-label">
+                            Advance Payment
+                        </label>
+
+                        <select asp-for="AdvancePaymentPercentage"
+                                class="form-select"
+                                id="advancePaymentPercentage">
+
+                            <option value="20">20% Advance</option>
+                            <option value="50">50% Advance</option>
+                            <option value="100">100% Advance</option>
+
+                        </select>
+
+                        <span asp-validation-for="AdvancePaymentPercentage"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="alert alert-info">
+
+                        <strong>Advance Amount:</strong>
+
+                        <span id="displayAdvanceAmount">
+                            @Model.AdvancePaymentAmount.ToString("N2")
+                        </span>
+
+                        BDT
+
+                    </div>
+
+                    <hr />
+
+                    <!-- Calculation -->
+
+                    <div class="table-responsive">
+
+                        <table class="table">
+
+                            <tr>
+                                <td>Quantity</td>
+
+                                <td class="text-end"
+                                    id="displayQuantity">
+                                    @Model.Quantity
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Subtotal</td>
+
+                                <td class="text-end"
+                                    id="displaySubtotal">
+                                    @Model.Subtotal.ToString("N2")
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Discount</td>
+
+                                <td class="text-end text-danger"
+                                    id="displayDiscount">
+                                    - @Model.Discount.ToString("N2")
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Tax</td>
+
+                                <td class="text-end"
+                                    id="displayTax">
+                                    @Model.Tax.ToString("N2")
+                                </td>
+                            </tr>
+
+                            <tr class="table-light">
+                                <th>Grand Total</th>
+
+                                <th class="text-end fs-5"
+                                    id="displayGrandTotal">
+                                    @Model.GrandTotal.ToString("N2")
+                                </th>
+                            </tr>
+
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Validity -->
+
+        <div class="col-lg-6">
+
+            <div class="card dashboard-card">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar-check"></i>
+                        Quotation Validity
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <label asp-for="ValidUntil"
+                           class="form-label">
+                        Valid Until
+                        <span class="text-danger">*</span>
+                    </label>
+
+                    <input asp-for="ValidUntil"
+                           type="date"
+                           class="form-control" />
+
+                    <span asp-validation-for="ValidUntil"
+                          class="text-danger">
+                    </span>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms -->
+
+        <div class="col-lg-6">
+
+            <div class="card dashboard-card">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-text"></i>
+                        Terms & Conditions
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <textarea asp-for="TermsAndConditions"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Payment terms, delivery terms, validity etc."></textarea>
+
+                    <span asp-validation-for="TermsAndConditions"
+                          class="text-danger">
+                    </span>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Remarks -->
+
+        <div class="col-12">
+
+            <div class="card dashboard-card">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-chat-left-text"></i>
+                        Remarks
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <textarea asp-for="Remarks"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Internal sales remarks or additional quotation notes"></textarea>
+
+                    <span asp-validation-for="Remarks"
+                          class="text-danger">
+                    </span>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+
+        <a asp-area="Sales"
+           asp-controller="Quotation"
+           asp-action="Details"
+           asp-route-id="@Model.Id"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-x-circle me-1"></i>
+            Cancel
+
+        </a>
+
+        <button type="submit"
+                class="btn btn-primary">
+
+            <i class="bi bi-save me-1"></i>
+            Save Quotation
+
+        </button>
+
+    </div>
+
+</form>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        function calculateQuotation() {
+
+            const quantity =
+                parseFloat('@Model.Quantity') || 0;
+
+            const unitPrice =
+                parseFloat(
+                    document.getElementById('unitPrice').value
+                ) || 0;
+
+            const discount =
+                parseFloat(
+                    document.getElementById('discount').value
+                ) || 0;
+
+            const tax =
+                parseFloat(
+                    document.getElementById('tax').value
+                ) || 0;
+
+            // Subtotal
+
+            const subtotal =
+                quantity * unitPrice;
+
+            // Grand Total
+
+            const grandTotal =
+                subtotal - discount + tax;
+
+            // Update Quantity
+
+            document.getElementById('displayQuantity')
+                .innerText = quantity;
+
+            // Update Subtotal
+
+            document.getElementById('displaySubtotal')
+                .innerText = subtotal.toFixed(2);
+
+            // Update Discount
+
+            document.getElementById('displayDiscount')
+                .innerText = '- ' + discount.toFixed(2);
+
+            // Update Tax
+
+            document.getElementById('displayTax')
+                .innerText = tax.toFixed(2);
+
+            // Update Grand Total
+
+            document.getElementById('displayGrandTotal')
+                .innerText = grandTotal.toFixed(2);
+
+            // =====================================================
+            // ADVANCE PAYMENT CALCULATION
+            // =====================================================
+
+            const advancePercentage =
+                parseFloat(
+                    document.getElementById(
+                        'advancePaymentPercentage'
+                    ).value
+                ) || 0;
+
+            const advanceAmount =
+                grandTotal * advancePercentage / 100;
+
+            document.getElementById(
+                'displayAdvanceAmount'
+            ).innerText = advanceAmount.toFixed(2);
+
+        }
+
+        // =====================================================
+        // EVENT LISTENERS
+        // =====================================================
+
+        document.getElementById('unitPrice')
+            .addEventListener('input', calculateQuotation);
+
+        document.getElementById('discount')
+            .addEventListener('input', calculateQuotation);
+
+        document.getElementById('tax')
+            .addEventListener('input', calculateQuotation);
+
+        document.getElementById(
+            'advancePaymentPercentage'
+        ).addEventListener(
+            'change',
+            calculateQuotation
+        );
+
+        // Initial Calculation
+
+        calculateQuotation();
+
+    </script>
+
+}

@@ -1,0 +1,90 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.MaterialRequirementPlan>
+
+@{
+    ViewData["Title"] = "Select MRP";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Operations / Procurement</small>
+        <h1>Select MRP</h1>
+        <p>Select an approved MRP to create a purchase requisition.</p>
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="PurchaseRequisition"
+       asp-action="Index"
+       class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>
+        Back
+    </a>
+</div>
+
+<div class="content-card">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>MRP Number</th>
+                    <th>Buyer Company</th>
+                    <th>Product</th>
+                    <th>Planned Quantity</th>
+                    <th>Status</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var mrp in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@mrp.MRPNumber</strong>
+                            </td>
+
+                            <td>@mrp.BuyerCompany</td>
+
+                            <td>@mrp.ProductDescription</td>
+
+                            <td>@mrp.PlannedQuantity</td>
+
+                            <td>
+                                <span class="badge bg-success">
+                                    Approved
+                                </span>
+                            </td>
+
+                            <td class="text-end">
+                                <a asp-area="Operations"
+                                   asp-controller="PurchaseRequisition"
+                                   asp-action="Create"
+                                   asp-route-mrpId="@mrp.Id"
+                                   class="btn btn-sm btn-primary">
+
+                                    <i class="bi bi-plus-circle me-1"></i>
+                                    Create Requisition
+
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <i class="bi bi-clipboard-x display-5 text-muted"></i>
+                            <h5 class="mt-3">No Approved MRP Found</h5>
+                            <p class="text-muted">
+                                Approve an MRP before creating a requisition.
+                            </p>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

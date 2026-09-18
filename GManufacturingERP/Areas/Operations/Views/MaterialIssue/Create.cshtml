@@ -1,0 +1,350 @@
+﻿@model GManufacturingERP.ViewModels.CreateMaterialIssueViewModel
+
+@{
+    ViewData["Title"] = "Create Material Issue";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <small class="text-muted">Operations / Material Issue / Create</small>
+        <h1 class="mb-0">Create Material Issue</h1>
+        <p class="text-muted mb-0">
+            Select an approved MRP and prepare the material issue request for Admin approval.
+        </p>
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i>
+        Back to List
+    </a>
+</div>
+
+<form asp-action="Create"
+      asp-controller="MaterialIssue"
+      asp-area="Operations"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly"
+         class="alert alert-danger"></div>
+
+
+    <!-- Issue Information -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="bi bi-clipboard-check"></i>
+                Issue Information
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <!-- Approved MRP -->
+                <div class="col-md-6">
+
+                    <label asp-for="MaterialRequirementPlanId"
+                           class="form-label">
+                    </label>
+
+                    <select asp-for="MaterialRequirementPlanId"
+                            asp-items="Model.ApprovedMRPs"
+                            class="form-select"
+                            id="mrpSelect"
+                            onchange="loadMRP(this.value)">
+
+                        <option value="">
+                            -- Select Approved MRP --
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="MaterialRequirementPlanId"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Production Reference -->
+                <div class="col-md-6">
+
+                    <label asp-for="ProductionReference"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="ProductionReference"
+                           class="form-control"
+                           readonly />
+
+                    <span asp-validation-for="ProductionReference"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Product Name -->
+                <div class="col-md-4">
+
+                    <label asp-for="ProductName"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="ProductName"
+                           class="form-control"
+                           readonly />
+
+                    <span asp-validation-for="ProductName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Planned Quantity -->
+                <div class="col-md-4">
+
+                    <label asp-for="PlannedQuantity"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="PlannedQuantity"
+                           class="form-control"
+                           readonly />
+
+                    <span asp-validation-for="PlannedQuantity"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Unit -->
+                <div class="col-md-4">
+
+                    <label asp-for="Unit"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="Unit"
+                           class="form-control"
+                           readonly />
+
+                    <span asp-validation-for="Unit"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Remarks -->
+                <div class="col-md-12">
+
+                    <label asp-for="Remarks"
+                           class="form-label">
+                    </label>
+
+                    <textarea asp-for="Remarks"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Enter remarks, if any..."></textarea>
+
+                    <span asp-validation-for="Remarks"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Required Materials -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white">
+            <h5 class="mb-0">
+                <i class="bi bi-box-seam"></i>
+                Required Materials
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            @if (Model.Items != null && Model.Items.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-bordered align-middle">
+
+                        <thead class="table-light">
+
+                            <tr>
+                                <th>Material</th>
+                                <th>Category</th>
+                                <th>Unit</th>
+                                <th>Required Quantity</th>
+                                <th>Available Stock</th>
+                                <th>Issue Quantity</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @for (int i = 0; i < Model.Items.Count; i++)
+                            {
+                                <tr>
+
+                                    <!-- Material -->
+                                    <td>
+
+                                        @Model.Items[i].MaterialName
+
+                                        <input asp-for="Items[i].InventoryStockId"
+                                               type="hidden" />
+
+                                        <input asp-for="Items[i].MaterialName"
+                                               type="hidden" />
+
+                                    </td>
+
+
+                                    <!-- Category -->
+                                    <td>
+
+                                        @Model.Items[i].MaterialCategory
+
+                                        <input asp-for="Items[i].MaterialCategory"
+                                               type="hidden" />
+
+                                    </td>
+
+
+                                    <!-- Unit -->
+                                    <td>
+
+                                        @Model.Items[i].Unit
+
+                                        <input asp-for="Items[i].Unit"
+                                               type="hidden" />
+
+                                    </td>
+
+
+                                    <!-- Required Quantity -->
+                                    <td>
+
+                                        @Model.Items[i].RequiredQuantity
+
+                                    </td>
+
+
+                                    <!-- Available Stock -->
+                                    <td>
+
+                                        <span class="badge bg-info text-dark">
+
+                                            @Model.Items[i].AvailableQuantity
+                                            @Model.Items[i].Unit
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- Issue Quantity -->
+                                    <td>
+
+                                        <input asp-for="Items[i].IssuedQuantity"
+                                               class="form-control"
+                                               min="0"
+                                               step="0.01"
+                                               max="@Model.Items[i].AvailableQuantity" />
+
+                                        <span asp-validation-for="Items[i].IssuedQuantity"
+                                              class="text-danger">
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning mb-0">
+
+                    <i class="bi bi-exclamation-triangle"></i>
+                    No material items found for this MRP.
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- Action Buttons -->
+    <div class="mt-4">
+
+        <button type="submit"
+                class="btn btn-primary">
+
+            <i class="bi bi-save"></i>
+            Create Material Issue
+
+        </button>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-x-circle"></i>
+            Cancel
+
+        </a>
+
+    </div>
+
+</form>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        function loadMRP(mrpId) {
+
+            if (!mrpId) {
+                return;
+            }
+
+            window.location.href =
+                '@Url.Action("CreateFromMRP", "MaterialIssue", new { area = "Operations" })'
+                + '?materialRequirementPlanId='
+                + encodeURIComponent(mrpId);
+
+        }
+
+    </script>
+
+}

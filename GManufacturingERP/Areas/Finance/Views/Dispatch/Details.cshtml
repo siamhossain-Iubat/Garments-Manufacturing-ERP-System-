@@ -1,0 +1,481 @@
+﻿@model GManufacturingERP.Models.Entities.Dispatch
+
+@{
+    ViewData["Title"] = "Dispatch Details";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+
+    var badgeClass = Model.Status switch
+    {
+        "Draft" => "bg-secondary",
+        "Dispatched" => "bg-primary",
+        "In Transit" => "bg-info text-dark",
+        "Cancelled" => "bg-danger",
+        _ => "bg-secondary"
+    };
+}
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <small class="text-muted">
+            Finance & Logistics / Dispatch / Details
+        </small>
+
+        <h1 class="mb-1">
+            @Model.DispatchNumber
+        </h1>
+
+        <p class="text-muted mb-0">
+            Dispatch details and transportation status
+        </p>
+
+    </div>
+
+    <span class="badge @badgeClass fs-6 px-3 py-2">
+        @Model.Status
+    </span>
+
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+
+        <i class="bi bi-check-circle me-2"></i>
+
+        @TempData["SuccessMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"></button>
+
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        <i class="bi bi-exclamation-triangle me-2"></i>
+
+        @TempData["ErrorMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"></button>
+
+    </div>
+}
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-truck me-2"></i>
+                    Dispatch Information
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Dispatch Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.DispatchNumber
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Shipment Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.Shipment?.ShipmentNumber
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Product
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.ProductName
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Quantity
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.Quantity.ToString("N2")
+                            @Model.Unit
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Total Cartons
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.TotalCartons
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Dispatch Date
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.DispatchDate.ToString("dd MMM yyyy")
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <hr />
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Transport
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.TransportName)
+                                                        ? "Not specified"
+                                                        : Model.TransportName)
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Vehicle Number
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.VehicleNumber)
+                                                        ? "Not specified"
+                                                        : Model.VehicleNumber)
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Driver Name
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.DriverName)
+                                                        ? "Not specified"
+                                                        : Model.DriverName)
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Driver Phone
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.DriverPhone)
+                                                        ? "Not specified"
+                                                        : Model.DriverPhone)
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <small class="text-muted">
+                            Destination
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.Destination)
+                                                        ? "Not specified"
+                                                        : Model.Destination)
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <small class="text-muted">
+                            Remarks
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.Remarks)
+                                                        ? "No remarks"
+                                                        : Model.Remarks)
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-arrow-repeat me-2"></i>
+                    Dispatch Actions
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                @* ==========================================
+                   Draft → Confirm Dispatch
+                   ========================================== *@
+
+                @if (Model.Status == "Draft")
+                {
+                    <form asp-action="Confirm"
+                          method="post"
+                          class="mb-2">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+
+                            <i class="bi bi-check-circle me-2"></i>
+                            Confirm Dispatch
+
+                        </button>
+
+                    </form>
+
+                    <form asp-action="Cancel"
+                          method="post"
+                          onsubmit="return confirm('Are you sure you want to cancel this dispatch?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-outline-danger w-100">
+
+                            <i class="bi bi-x-circle me-2"></i>
+                            Cancel Dispatch
+
+                        </button>
+
+                    </form>
+                }
+
+
+                @* ==========================================
+                   Dispatched → In Transit
+                   ========================================== *@
+
+                @if (Model.Status == "Dispatched")
+                {
+                    <form asp-action="InTransit"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-info w-100">
+
+                            <i class="bi bi-geo-alt me-2"></i>
+                            Mark In Transit
+
+                        </button>
+
+                    </form>
+                }
+
+
+                @* ==========================================
+                   In Transit → Create Delivery
+                   ========================================== *@
+
+                @if (Model.Status == "In Transit")
+                {
+                    <a asp-area="Finance"
+                       asp-controller="Delivery"
+                       asp-action="Create"
+                       asp-route-dispatchId="@Model.Id"
+                       class="btn btn-success w-100 mb-2">
+
+                        <i class="bi bi-box2-heart me-2"></i>
+                        Create Delivery
+
+                    </a>
+
+                    <div class="alert alert-info mb-0">
+
+                        <i class="bi bi-info-circle me-2"></i>
+
+                        This dispatch is currently in transit
+                        and ready for delivery.
+
+                    </div>
+                }
+
+
+                @* ==========================================
+                   Cancelled
+                   ========================================== *@
+
+                @if (Model.Status == "Cancelled")
+                {
+                    <div class="alert alert-danger mb-0">
+
+                        <i class="bi bi-x-circle me-2"></i>
+
+                        This dispatch has been cancelled.
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+        @* ==========================================
+           Timeline
+           ========================================== *@
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-clock-history me-2"></i>
+                    Timeline
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+
+                    <small class="text-muted">
+                        Created
+                    </small>
+
+                    <div>
+                        @Model.CreatedAt
+                        .ToLocalTime()
+                        .ToString("dd MMM yyyy, hh:mm tt")
+                    </div>
+
+                </div>
+
+                @if (Model.DispatchedAt.HasValue)
+                {
+                    <div>
+
+                        <small class="text-muted">
+                            Dispatched
+                        </small>
+
+                        <div>
+                            @Model.DispatchedAt.Value
+                            .ToLocalTime()
+                            .ToString("dd MMM yyyy, hh:mm tt")
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="mt-4">
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to Dispatches
+
+    </a>
+
+
+    @if (Model.Shipment != null)
+    {
+        <a asp-area="Finance"
+           asp-controller="Shipment"
+           asp-action="Details"
+           asp-route-id="@Model.ShipmentId"
+           class="btn btn-outline-primary">
+
+            <i class="bi bi-box-seam me-1"></i>
+            View Shipment
+
+        </a>
+    }
+
+</div>

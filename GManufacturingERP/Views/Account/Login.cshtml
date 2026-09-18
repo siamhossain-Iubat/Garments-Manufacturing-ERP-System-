@@ -1,0 +1,266 @@
+﻿@model GManufacturingERP.ViewModels.LoginViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Sign In";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Sign In | G-MANUFACTURING ERP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/auth.css"
+          asp-append-version="true" />
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-wrapper">
+
+        <!-- Left Branding Section -->
+        <section class="auth-visual">
+
+            <div class="visual-overlay"></div>
+
+            <div class="brand-content">
+
+                <div class="brand-logo">
+                    <span class="brand-icon">
+                        <i class="bi bi-buildings-fill"></i>
+                    </span>
+
+                    <span>G-MANUFACTURING</span>
+                </div>
+
+                <p class="brand-subtitle">
+                    ENTERPRISE RESOURCE PLANNING
+                </p>
+
+                <div class="visual-message">
+                    <span class="message-line"></span>
+
+                    <h1>
+                        Smarter production.<br />
+                        Better business.
+                    </h1>
+
+                    <p>
+                        Manage your garment manufacturing operations
+                        with clarity, control and confidence.
+                    </p>
+                </div>
+
+                <div class="visual-features">
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Integrated Manufacturing
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Real-time Business Visibility
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Secure Role-based Access
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="visual-footer">
+                © 2026 G-MANUFACTURING ERP
+            </div>
+
+        </section>
+
+        <!-- Right Login Section -->
+        <section class="auth-form-section">
+
+            <div class="auth-form-container">
+
+                <div class="mobile-brand">
+                    <span class="brand-icon">
+                        <i class="bi bi-buildings-fill"></i>
+                    </span>
+
+                    <span>G-MANUFACTURING</span>
+                </div>
+
+                <div class="form-heading">
+                    <span class="eyebrow">WELCOME BACK</span>
+
+                    <h2>Sign in to your account</h2>
+
+                    <p>
+                        Enter your credentials to access your workspace.
+                    </p>
+                </div>
+
+                <form asp-action="Login"
+                      asp-controller="Account"
+                      method="post"
+                      class="login-form">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="returnUrl"
+                           value="@ViewData["ReturnUrl"]" />
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="validation-summary"></div>
+
+                    <div class="form-group">
+
+                        <label asp-for="Email"></label>
+
+                        <div class="input-wrapper">
+                            <i class="bi bi-envelope"></i>
+
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   placeholder="Enter your email address"
+                                   autocomplete="email" />
+                        </div>
+
+                        <span asp-validation-for="Email"
+                              class="field-validation"></span>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="password-label-row">
+                            <label asp-for="Password"></label>
+
+                            <a asp-action="ForgotPassword"
+                               asp-controller="Account"
+                               class="forgot-link">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock"></i>
+
+                            <input asp-for="Password"
+                                   class="form-control"
+                                   id="passwordInput"
+                                   placeholder="Enter your password"
+                                   autocomplete="current-password" />
+
+                            <button type="button"
+                                    class="password-toggle"
+                                    id="togglePassword"
+                                    aria-label="Show password">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+
+                        <span asp-validation-for="Password"
+                              class="field-validation"></span>
+
+                    </div>
+
+                    <div class="remember-row">
+
+                        <label class="remember-label">
+                            <input asp-for="RememberMe" />
+
+                            <span>Remember me</span>
+                        </label>
+
+                        <span class="secure-login">
+                            <i class="bi bi-shield-check"></i>
+                            Secure login
+                        </span>
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn-signin">
+
+                        <span>Sign In</span>
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+                <div class="registration-prompt">
+
+                    <span>Are you a buyer?</span>
+
+                    <a asp-action="Register"
+                       asp-controller="Account">
+                        Create a buyer account
+                    </a>
+
+                </div>
+
+                <div class="auth-divider">
+                    <span>Authorized business access</span>
+                </div>
+
+                <p class="auth-note">
+                    <i class="bi bi-info-circle"></i>
+                    Access is protected by your assigned role and permissions.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("passwordInput");
+
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener("click", function () {
+                const isPassword =
+                    passwordInput.getAttribute("type") === "password";
+
+                passwordInput.setAttribute(
+                    "type",
+                    isPassword ? "text" : "password"
+                );
+
+                this.innerHTML = isPassword
+                    ? '<i class="bi bi-eye-slash"></i>'
+                    : '<i class="bi bi-eye"></i>';
+
+                this.setAttribute(
+                    "aria-label",
+                    isPassword ? "Hide password" : "Show password"
+                );
+            });
+        }
+    </script>
+
+</body>
+</html>

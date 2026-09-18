@@ -1,0 +1,174 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.FinishedGoodsStock>
+
+@{
+    ViewData["Title"] = "Finished Goods Inventory";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">
+                <i class="bi bi-box-seam"></i>
+                Finished Goods Inventory
+            </h2>
+            <p class="text-muted mb-0">
+                Finished goods automatically received after Admin QC approval
+            </p>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i>
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i>
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-boxes"></i>
+                Finished Goods Stock List
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-box-seam fs-1 text-muted"></i>
+                    <h5 class="mt-3 text-muted">
+                        No finished goods available
+                    </h5>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Product Name</th>
+                                <th>Production Reference</th>
+                                <th>Ordered Quantity</th>
+                                <th>Unit</th>
+                                <th>Available Quantity</th>
+                                <th>Reserved Quantity</th>
+                                <th>Rework Quantity</th>
+                                <th>Location</th>
+                                <th>Updated</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @{
+                                int serial = 1;
+                            }
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@serial</td>
+
+                                    <td class="fw-semibold">
+                                        @item.ProductName
+                                    </td>
+
+                                    <td>
+                                        @(item.ProductionReference ?? "-")
+                                    </td>
+
+                                    <td class="fw-semibold">
+                                        @item.OrderedQuantity
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            @item.Unit
+                                        </span>
+                                    </td>
+
+                                    <td class="fw-bold text-success">
+                                        @item.AvailableQuantity
+                                    </td>
+
+                                    <td class="text-warning fw-semibold">
+                                        @item.ReservedQuantity
+                                    </td>
+
+                                    <td>
+                                        @if (item.ReworkQuantity > 0)
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                @item.ReworkQuantity @item.Unit
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                0 @item.Unit
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @(item.Location ?? "Not Set")
+                                    </td>
+
+                                    <td>
+                                        @(item.UpdatedAt.ToLocalTime()
+                                        .ToString("dd MMM yyyy hh:mm tt"))
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex gap-1">
+
+                                            <a asp-area="Operations"
+                                               asp-controller="FinishedGoods"
+                                               asp-action="Details"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                                Details
+                                            </a>
+
+                                            @if (item.ReworkQuantity > 0)
+                                            {
+                                                <a asp-area="Operations"
+                                                   asp-controller="FinishedGoods"
+                                                   asp-action="Rework"
+                                                   asp-route-id="@item.Id"
+                                                   class="btn btn-sm btn-outline-warning">
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                    Rework
+                                                </a>
+                                            }
+                                       
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                serial++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

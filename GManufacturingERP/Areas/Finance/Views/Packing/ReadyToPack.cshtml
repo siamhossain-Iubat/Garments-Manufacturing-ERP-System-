@@ -1,0 +1,353 @@
+﻿@model GManufacturingERP.ViewModels.CreatePackingViewModel
+
+@{
+    ViewData["Title"] = "Ready to Pack";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <small class="text-muted">
+            Finance & Logistics / Packing / Ready to Pack
+        </small>
+
+        <h2 class="fw-bold mt-1">
+            Ready to Pack
+        </h2>
+    </div>
+
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+
+    <form asp-action="Create"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input asp-for="FinishedGoodsStockId"
+               type="hidden" />
+
+        <input asp-for="SalesOrderId"
+               type="hidden" />
+
+        <input asp-for="ShipmentType"
+               type="hidden" />
+
+        <input asp-for="PartialShipmentApproved"
+               type="hidden" />
+
+        <input asp-for="ApprovedBy"
+               type="hidden" />
+
+        <input asp-for="ApprovedAt"
+               type="hidden" />
+
+
+        <div class="row g-4">
+
+            <!-- ORDER INFORMATION -->
+
+            <div class="col-lg-5">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            Order Information
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                Sales Order
+                            </small>
+
+                            <h5>
+                                @Model.SalesOrderNumber
+                            </h5>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                Product
+                            </small>
+
+                            <h5>
+                                @Model.ProductName
+                            </h5>
+                        </div>
+
+
+                        <div class="row g-3">
+
+                            <div class="col-6">
+
+                                <div class="border rounded p-3">
+
+                                    <small class="text-muted">
+                                        Ordered
+                                    </small>
+
+                                    <h5>
+                                        @Model.OrderedQuantity
+                                        @Model.Unit
+                                    </h5>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-6">
+
+                                <div class="border rounded p-3">
+
+                                    <small class="text-muted">
+                                        Available
+                                    </small>
+
+                                    <h5>
+                                        @Model.AvailableQuantity
+                                        @Model.Unit
+                                    </h5>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-6">
+
+                                <div class="border rounded p-3">
+
+                                    <small class="text-muted">
+                                        Already Packed
+                                    </small>
+
+                                    <h5>
+                                        @Model.AlreadyPackedQuantity
+                                        @Model.Unit
+                                    </h5>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-6">
+
+                                <div class="border rounded p-3">
+
+                                    <small class="text-muted">
+                                        Remaining Order
+                                    </small>
+
+                                    <h5>
+                                        @Model.RemainingOrderQuantity
+                                        @Model.Unit
+                                    </h5>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        @if (Model.PartialShipmentApproved)
+                        {
+                            <div class="alert alert-warning mt-4">
+
+                                <strong>
+                                    Partial Shipment Approved
+                                </strong>
+
+                                <br />
+
+                                Approved By:
+                                @Model.ApprovedBy
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-success mt-4">
+
+                                <strong>
+                                    Full Quantity Available
+                                </strong>
+
+                                <br />
+
+                                This order is ready for complete packing.
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PACKING FORM -->
+
+            <div class="col-lg-7">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-header bg-white">
+
+                        <h5 class="mb-0">
+                            Packing Details
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="mb-3">
+
+                            <label asp-for="PackingDate"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="PackingDate"
+                                   type="date"
+                                   class="form-control" />
+
+                            <span asp-validation-for="PackingDate"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label asp-for="PackingQuantity"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="PackingQuantity"
+                                   class="form-control"
+                                   min="0.01"
+                                   max="@Model.QuantityAvailableForPacking"
+                                   step="0.01" />
+
+                            <small class="text-muted">
+                                Maximum available:
+                                @Model.QuantityAvailableForPacking
+                                @Model.Unit
+                            </small>
+
+                            <span asp-validation-for="PackingQuantity"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label asp-for="TotalCartons"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="TotalCartons"
+                                   class="form-control"
+                                   min="1" />
+
+                            <span asp-validation-for="TotalCartons"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label asp-for="QuantityPerCarton"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <input asp-for="QuantityPerCarton"
+                                   class="form-control"
+                                   min="0.01"
+                                   step="0.01" />
+
+                            <span asp-validation-for="QuantityPerCarton"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="mb-4">
+
+                            <label asp-for="Remarks"
+                                   class="form-label fw-semibold">
+                            </label>
+
+                            <textarea asp-for="Remarks"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Optional packing remarks...">
+                            </textarea>
+
+                            <span asp-validation-for="Remarks"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex justify-content-between">
+
+                            <a asp-action="Index"
+                               class="btn btn-secondary">
+                                Cancel
+                            </a>
+
+
+                            <button type="submit"
+                                    class="btn btn-success px-4">
+
+                                <i class="bi bi-box-seam"></i>
+
+                                Confirm Packing
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

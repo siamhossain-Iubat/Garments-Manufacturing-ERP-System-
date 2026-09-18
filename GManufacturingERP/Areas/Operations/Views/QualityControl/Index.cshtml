@@ -1,0 +1,128 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.QualityInspection>
+
+@{
+    ViewData["Title"] = "Quality Control";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Operations / Quality Control</small>
+        <h1>Quality Control</h1>
+        <p>Inspect and approve finished production output.</p>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Inspection No.</th>
+                        <th>Production Reference</th>
+                        <th>Product</th>
+                        <th>Inspected</th>
+                        <th>Passed</th>
+                        <th>Failed</th>
+                        <th>Result</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="10"
+                                class="text-center text-muted">
+                                No quality inspections found.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int count = 1;
+
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@count</td>
+
+                                <td>
+                                    <strong>@item.InspectionNumber</strong>
+                                </td>
+
+                                <td>@item.ProductionReference</td>
+
+                                <td>@item.ProductName</td>
+
+                                <td>@item.InspectedQuantity</td>
+
+                                <td class="text-success">
+                                    @item.PassedQuantity
+                                </td>
+
+                                <td class="text-danger">
+                                    @item.FailedQuantity
+                                </td>
+
+                                <td>
+                                    <span class="badge
+                                                @(item.InspectionResult == "Passed"
+                                                                                      ? "bg-success"
+                                                                                      : item.InspectionResult == "Failed"
+                                                                                          ? "bg-danger"
+                                                                                          : "bg-warning text-dark")">
+                                                                                                                 @item.InspectionResult
+                                                                                                             </span>
+                                                                                                         </td>
+
+                                <td>
+                                    <span class="badge
+                                                @(item.Status == "Approved"
+                                                                                      ? "bg-success"
+                                                                                      : item.Status == "Submitted"
+                                                                                          ? "bg-warning text-dark"
+                                                                                          : "bg-secondary")">
+                                @item.Status
+                            </span>
+                        </td>
+
+                                                    <td>
+                                                        <a asp-action="Details"
+                                                           asp-route-id="@item.Id"
+                                                           class="btn btn-sm btn-outline-primary">
+                                                            Details
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+                                                count++;
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>

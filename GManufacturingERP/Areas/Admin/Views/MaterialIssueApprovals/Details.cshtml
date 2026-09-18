@@ -1,0 +1,382 @@
+﻿@model GManufacturingERP.Models.Entities.MaterialIssue
+
+@{
+    ViewData["Title"] = "Material Issue Approval";
+
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="page-header d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <small>Admin / Material Issue Approval</small>
+
+        <h1>
+            @Model.IssueNumber
+        </h1>
+
+        <p>
+            Review material issue request before approval.
+        </p>
+
+    </div>
+
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back to Approvals
+
+    </a>
+
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+
+<!-- Request Information -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-clipboard-check me-2"></i>
+
+            Request Information
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-3">
+
+                <small class="text-muted">
+                    Issue Number
+                </small>
+
+                <h6>
+                    @Model.IssueNumber
+                </h6>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <small class="text-muted">
+                    Production Reference
+                </small>
+
+                <h6>
+                    @Model.ProductionReference
+                </h6>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <small class="text-muted">
+                    Requested By
+                </small>
+
+                <h6>
+                    @Model.RequestedBy
+                </h6>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <small class="text-muted">
+                    Status
+                </small>
+
+                <h6>
+
+                    @if (Model.Status == "Approved")
+                    {
+                        <span class="badge bg-success">
+                            Approved
+                        </span>
+                    }
+                    else if (Model.Status == "Rejected")
+                    {
+                        <span class="badge bg-danger">
+                            Rejected
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">
+                            @Model.Status
+                        </span>
+                    }
+
+                </h6>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Material Items -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-box-seam me-2"></i>
+
+            Materials Requested
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Material</th>
+
+                        <th>Category</th>
+
+                        <th>Unit</th>
+
+                        <th>Requested</th>
+
+                        <th>Current Stock</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+
+                            <td>
+                                @item.MaterialName
+                            </td>
+
+                            <td>
+                                @item.MaterialCategory
+                            </td>
+
+                            <td>
+                                @item.Unit
+                            </td>
+
+                            <td>
+                                @item.RequestedQuantity
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-info text-dark">
+
+                                    @item.InventoryStockId
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@if (!string.IsNullOrWhiteSpace(Model.Remarks))
+{
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <strong>
+                Remarks
+            </strong>
+
+            <p class="mb-0 mt-2">
+                @Model.Remarks
+            </p>
+
+        </div>
+
+    </div>
+}
+
+
+<!-- Approval -->
+@if (Model.Status == "Submitted")
+{
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <h5 class="mb-3">
+
+                <i class="bi bi-shield-check me-2"></i>
+
+                Admin Decision
+
+            </h5>
+
+
+            <div class="alert alert-warning">
+
+                <i class="bi bi-exclamation-triangle me-2"></i>
+
+                Approving this request will deduct the requested
+                quantities from inventory and create inventory
+                transaction records.
+
+            </div>
+
+
+            <div class="row g-3">
+
+                <!-- Approve -->
+
+                <div class="col-md-6">
+
+                    <form asp-action="Approve"
+                          asp-route-id="@Model.Id"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                class="btn btn-success w-100"
+                                onclick="return confirm('Approve this material issue and deduct inventory stock?');">
+
+                            <i class="bi bi-check-circle-fill me-1"></i>
+
+                            Approve & Issue Materials
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <!-- Reject -->
+
+                <div class="col-md-6">
+
+                    <form asp-action="Reject"
+                          asp-route-id="@Model.Id"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="input-group">
+
+                            <input type="text"
+                                   name="rejectionReason"
+                                   class="form-control"
+                                   placeholder="Rejection reason..." />
+
+                            <button type="submit"
+                                    class="btn btn-danger"
+                                    onclick="return confirm('Reject this material issue?');">
+
+                                <i class="bi bi-x-circle me-1"></i>
+
+                                Reject
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+else if (Model.Status == "Approved")
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle-fill me-2"></i>
+
+        <strong>Approved.</strong>
+
+        Materials were issued and inventory was updated.
+
+        <br />
+
+        Approved By:
+        <strong>@Model.ApprovedBy</strong>
+
+    </div>
+}
+else if (Model.Status == "Rejected")
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-x-circle-fill me-2"></i>
+
+        <strong>Rejected.</strong>
+
+        This material issue was rejected by Admin.
+
+    </div>
+}

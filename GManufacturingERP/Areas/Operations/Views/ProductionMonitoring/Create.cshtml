@@ -1,0 +1,376 @@
+﻿```cshtml
+@model GManufacturingERP.ViewModels.CreateProductionMonitoringViewModel
+
+@{
+    ViewData["Title"] = "Create Production Monitoring";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+
+    <div>
+        <small>Operations / Production</small>
+
+        <h1>
+            Create Production Monitoring
+        </h1>
+
+        <p>
+            Create a production monitoring record from an approved material issue.
+        </p>
+    </div>
+
+</div>
+
+
+<!-- Create Production Monitoring Form -->
+<form asp-action="Create"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+
+    <!-- Validation Summary -->
+    <div asp-validation-summary="ModelOnly"
+         class="alert alert-danger">
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+
+                <!-- ================================================= -->
+                <!-- APPROVED MATERIAL ISSUE -->
+                <!-- ================================================= -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="MaterialIssueId"
+                           class="form-label">
+
+                        Approved Material Issue
+
+                    </label>
+
+
+                    <select asp-for="MaterialIssueId"
+                            asp-items="Model.ApprovedMaterialIssues"
+                            class="form-select"
+                            id="materialIssueSelect"
+                            onchange="loadMaterialIssue(this.value)">
+
+                        <option value="">
+                            -- Select Approved Material Issue --
+                        </option>
+
+                    </select>
+
+
+                    <span asp-validation-for="MaterialIssueId"
+                          class="text-danger">
+                    </span>
+
+
+                    <small class="text-muted">
+
+                        Select an approved material issue to load
+                        production information automatically.
+
+                    </small>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- PRODUCTION REFERENCE -->
+                <!-- Auto-loaded from selected Material Issue -->
+                <!-- ================================================= -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="ProductionReference"
+                           class="form-label">
+
+                        Production Reference
+
+                    </label>
+
+
+                    <input asp-for="ProductionReference"
+                           class="form-control"
+                           readonly />
+
+
+                    <span asp-validation-for="ProductionReference"
+                          class="text-danger">
+                    </span>
+
+
+                    <small class="text-muted">
+
+                        Automatically generated from the selected
+                        production information.
+
+                    </small>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- PRODUCT NAME -->
+                <!-- Auto-loaded -->
+                <!-- ================================================= -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="ProductName"
+                           class="form-label">
+
+                        Product Name
+
+                    </label>
+
+
+                    <input asp-for="ProductName"
+                           class="form-control"
+                           readonly />
+
+
+                    <span asp-validation-for="ProductName"
+                          class="text-danger">
+                    </span>
+
+
+                    <small class="text-muted">
+
+                        Product information is taken from the
+                        approved production process.
+
+                    </small>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- PLANNED QUANTITY -->
+                <!-- Auto-loaded -->
+                <!-- ================================================= -->
+
+                <div class="col-md-4">
+
+                    <label asp-for="PlannedQuantity"
+                           class="form-label">
+
+                        Planned Quantity
+
+                    </label>
+
+
+                    <div class="input-group">
+
+                        <input asp-for="PlannedQuantity"
+                               class="form-control"
+                               readonly />
+
+
+                        <span class="input-group-text">
+                            Units
+                        </span>
+
+                    </div>
+
+
+                    <span asp-validation-for="PlannedQuantity"
+                          class="text-danger">
+                    </span>
+
+
+                    <small class="text-muted">
+
+                        Quantity is taken from the production plan.
+
+                    </small>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- UNIT -->
+                <!-- Auto-loaded -->
+                <!-- ================================================= -->
+
+                <div class="col-md-4">
+
+                    <label asp-for="Unit"
+                           class="form-label">
+
+                        Unit
+
+                    </label>
+
+
+                    <input asp-for="Unit"
+                           class="form-control"
+                           readonly />
+
+
+                    <span asp-validation-for="Unit"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- START DATE -->
+                <!-- User Input -->
+                <!-- ================================================= -->
+
+                <div class="col-md-4">
+
+                    <label asp-for="StartDate"
+                           class="form-label">
+
+                        Start Date
+
+                    </label>
+
+
+                    <input asp-for="StartDate"
+                           type="date"
+                           class="form-control" />
+
+
+                    <span asp-validation-for="StartDate"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- REMARKS -->
+                <!-- User Input -->
+                <!-- ================================================= -->
+
+                <div class="col-md-12">
+
+                    <label asp-for="Remarks"
+                           class="form-label">
+
+                        Remarks
+
+                    </label>
+
+
+                    <textarea asp-for="Remarks"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Optional remarks"></textarea>
+
+
+                    <span asp-validation-for="Remarks"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- INFORMATION ALERT -->
+            <!-- ================================================= -->
+
+            <div class="alert alert-info mt-4">
+
+                <i class="bi bi-info-circle me-2"></i>
+
+                <strong>
+                    Production Information
+                </strong>
+
+                <div class="mt-1">
+
+                    Product name, planned quantity, unit and
+                    production reference are automatically loaded
+                    from the selected approved material issue.
+
+                    Only the start date and remarks can be entered
+                    manually.
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- ACTION BUTTONS -->
+            <!-- ================================================= -->
+
+            <div class="mt-4">
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="bi bi-save me-1"></i>
+
+                    Create Monitoring
+
+                </button>
+
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+
+                    <i class="bi bi-x-circle me-1"></i>
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+
+    <script>
+
+        function loadMaterialIssue(materialIssueId) {
+
+            if (!materialIssueId) {
+                return;
+            }
+
+
+            window.location.href =
+                '@Url.Action(
+                                    "CreateFromMaterialIssue",
+                                    "ProductionMonitoring",
+                                    new
+                                    {
+                                            area = "Operations"
+                                    })'
+            + '?materialIssueId='
+            + materialIssueId;
+
+        }
+
+    </script>
+
+}
+

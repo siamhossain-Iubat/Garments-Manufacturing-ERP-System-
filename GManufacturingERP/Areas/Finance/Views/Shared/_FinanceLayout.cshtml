@@ -1,0 +1,367 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using GManufacturingERP.Models.Entities
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var currentName = currentUser?.FullName
+        ?? User.Identity?.Name
+        ?? "Finance User";
+
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - GManufacturing ERP
+    </title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/layout.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/dashboard.css"
+          asp-append-version="true" />
+
+</head>
+
+<body>
+
+    <div class="erp-wrapper">
+
+        <!-- Sidebar -->
+
+        <aside class="erp-sidebar" id="financeSidebar">
+
+            <div class="sidebar-brand">
+
+                <div class="brand-icon">
+                    <i class="bi bi-buildings-fill"></i>
+                </div>
+
+                <div class="brand-text">
+                    <h5>GManufacturing</h5>
+                    <span>ERP SYSTEM</span>
+                </div>
+
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+                    @currentName.Substring(0, 1).ToUpper()
+                </div>
+
+                <div class="user-info">
+
+                    <strong>@currentName</strong>
+
+                    <small>
+                        Finance & Logistics
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <nav class="sidebar-menu">
+
+                <div class="menu-section-title">
+                    MAIN MENU
+                </div>
+
+                <a asp-area="Finance"
+                   asp-controller="Dashboard"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "Dashboard" ? "active" : "")">
+
+                    <i class="bi bi-grid-1x2-fill"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+                <div class="menu-section-title">
+                    PROCUREMENT
+                </div>
+                <a asp-area="Finance"
+                   asp-controller="PurchaseRequisitionApprovals"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "PurchaseRequisitionApprovals" ? "active" : "")">
+
+                    <i class="bi bi-file-earmark-check"></i>
+
+                    <span>PR Approvals</span>
+
+                </a>
+                <a asp-area="Finance"
+                   asp-controller="PurchaseOrder"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "PurchaseOrder" ? "active" : "")">
+
+                    <i class="bi bi-cart-check"></i>
+
+                    <span>Purchase Orders</span>
+
+                </a>
+                <a asp-area="Finance"
+                   asp-controller="GoodsReceipt"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GoodsReceipt" ? "active" : "")">
+
+                    <i class="bi bi-box-arrow-in-down"></i>
+
+                    <span>Goods Receipts</span>
+
+                </a>
+
+                <a asp-area="Finance"
+                   asp-controller="Inventory"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Inventory" ? "active" : "")">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    <span>Inventory</span>
+
+                </a>
+                
+
+                <div class="menu-section-title">
+                    FINANCE
+                </div>
+
+                <a asp-area="Finance"
+                   asp-controller="Invoice"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "Invoice" ? "active" : "")">
+
+                    <i class="bi bi-receipt"></i>
+
+                    <span>Invoice</span>
+
+                </a>
+                <a asp-area="Finance"
+                   asp-controller="Payment"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "Payment" ? "active" : "")">
+
+                    <i class="bi bi-cash-stack"></i>
+
+                    <span>Payment</span>
+
+                </a>
+
+                <div class="menu-section-title">
+                    LOGISTICS
+                </div>
+                <a asp-area="Finance"
+                   asp-controller="Packing"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "Packing" ? "active" : "")">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    <span>Packing</span>
+
+                </a>
+                <a asp-area="Finance"
+                   asp-controller="Shipment"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "Shipment" ? "active" : "")">
+                    <i class="bi bi-truck"></i>
+                    <span>Shipment</span>
+                </a>
+                <a asp-area="Finance"
+                   asp-controller="Dispatch"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "Dispatch" ? "active" : "")">
+                    <i class="bi bi-truck"></i>
+                    <span>Dispatch</span>
+                </a>
+                <a asp-area="Finance"
+                   asp-controller="Delivery"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "Delivery" ? "active" : "")">
+
+                    <i class="bi bi-box2-heart"></i>
+
+                    <span>Delivery</span>
+
+                </a>
+
+
+
+                <div class="menu-section-title">
+                    SYSTEM
+                </div>
+
+                <a asp-area="Finance"
+                   asp-controller="Profile"
+                   asp-action="Index"
+                   class="menu-item @(currentController == "Profile" ? "active" : "")">
+
+                    <i class="bi bi-person-circle"></i>
+
+                    <span>My Profile</span>
+
+                </a>
+
+            </nav>
+
+            <div class="sidebar-footer">
+
+                <form asp-area=""
+                      asp-controller="Account"
+                      asp-action="Logout"
+                      method="post"
+                      class="d-inline">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-link nav-link"
+                            style="text-decoration: none;">
+
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        Logout
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+
+        <div class="erp-main">
+
+            <!-- Topbar -->
+
+            <header class="erp-topbar">
+
+                <button type="button"
+                        class="sidebar-toggle"
+                        id="sidebarToggle">
+
+                    <i class="bi bi-list"></i>
+
+                </button>
+
+                <div class="topbar-title">
+
+                    <span>Finance & Logistics Management</span>
+
+                </div>
+
+                <div class="topbar-right">
+
+                    <div class="topbar-date">
+
+                        <i class="bi bi-calendar3"></i>
+
+                        @DateTime.Now.ToString("dd MMM yyyy")
+
+                    </div>
+
+                    <div class="topbar-user">
+
+                        <div class="topbar-avatar">
+                            @currentName.Substring(0, 1).ToUpper()
+                        </div>
+
+                        <span>@currentName</span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+            <!-- Page Content -->
+
+            <main class="erp-content">
+
+                @RenderBody()
+
+            </main>
+
+            <!-- Footer -->
+
+            <footer class="erp-footer">
+
+                <span>
+                    © @DateTime.Now.Year GManufacturing ERP
+                </span>
+
+                <span>
+                    Finance & Logistics Module
+                </span>
+
+            </footer>
+
+        </div>
+
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const sidebarToggle =
+                document.getElementById("sidebarToggle");
+
+            const sidebar =
+                document.getElementById("financeSidebar");
+
+            if (sidebarToggle && sidebar) {
+
+                sidebarToggle.addEventListener("click", function () {
+
+                    sidebar.classList.toggle("show");
+
+                });
+
+            }
+
+        });
+
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

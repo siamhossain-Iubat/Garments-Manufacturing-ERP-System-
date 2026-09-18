@@ -1,0 +1,247 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.SalesOrder>
+
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "~/Areas/Buyer/Views/Shared/_BuyerLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Buyer Portal</small>
+
+        <h1>My Sales Orders</h1>
+
+        <p>
+            View and track your sales orders created from accepted quotations.
+        </p>
+
+    </div>
+
+</div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+
+        <i class="bi bi-check-circle-fill me-2"></i>
+
+        @TempData["SuccessMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+        @TempData["ErrorMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+<div class="card dashboard-card">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-cart-check-fill"></i>
+
+            Order History
+
+        </h5>
+
+        <span class="text-muted">
+
+            Sales Orders
+
+        </span>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-cart3"></i>
+
+                <h5>
+                    No Sales Orders Yet
+                </h5>
+
+                <p>
+                    Sales Orders are created after an accepted quotation.
+                </p>
+
+
+                <a asp-area="Buyer"
+                   asp-controller="Quotation"
+                   asp-action="Create"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-file-earmark-plus me-1"></i>
+
+                    Request Quotation
+
+                </a>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Order Number
+                            </th>
+
+                            <th>
+                                Product Description
+                            </th>
+
+                            <th>
+                                Quantity
+                            </th>
+
+                            <th>
+                                Delivery Date
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Submitted
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        @order.OrderNumber
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    @order.ProductDescription
+
+                                </td>
+
+
+                                <td>
+
+                                    @order.Quantity @order.Unit
+
+                                </td>
+
+
+                                <td>
+                                    @(order.CreatedAt.ToLocalTime().ToString("dd MMM yyyy"))
+                                </td>
+
+
+                                <td>
+
+                            @if (order.OrderStatus == "Approved")
+                                    {
+                                        <span class="badge bg-success">
+
+                                            <i class="bi bi-check-circle me-1"></i>
+
+                                            Approved
+
+                                        </span>
+                                    }
+                                    else if (order.OrderStatus == "Rejected")
+                                    {
+                                        <span class="badge bg-danger">
+
+                                            <i class="bi bi-x-circle me-1"></i>
+
+                                            Rejected
+
+                                        </span>
+                                    }
+                                    else if (order.OrderStatus == "Pending")
+                                    {
+                                        <span class="badge bg-warning text-dark">
+
+                                            <i class="bi bi-hourglass-split me-1"></i>
+
+                                            Pending
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+
+                                            @order.OrderStatus
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    @order.CreatedAt
+                                    .ToLocalTime()
+                                    .ToString("dd MMM yyyy")
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>

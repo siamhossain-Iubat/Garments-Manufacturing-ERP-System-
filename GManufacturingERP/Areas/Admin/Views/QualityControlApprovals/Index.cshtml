@@ -1,0 +1,330 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.QualityInspection>
+
+@{
+    ViewData["Title"] = "Quality Control Approvals";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var history =
+        ViewBag.History
+        as IEnumerable<GManufacturingERP.Models.Entities.QualityInspection>;
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Admin / Quality Control</small>
+
+        <h1>Quality Control Approvals</h1>
+
+        <p>
+            Review submitted quality inspections.
+        </p>
+
+    </div>
+
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle me-2"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        @TempData["Error"]
+    </div>
+}
+
+
+<!-- Pending Approvals -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-hourglass-split me-2"></i>
+
+            Pending QC Approvals
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Inspection No.</th>
+
+                        <th>Production Reference</th>
+
+                        <th>Product</th>
+
+                        <th>Inspected</th>
+
+                        <th>Passed</th>
+
+                        <th>Failed</th>
+
+                        <th>Result</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+
+                            <td colspan="9"
+                                class="text-center text-muted py-4">
+
+                                No pending QC approvals.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        int count = 1;
+
+                        foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>@count</td>
+
+                                <td>
+                                    <strong>
+                                        @item.InspectionNumber
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @item.ProductionReference
+                                </td>
+
+                                <td>
+                                    @item.ProductName
+                                </td>
+
+                                <td>
+                                    @item.InspectedQuantity
+                                </td>
+
+                                <td class="text-success">
+                                    @item.PassedQuantity
+                                </td>
+
+                                <td class="text-danger">
+                                    @item.FailedQuantity
+                                </td>
+
+                                <td>
+
+                                    @if (item.InspectionResult == "Passed")
+                                    {
+                                        <span class="badge bg-success">
+                                            Passed
+                                        </span>
+                                    }
+                                    else if (item.InspectionResult == "Failed")
+                                    {
+                                        <span class="badge bg-danger">
+                                            Failed
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            @item.InspectionResult
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <a asp-area="Admin"
+                                       asp-controller="QualityControlApprovals"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-primary">
+
+                                        <i class="bi bi-eye me-1"></i>
+
+                                        Review
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            count++;
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Approval History -->
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-clock-history me-2"></i>
+
+            QC Approval History
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Inspection No.</th>
+
+                        <th>Production Reference</th>
+
+                        <th>Product</th>
+
+                        <th>Result</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (history == null || !history.Any())
+                    {
+                        <tr>
+
+                            <td colspan="6"
+                                class="text-center text-muted py-4">
+
+                                No QC approval history found.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in history)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        @item.InspectionNumber
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    @item.ProductionReference
+                                </td>
+
+                                <td>
+                                    @item.ProductName
+                                </td>
+
+                                <td>
+                                    @item.InspectionResult
+                                </td>
+
+                                <td>
+
+                                    @if (item.Status == "Approved")
+                                    {
+                                        <span class="badge bg-success">
+                                            Approved
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">
+                                            Rejected
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <a asp-area="Admin"
+                                       asp-controller="QualityControlApprovals"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        Details
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

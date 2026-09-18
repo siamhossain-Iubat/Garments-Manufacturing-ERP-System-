@@ -1,0 +1,370 @@
+﻿@using GManufacturingERP.Models.Entities
+
+@{
+    ViewData["Title"] = "MRP Approvals";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+    var pendingMRPs =
+        ViewBag.PendingMRPs as List<MaterialRequirementPlan>
+        ?? new List<MaterialRequirementPlan>();
+
+    var historyMRPs =
+        ViewBag.HistoryMRPs as List<MaterialRequirementPlan>
+        ?? new List<MaterialRequirementPlan>();
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Admin / Approvals</small>
+
+        <h1>MRP Approvals</h1>
+
+        <p>
+            Review material requirement plans submitted by
+            the Operations & Production Manager.
+        </p>
+
+    </div>
+
+</div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle-fill"></i>
+
+        @TempData["SuccessMessage"]
+
+    </div>
+}
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-exclamation-triangle-fill"></i>
+
+        @TempData["ErrorMessage"]
+
+    </div>
+}
+
+
+<!-- ===================================================== -->
+<!-- PENDING MRP -->
+<!-- ===================================================== -->
+
+<div class="card dashboard-card mb-4">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-clipboard-check"></i>
+
+            Pending MRP Approvals
+
+        </h5>
+
+        <span class="text-muted">
+
+            Total: @pendingMRPs.Count
+
+        </span>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (pendingMRPs.Count == 0)
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-clipboard2-x"></i>
+
+                <h5>
+                    No Pending MRP
+                </h5>
+
+                <p>
+                    There are currently no MRP plans
+                    waiting for approval.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>MRP Number</th>
+                            <th>Production Plan</th>
+                            <th>Buyer</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Materials</th>
+                            <th>Submitted</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var mrp in pendingMRPs)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        @mrp.MRPNumber
+                                    </strong>
+
+                                </td>
+
+                                <td>
+                                    @mrp.ProductionPlan?.PlanNumber
+                                </td>
+
+                                <td>
+                                    @mrp.BuyerCompany
+                                </td>
+
+                                <td>
+                                    @mrp.ProductDescription
+                                </td>
+
+                                <td>
+                                    @mrp.PlannedQuantity Pieces
+                                </td>
+
+                                <td>
+                                    @mrp.MaterialItems.Count
+                                </td>
+
+                                <td>
+
+                                    @if (mrp.UpdatedAt.HasValue)
+                                    {
+                                        @(mrp.UpdatedAt.Value
+                                                                    .ToLocalTime()
+                                                                    .ToString("dd MMM yyyy hh:mm tt"))
+                                                        }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            -
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <a asp-area="Admin"
+                                       asp-controller="MRPApprovals"
+                                       asp-action="Details"
+                                       asp-route-id="@mrp.Id"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        <i class="bi bi-eye"></i>
+                                        Review
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- APPROVAL HISTORY -->
+<!-- ===================================================== -->
+
+<div class="card dashboard-card">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-clock-history"></i>
+
+            MRP Approval History
+
+        </h5>
+
+        <span class="text-muted">
+
+            Total: @historyMRPs.Count
+
+        </span>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (historyMRPs.Count == 0)
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-clock-history"></i>
+
+                <h5>
+                    No Approval History
+                </h5>
+
+                <p>
+                    Approved or rejected MRP records
+                    will appear here.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>MRP Number</th>
+                            <th>Production Plan</th>
+                            <th>Buyer</th>
+                            <th>Product</th>
+                            <th>Materials</th>
+                            <th>Status</th>
+                            <th>Processed</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var mrp in historyMRPs)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        @mrp.MRPNumber
+                                    </strong>
+
+                                </td>
+
+                                <td>
+                                    @mrp.ProductionPlan?.PlanNumber
+                                </td>
+
+                                <td>
+                                    @mrp.BuyerCompany
+                                </td>
+
+                                <td>
+                                    @mrp.ProductDescription
+                                </td>
+
+                                <td>
+                                    @mrp.MaterialItems.Count
+                                </td>
+
+                                <td>
+
+                                    @if (mrp.MRPStatus == "Approved")
+                                    {
+                                        <span class="badge bg-success">
+
+                                            <i class="bi bi-check-circle"></i>
+                                            Approved
+
+                                        </span>
+                                    }
+                                    else if (mrp.MRPStatus == "Rejected")
+                                    {
+                                        <span class="badge bg-danger">
+
+                                            <i class="bi bi-x-circle"></i>
+                                            Rejected
+
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    @if (mrp.UpdatedAt.HasValue)
+                                    {
+                                        @(mrp.UpdatedAt.Value
+                                                                    .ToLocalTime()
+                                                                    .ToString("dd MMM yyyy hh:mm tt"))
+                                                        }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            Not recorded
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <a asp-area="Admin"
+                                       asp-controller="MRPApprovals"
+                                       asp-action="Details"
+                                       asp-route-id="@mrp.Id"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        <i class="bi bi-eye"></i>
+                                        View
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>

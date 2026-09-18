@@ -1,0 +1,206 @@
+﻿@model GManufacturingERP.Models.Entities.ProductionPlan
+
+@{
+    ViewData["Title"] = "Production Plan Details";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+        <small>Operations Manager / Production Planning</small>
+        <h1>Production Plan Details</h1>
+        <p>View production planning information.</p>
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="Production"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Plans
+    </a>
+
+</div>
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-clipboard2-check-fill"></i>
+                    @Model.PlanNumber
+                </h5>
+
+                @if (Model.ProductionStatus == "Completed")
+                {
+                    <span class="badge bg-success">
+                        Completed
+                    </span>
+                }
+                else if (Model.ProductionStatus == "InProgress")
+                {
+                    <span class="badge bg-primary">
+                        In Progress
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">
+                        Planned
+                    </span>
+                }
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Plan Number
+                        </label>
+
+                        <div class="details-value">
+                            @Model.PlanNumber
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Sales Order
+                        </label>
+
+                        <div class="details-value">
+                            @Model.SalesOrder?.OrderNumber
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="details-label">
+                            Product Description
+                        </label>
+
+                        <div class="details-value">
+                            @Model.ProductDescription
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Buyer Company
+                        </label>
+
+                        <div class="details-value">
+                            @Model.BuyerCompany
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Planned Quantity
+                        </label>
+
+                        <div class="details-value">
+                            @Model.PlannedQuantity Pieces
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Planned Start Date
+                        </label>
+
+                        <div class="details-value">
+                            @Model.PlannedStartDate.ToString("dd MMM yyyy")
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Expected Completion Date
+                        </label>
+
+                        <div class="details-value">
+                            @Model.ExpectedCompletionDate.ToString("dd MMM yyyy")
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="details-label">
+                            Production Remarks
+                        </label>
+
+                        <div class="details-value">
+                            @(string.IsNullOrWhiteSpace(Model.ProductionRemarks)
+                                                        ? "-"
+                                                        : Model.ProductionRemarks)
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-info-circle"></i>
+                    Plan Summary
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label class="details-label">
+                        Current Status
+                    </label>
+
+                    <div class="details-value">
+                        @Model.ProductionStatus
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="details-label">
+                        Created Date
+                    </label>
+
+                    <div class="details-value">
+                        @Model.CreatedAt.ToLocalTime()
+                        .ToString("dd MMM yyyy")
+                    </div>
+                </div>
+
+                <div>
+                    <label class="details-label">
+                        Last Updated
+                    </label>
+
+                    <div class="details-value">
+                        @(Model.UpdatedAt?
+                                                .ToLocalTime()
+                                                .ToString("dd MMM yyyy") ?? "-")
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

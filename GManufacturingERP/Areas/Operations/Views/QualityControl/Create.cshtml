@@ -1,0 +1,310 @@
+﻿@model GManufacturingERP.ViewModels.CreateQualityInspectionViewModel
+
+@{
+    ViewData["Title"] = "Create Quality Inspection";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Operations / Quality Control</small>
+        <h1>Create Quality Inspection</h1>
+        <p>Record inspection results for completed production.</p>
+    </div>
+</div>
+
+<form asp-action="Create" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input asp-for="ProductionMonitoringId" type="hidden" />
+
+    <div asp-validation-summary="ModelOnly"
+         class="alert alert-danger"></div>
+
+    <!-- Automatic Production Information -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+
+            <h5 class="mb-3">
+                <i class="bi bi-box-seam"></i>
+                Production Information
+            </h5>
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Production Reference
+                    </label>
+
+                    <input value="@Model.ProductionReference"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Product Name
+                    </label>
+
+                    <input value="@Model.ProductName"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Produced Quantity
+                    </label>
+
+                    <input id="ProducedQuantity"
+                           value="@Model.ProducedQuantity"
+                           class="form-control"
+                           readonly />
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Inspection Information -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+
+            <h5 class="mb-3">
+                <i class="bi bi-clipboard-check"></i>
+                Inspection Information
+            </h5>
+
+            <div class="row g-3">
+
+                <!-- Manual: Inspected Quantity -->
+                <div class="col-md-4">
+                    <label asp-for="InspectedQuantity"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="InspectedQuantity"
+                           id="InspectedQuantity"
+                           class="form-control"
+                           min="0.01"
+                           max="@Model.ProducedQuantity"
+                           step="0.01"
+                           required />
+
+                    <small class="text-muted">
+                        Maximum:
+                        @Model.ProducedQuantity
+                    </small>
+
+                    <span asp-validation-for="InspectedQuantity"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Manual: Passed Quantity -->
+                <div class="col-md-4">
+                    <label asp-for="PassedQuantity"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="PassedQuantity"
+                           id="PassedQuantity"
+                           class="form-control"
+                           min="0"
+                           step="0.01"
+                           required />
+
+                    <small class="text-muted">
+                        Must not exceed inspected quantity
+                    </small>
+
+                    <span asp-validation-for="PassedQuantity"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Automatic: Failed Quantity -->
+                <div class="col-md-4">
+                    <label asp-for="FailedQuantity"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="FailedQuantity"
+                           id="FailedQuantity"
+                           class="form-control"
+                           readonly />
+
+                    <small class="text-muted">
+                        Failed = Inspected − Passed
+                    </small>
+
+                    <span asp-validation-for="FailedQuantity"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Manual: Defect Description -->
+                <div class="col-md-12">
+                    <label asp-for="DefectDescription"
+                           class="form-label">
+                    </label>
+
+                    <textarea asp-for="DefectDescription"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Describe defects found during inspection..."></textarea>
+
+                    <span asp-validation-for="DefectDescription"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Manual: Remarks -->
+                <div class="col-md-12">
+                    <label asp-for="Remarks"
+                           class="form-label">
+                    </label>
+
+                    <textarea asp-for="Remarks"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Additional remarks..."></textarea>
+
+                    <span asp-validation-for="Remarks"
+                          class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <!-- Live Summary -->
+            <div class="alert alert-info mt-4 mb-0">
+                <div class="row text-center">
+
+                    <div class="col-md-4">
+                        <strong>Inspected</strong>
+                        <div id="summaryInspected">0</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Passed</strong>
+                        <div id="summaryPassed">0</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <strong>Failed</strong>
+                        <div id="summaryFailed">0</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="mt-4">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    <i class="bi bi-save"></i>
+                    Create Inspection
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const inspectedInput =
+                document.getElementById("InspectedQuantity");
+
+            const passedInput =
+                document.getElementById("PassedQuantity");
+
+            const failedInput =
+                document.getElementById("FailedQuantity");
+
+            const producedInput =
+                document.getElementById("ProducedQuantity");
+
+            const summaryInspected =
+                document.getElementById("summaryInspected");
+
+            const summaryPassed =
+                document.getElementById("summaryPassed");
+
+            const summaryFailed =
+                document.getElementById("summaryFailed");
+
+            function calculateFailedQuantity() {
+
+                let inspected =
+                    parseFloat(inspectedInput.value) || 0;
+
+                let passed =
+                    parseFloat(passedInput.value) || 0;
+
+                let produced =
+                    parseFloat(producedInput.value) || 0;
+
+                // Inspected cannot exceed Produced
+                if (inspected > produced) {
+                    inspected = produced;
+                    inspectedInput.value = produced;
+                }
+
+                // Passed cannot exceed Inspected
+                if (passed > inspected) {
+                    passed = inspected;
+                    passedInput.value = inspected;
+                }
+
+                if (passed < 0) {
+                    passed = 0;
+                    passedInput.value = 0;
+                }
+
+                let failed = inspected - passed;
+
+                if (failed < 0) {
+                    failed = 0;
+                }
+
+                // Set automatic failed quantity
+                failedInput.value = failed.toFixed(2);
+
+                // Update live summary
+                summaryInspected.textContent =
+                    inspected.toFixed(2);
+
+                summaryPassed.textContent =
+                    passed.toFixed(2);
+
+                summaryFailed.textContent =
+                    failed.toFixed(2);
+            }
+
+            inspectedInput.addEventListener(
+                "input",
+                calculateFailedQuantity
+            );
+
+            passedInput.addEventListener(
+                "input",
+                calculateFailedQuantity
+            );
+
+            calculateFailedQuantity();
+
+        });
+    </script>
+}

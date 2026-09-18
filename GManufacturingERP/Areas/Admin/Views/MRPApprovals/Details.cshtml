@@ -1,0 +1,567 @@
+﻿@model GManufacturingERP.Models.Entities.MaterialRequirementPlan
+
+@{
+    ViewData["Title"] = "Review MRP";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Admin / MRP Approval</small>
+
+        <h1>Review MRP</h1>
+
+        <p>
+            Review required materials before approving
+            the material requirement plan.
+        </p>
+
+    </div>
+
+    <a asp-area="Admin"
+       asp-controller="MRPApprovals"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+
+        <i class="bi bi-arrow-left"></i>
+        Back
+
+    </a>
+
+</div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle-fill"></i>
+
+        @TempData["SuccessMessage"]
+
+    </div>
+}
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-exclamation-triangle-fill"></i>
+
+        @TempData["ErrorMessage"]
+
+    </div>
+}
+
+
+<!-- ===================================================== -->
+<!-- MRP INFORMATION -->
+<!-- ===================================================== -->
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-box-seam-fill"></i>
+
+                    @Model.MRPNumber
+
+                </h5>
+
+
+                @if (Model.MRPStatus == "Submitted")
+                {
+                    <span class="badge bg-info text-dark">
+                        Submitted
+                    </span>
+                }
+                else if (Model.MRPStatus == "Approved")
+                {
+                    <span class="badge bg-success">
+                        Approved
+                    </span>
+                }
+                else if (Model.MRPStatus == "Rejected")
+                {
+                    <span class="badge bg-danger">
+                        Rejected
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">
+                        @Model.MRPStatus
+                    </span>
+                }
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label class="details-label">
+                            MRP Number
+                        </label>
+
+                        <div class="details-value">
+                            @Model.MRPNumber
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="details-label">
+                            Production Plan
+                        </label>
+
+                        <div class="details-value">
+                            @Model.ProductionPlan?.PlanNumber
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="details-label">
+                            Buyer Company
+                        </label>
+
+                        <div class="details-value">
+                            @Model.BuyerCompany
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="details-label">
+                            Planned Quantity
+                        </label>
+
+                        <div class="details-value">
+                            @Model.PlannedQuantity Pieces
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="details-label">
+                            Product Description
+                        </label>
+
+                        <div class="details-value">
+                            @Model.ProductDescription
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label class="details-label">
+                            Remarks
+                        </label>
+
+                        <div class="details-value">
+
+                            @(string.IsNullOrWhiteSpace(Model.Remarks)
+                                                        ? "-"
+                                                        : Model.Remarks)
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-calculator"></i>
+
+                    MRP Summary
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="mb-3">
+
+                    <label class="details-label">
+                        Total Materials
+                    </label>
+
+                    <div class="details-value">
+                        @Model.MaterialItems.Count
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <label class="details-label">
+                        Status
+                    </label>
+
+                    <div class="details-value">
+                        @Model.MRPStatus
+                    </div>
+
+                </div>
+
+
+                @if (Model.UpdatedAt.HasValue)
+                {
+                    <div class="mt-3">
+
+                        <label class="details-label">
+                            Last Updated
+                        </label>
+
+                        <div class="details-value">
+
+                            @(Model.UpdatedAt.Value
+                                                    .ToLocalTime()
+                                                    .ToString("dd MMM yyyy hh:mm tt"))
+
+                    </div>
+
+                    </div>
+                                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- REQUIRED MATERIALS -->
+<!-- ===================================================== -->
+
+<div class="card dashboard-card mt-4">
+
+    <div class="card-header">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-list-check"></i>
+
+            Required Materials
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (Model.MaterialItems.Count == 0)
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-box-seam"></i>
+
+                <h5>
+                    No Materials
+                </h5>
+
+                <p>
+                    No material requirements have been added.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Material</th>
+                            <th>Category</th>
+                            <th>Unit</th>
+                            <th>Per Piece</th>
+                            <th>Wastage</th>
+                            <th>Required Quantity</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var item in Model.MaterialItems)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        @item.MaterialName
+                                    </strong>
+
+                                </td>
+
+                                <td>
+                                    @item.MaterialCategory
+                                </td>
+
+                                <td>
+                                    @item.Unit
+                                </td>
+
+                                <td>
+                                    @item.QuantityPerPiece
+                                </td>
+
+                                <td>
+                                    @item.WastagePercentage%
+                                </td>
+
+                                <td>
+
+                                    <strong>
+                                        @item.RequiredQuantity
+                                        @item.Unit
+                                    </strong>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- APPROVAL ACTIONS -->
+<!-- ===================================================== -->
+@if (Model.MRPStatus == "Submitted")
+{
+    <div class="card dashboard-card mt-4">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-shield-check"></i>
+
+                Admin Decision
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <!-- APPROVE -->
+
+                <div class="col-md-6">
+
+                    <div class="border rounded p-4 h-100">
+
+                        <h5>
+
+                            <i class="bi bi-check-circle-fill text-success"></i>
+
+                            Approve MRP
+
+                        </h5>
+
+                        <p class="text-muted">
+
+                            Approving this MRP will make it available
+                            for the Purchase Requisition process.
+
+                        </p>
+
+
+                        <form asp-area="Admin"
+                              asp-controller="MRPApprovals"
+                              asp-action="Approve"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.Id" />
+
+                            <button type="submit"
+                                    class="btn btn-success w-100"
+                                    onclick="return confirm('Are you sure you want to approve this MRP?');">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                Approve MRP
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REJECT -->
+
+                <div class="col-md-6">
+
+                    <div class="border rounded p-4 h-100">
+
+                        <h5>
+
+                            <i class="bi bi-x-circle-fill text-danger"></i>
+
+                            Reject MRP
+
+                        </h5>
+
+
+                        <form asp-area="Admin"
+                              asp-controller="MRPApprovals"
+                              asp-action="Reject"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.Id" />
+
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Rejection Reason
+                                </label>
+
+                                <textarea name="rejectionReason"
+                                      class="form-control"
+                                      rows="3"
+                                      placeholder="Enter rejection reason..."></textarea>
+
+                            </div>
+
+
+                            <button type="submit"
+                                    class="btn btn-danger w-100"
+                                    onclick="return confirm('Are you sure you want to reject this MRP?');">
+
+                                <i class="bi bi-x-circle-fill"></i>
+
+                                Reject MRP
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+else
+{
+    <div class="card dashboard-card mt-4">
+
+        <div class="card-body">
+
+            @if (Model.MRPStatus == "Approved")
+            {
+                <div class="alert alert-success mb-0">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                    This MRP has already been approved.
+
+                </div>
+            }
+            else if (Model.MRPStatus == "Rejected")
+            {
+                <div class="alert alert-danger mb-0">
+
+                    <i class="bi bi-x-circle-fill"></i>
+
+                    This MRP has already been rejected.
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+
+                    This MRP is not currently waiting
+                    for Admin approval.
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+}

@@ -1,0 +1,168 @@
+﻿@model GManufacturingERP.Models.Entities.MaterialIssue
+
+@{
+    ViewData["Title"] = "Material Issue Details";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <small>Operations / Material Issue / Details</small>
+        <h1>@Model.IssueNumber</h1>
+        <p>Material issue request details.</p>
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+        Back to List
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-3">
+                <small class="text-muted">Issue Number</small>
+                <h6>@Model.IssueNumber</h6>
+            </div>
+
+            <div class="col-md-3">
+                <small class="text-muted">Production Reference</small>
+                <h6>@Model.ProductionReference</h6>
+            </div>
+
+            <div class="col-md-3">
+                <small class="text-muted">Issue Date</small>
+                <h6>
+                    @(Model.IssueDate.ToLocalTime()
+                    .ToString("dd MMM yyyy HH:mm"))
+                </h6>
+            </div>
+
+            <div class="col-md-3">
+                <small class="text-muted">Status</small>
+                <h6>
+                    <span class="badge
+                        @(Model.Status == "Approved"
+                                                      ? "bg-success"
+                                                      : Model.Status == "Submitted"
+                                                          ? "bg-warning text-dark"
+                                                          : "bg-secondary")">
+                        @Model.Status
+                    </span>
+                </h6>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+
+        <h5 class="mb-3">Material Items</h5>
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Category</th>
+                        <th>Unit</th>
+                        <th>Requested Quantity</th>
+                        <th>Issued Quantity</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.MaterialName</td>
+                            <td>@item.MaterialCategory</td>
+                            <td>@item.Unit</td>
+                            <td>@item.RequestedQuantity</td>
+                            <td>@item.IssuedQuantity</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Remarks))
+        {
+            <div class="mt-3">
+                <strong>Remarks:</strong>
+                <p>@Model.Remarks</p>
+            </div>
+        }
+
+        <div class="mt-4">
+
+            @if (Model.Status == "Draft")
+            {
+                <form asp-action="Submit"
+                      asp-route-id="@Model.Id"
+                      method="post"
+                      class="d-inline">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-primary"
+                            onclick="return confirm('Submit this material issue?');">
+                        <i class="bi bi-send"></i>
+                        Submit Issue
+                    </button>
+                </form>
+            }
+
+            @if (Model.Status == "Submitted")
+            {
+                <form asp-action="Approve"
+                      asp-route-id="@Model.Id"
+                      method="post"
+                      class="d-inline">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-success"
+                            onclick="return confirm('Approve this issue and reduce inventory stock?');">
+                        <i class="bi bi-check-circle"></i>
+                        Approve Issue
+                    </button>
+                </form>
+            }
+
+            @if (Model.Status == "Approved")
+            {
+                <span class="badge bg-success p-2">
+                    <i class="bi bi-check-circle"></i>
+                    Stock Issued Successfully
+                </span>
+            }
+
+        </div>
+
+    </div>
+</div>

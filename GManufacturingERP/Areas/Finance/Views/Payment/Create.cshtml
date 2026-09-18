@@ -1,0 +1,250 @@
+﻿@model GManufacturingERP.ViewModels.CreatePaymentViewModel
+
+@{
+    ViewData["Title"] = "Make Payment";
+    Layout = "~/Areas/Buyer/Views/Shared/_BuyerLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-credit-card me-2"></i>
+                Make Payment
+            </h2>
+
+            <p class="text-muted mb-0">
+                Complete your invoice payment securely.
+            </p>
+        </div>
+
+        <a asp-area="Buyer"
+           asp-controller="Invoice"
+           asp-action="Details"
+           asp-route-id="@Model.InvoiceId"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Invoice
+
+        </a>
+
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-4">
+                        Invoice Payment
+                    </h5>
+
+                    <form asp-area="Finance"
+                          asp-controller="Payment"
+                          asp-action="Create"
+                          method="post"
+                          id="paymentForm">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="All"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <!-- Invoice -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Invoice Number
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="@Model.InvoiceNumber"
+                                   readonly />
+
+                        </div>
+
+                        <!-- Buyer -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Buyer
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="@Model.BuyerName"
+                                   readonly />
+
+                        </div>
+
+                        <!-- Grand Total -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Grand Total
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="৳ @Model.GrandTotal.ToString("N2")"
+                                   readonly />
+
+                        </div>
+
+                        <!-- Paid -->
+
+                        <div class="mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Already Paid
+                            </label>
+
+                            <input type="text"
+                                   class="form-control text-success"
+                                   value="৳ @Model.PaidAmount.ToString("N2")"
+                                   readonly />
+
+                        </div>
+
+                        <!-- Due -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Amount Due
+                            </label>
+
+                            <input type="text"
+                                   class="form-control text-danger fw-bold"
+                                   value="৳ @Model.DueAmount.ToString("N2")"
+                                   readonly />
+
+                        </div>
+
+                        <!-- Amount -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="Amount"
+                                   class="form-label fw-semibold">
+                                Payment Amount
+                            </label>
+
+                            <input asp-for="Amount"
+                                   class="form-control"
+                                   value="@Model.DueAmount.ToString("0.00")"
+                                   readonly />
+
+                            <div class="form-text">
+                                The full outstanding amount will be paid.
+                            </div>
+
+                            <span asp-validation-for="Amount"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <!-- Payment Method -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+                                Payment Method
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="SSLCommerz"
+                                   readonly />
+
+                        </div>
+
+                        <!-- Remarks -->
+
+                        <div class="mb-4">
+
+                            <label asp-for="Remarks"
+                                   class="form-label">
+                                Remarks
+                            </label>
+
+                            <textarea asp-for="Remarks"
+                                      class="form-control"
+                                      rows="3"
+                                      placeholder="Optional remarks">
+                            </textarea>
+
+                            <span asp-validation-for="Remarks"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <!-- Hidden -->
+
+                        <input asp-for="InvoiceId"
+                               type="hidden" />
+
+                        <input asp-for="InvoiceNumber"
+                               type="hidden" />
+
+                        <input asp-for="BuyerName"
+                               type="hidden" />
+
+                        <input asp-for="GrandTotal"
+                               type="hidden" />
+
+                        <input asp-for="PaidAmount"
+                               type="hidden" />
+
+                        <input asp-for="DueAmount"
+                               type="hidden" />
+
+                        <input asp-for="Currency"
+                               type="hidden" />
+
+                        <input asp-for="PaymentMethod"
+                               type="hidden" />
+
+                        <!-- Submit -->
+
+                        <div class="d-grid">
+
+                            <button type="submit"
+                                    class="btn btn-success btn-lg">
+
+                                <i class="bi bi-credit-card me-2"></i>
+                                Proceed to SSLCommerz
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

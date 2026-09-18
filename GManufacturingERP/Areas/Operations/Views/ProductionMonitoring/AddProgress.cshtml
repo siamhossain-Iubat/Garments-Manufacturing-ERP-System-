@@ -1,0 +1,339 @@
+﻿@model GManufacturingERP.ViewModels.CreateProductionProgressViewModel
+
+@{
+    ViewData["Title"] = "Add Production Progress";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Operations / Production / Progress</small>
+        <h1>Add Production Progress</h1>
+        <p>Record today's production output.</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-3">
+                <small class="text-muted">
+                    Production Reference
+                </small>
+                <h6>@Model.ProductionReference</h6>
+            </div>
+
+            <div class="col-md-3">
+                <small class="text-muted">
+                    Product
+                </small>
+                <h6>@Model.ProductName</h6>
+            </div>
+
+            <div class="col-md-3">
+                <small class="text-muted">
+                    Planned Quantity
+                </small>
+                <h6>
+                    @Model.PlannedQuantity
+                </h6>
+            </div>
+
+            <div class="col-md-3">
+                <small class="text-muted">
+                    Remaining Good Quantity
+                </small>
+                <h6>
+                    @Model.RemainingQuantity
+                </h6>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<form asp-action="AddProgress" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input asp-for="ProductionMonitoringId"
+           type="hidden" />
+
+    <div asp-validation-summary="ModelOnly"
+         class="alert alert-danger"></div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <!-- Today's Produced Quantity -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="TodayProducedQuantity"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="TodayProducedQuantity"
+                           id="TodayProducedQuantity"
+                           class="form-control"
+                           min="0.01"
+                           step="0.01" />
+
+                    <small class="text-muted">
+                        Total quantity produced today,
+                        including rejected pieces.
+                    </small>
+
+                    <span asp-validation-for="TodayProducedQuantity"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Today's Rejected Quantity -->
+
+                <div class="col-md-6">
+
+                    <label asp-for="TodayRejectedQuantity"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="TodayRejectedQuantity"
+                           id="TodayRejectedQuantity"
+                           class="form-control"
+                           min="0"
+                           step="0.01" />
+
+                    <small class="text-muted">
+                        Quantity rejected from today's production.
+                    </small>
+
+                    <span asp-validation-for="TodayRejectedQuantity"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Today's Good Quantity -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Today's Good Quantity
+                    </label>
+
+                    <input id="TodayGoodQuantity"
+                           class="form-control"
+                           readonly />
+
+                    <small class="text-muted">
+                        Good Quantity = Produced − Rejected
+                    </small>
+
+                </div>
+
+
+                <!-- Expected Remaining -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Expected Remaining Quantity
+                    </label>
+
+                    <input id="ExpectedRemainingQuantity"
+                           class="form-control"
+                           readonly />
+
+                    <small class="text-muted">
+                        Remaining required good quantity after today's production.
+                    </small>
+
+                </div>
+
+
+                <!-- Remarks -->
+
+                <div class="col-md-12">
+
+                    <label asp-for="Remarks"
+                           class="form-label">
+                    </label>
+
+                    <textarea asp-for="Remarks"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Optional remarks">
+                    </textarea>
+
+                    <span asp-validation-for="Remarks"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Explanation -->
+
+            <div class="alert alert-info mt-4">
+
+                <strong>Production Calculation:</strong>
+
+                <div class="mt-2">
+
+                    Good Quantity =
+                    Produced Quantity − Rejected Quantity
+
+                    <br />
+
+                    Remaining Quantity =
+                    Planned Quantity − Total Good Quantity
+
+                </div>
+
+            </div>
+
+
+            <div class="mt-4">
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Save Progress
+
+                </button>
+
+
+                <a asp-action="Details"
+                   asp-route-id="@Model.ProductionMonitoringId"
+                   class="btn btn-outline-secondary">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const producedInput =
+                document.getElementById(
+                    "TodayProducedQuantity"
+                );
+
+            const rejectedInput =
+                document.getElementById(
+                    "TodayRejectedQuantity"
+                );
+
+            const goodInput =
+                document.getElementById(
+                    "TodayGoodQuantity"
+                );
+
+            const remainingInput =
+                document.getElementById(
+                    "ExpectedRemainingQuantity"
+                );
+
+            const currentRemaining =
+                parseFloat(
+                    "@Model.RemainingQuantity"
+                ) || 0;
+
+
+            function calculateProduction() {
+
+                let produced =
+                    parseFloat(
+                        producedInput.value
+                    ) || 0;
+
+                let rejected =
+                    parseFloat(
+                        rejectedInput.value
+                    ) || 0;
+
+
+                // Rejected cannot exceed produced
+                if (rejected > produced) {
+
+                    rejected = produced;
+
+                    rejectedInput.value =
+                        rejected.toFixed(2);
+                }
+
+
+                // Calculate today's good quantity
+                let good =
+                    produced - rejected;
+
+
+                if (good < 0) {
+                    good = 0;
+                }
+
+
+                // Calculate expected remaining
+                let remaining =
+                    currentRemaining - good;
+
+
+                if (remaining < 0) {
+                    remaining = 0;
+                }
+
+
+                goodInput.value =
+                    good.toFixed(2);
+
+                remainingInput.value =
+                    remaining.toFixed(2);
+            }
+
+
+            producedInput.addEventListener(
+                "input",
+                calculateProduction
+            );
+
+            rejectedInput.addEventListener(
+                "input",
+                calculateProduction
+            );
+
+
+            calculateProduction();
+
+        });
+
+    </script>
+}

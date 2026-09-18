@@ -1,0 +1,394 @@
+﻿@model GManufacturingERP.ViewModels.RegisterViewModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Buyer Registration";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Buyer Registration | G-MANUFACTURING ERP</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/auth.css"
+          asp-append-version="true" />
+
+    <style>
+        .register-form-container {
+            max-width: 650px;
+        }
+
+        .register-heading {
+            margin-bottom: 28px;
+        }
+
+        .register-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+            .register-grid .full-width {
+                grid-column: 1 / -1;
+            }
+
+            .register-grid .form-group {
+                margin-bottom: 0;
+            }
+
+        .register-form .form-control {
+            height: 50px;
+        }
+
+        .terms-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 24px 0;
+            color: #667085;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+            .terms-row input {
+                width: 16px;
+                height: 16px;
+                margin-top: 2px;
+                accent-color: #2563eb;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+
+            .terms-row label {
+                cursor: pointer;
+            }
+
+            .terms-row a {
+                color: #2563eb;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+        .register-button {
+            margin-top: 5px;
+        }
+
+        .back-login {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+            color: #8a94a6;
+            font-size: 12px;
+        }
+
+            .back-login a {
+                margin-left: 5px;
+                color: #2563eb;
+                font-weight: 700;
+                text-decoration: none;
+            }
+
+        @@media (max-width: 650px) {
+            .register-grid
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        .register-grid .full-width {
+            grid-column: auto;
+        }
+
+        }
+    </style>
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-wrapper">
+
+        <!-- Left Branding Section -->
+        <section class="auth-visual">
+
+            <div class="visual-overlay"></div>
+
+            <div class="brand-content">
+
+                <div class="brand-logo">
+                    <span class="brand-icon">
+                        <i class="bi bi-buildings-fill"></i>
+                    </span>
+
+                    <span>G-MANUFACTURING</span>
+                </div>
+
+                <p class="brand-subtitle">
+                    ENTERPRISE RESOURCE PLANNING
+                </p>
+
+                <div class="visual-message">
+                    <span class="message-line"></span>
+
+                    <h1>
+                        Build better<br />
+                        business connections.
+                    </h1>
+
+                    <p>
+                        Join our manufacturing network and manage
+                        your orders, shipments and payments in one place.
+                    </p>
+                </div>
+
+                <div class="visual-features">
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Submit Manufacturing Orders
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Track Production & Shipment
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Access Invoices & Payments
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="visual-footer">
+                © 2026 G-MANUFACTURING ERP
+            </div>
+
+        </section>
+
+        <!-- Registration Form -->
+        <section class="auth-form-section">
+
+            <div class="auth-form-container register-form-container">
+
+                <div class="mobile-brand">
+                    <span class="brand-icon">
+                        <i class="bi bi-buildings-fill"></i>
+                    </span>
+
+                    <span>G-MANUFACTURING</span>
+                </div>
+
+                <div class="form-heading register-heading">
+                    <span class="eyebrow">BUYER REGISTRATION</span>
+
+                    <h2>Create your buyer account</h2>
+
+                    <p>
+                        Register your company to place and manage orders.
+                    </p>
+                </div>
+
+                <form asp-action="Register"
+                      asp-controller="Account"
+                      method="post"
+                      class="login-form register-form">
+
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="validation-summary"></div>
+
+                    <div class="register-grid">
+
+                        <div class="form-group">
+                            <label asp-for="CompanyName"></label>
+
+                            <div class="input-wrapper">
+                                <i class="bi bi-building"></i>
+
+                                <input asp-for="CompanyName"
+                                       class="form-control"
+                                       placeholder="Company name" />
+                            </div>
+
+                            <span asp-validation-for="CompanyName"
+                                  class="field-validation"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="FullName"></label>
+
+                            <div class="input-wrapper">
+                                <i class="bi bi-person"></i>
+
+                                <input asp-for="FullName"
+                                       class="form-control"
+                                       placeholder="Contact person" />
+                            </div>
+
+                            <span asp-validation-for="FullName"
+                                  class="field-validation"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+
+                            <div class="input-wrapper">
+                                <i class="bi bi-envelope"></i>
+
+                                <input asp-for="Email"
+                                       class="form-control"
+                                       placeholder="Business email" />
+                            </div>
+
+                            <span asp-validation-for="Email"
+                                  class="field-validation"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="PhoneNumber"></label>
+
+                            <div class="input-wrapper">
+                                <i class="bi bi-telephone"></i>
+
+                                <input asp-for="PhoneNumber"
+                                       class="form-control"
+                                       placeholder="Phone number" />
+                            </div>
+
+                            <span asp-validation-for="PhoneNumber"
+                                  class="field-validation"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Country"></label>
+
+                            <div class="input-wrapper">
+                                <i class="bi bi-globe2"></i>
+
+                                <input asp-for="Country"
+                                       class="form-control"
+                                       placeholder="Country" />
+                            </div>
+
+                            <span asp-validation-for="Country"
+                                  class="field-validation"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CompanyAddress"></label>
+
+                            <div class="input-wrapper">
+                                <i class="bi bi-geo-alt"></i>
+
+                                <input asp-for="CompanyAddress"
+                                       class="form-control"
+                                       placeholder="Company address" />
+                            </div>
+
+                            <span asp-validation-for="CompanyAddress"
+                                  class="field-validation"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Password"></label>
+
+                            <div class="input-wrapper">
+                                <i class="bi bi-lock"></i>
+
+                                <input asp-for="Password"
+                                       class="form-control"
+                                       placeholder="Create password" />
+                            </div>
+
+                            <span asp-validation-for="Password"
+                                  class="field-validation"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword"></label>
+
+                            <div class="input-wrapper">
+                                <i class="bi bi-shield-lock"></i>
+
+                                <input asp-for="ConfirmPassword"
+                                       class="form-control"
+                                       placeholder="Confirm password" />
+                            </div>
+
+                            <span asp-validation-for="ConfirmPassword"
+                                  class="field-validation"></span>
+                        </div>
+
+                        <div class="full-width">
+
+                            <div class="terms-row">
+                                <input asp-for="AcceptTerms"
+                                       type="checkbox"
+                                       id="AcceptTerms"
+                                       class="form-check-input"
+                                       data-val="false" />
+
+                                <label for="AcceptTerms">
+                                    I agree to the
+                                    <a href="#" target="_blank">
+                                        terms and conditions
+                                    </a>
+                                    of G-MANUFACTURING ERP.
+                                </label>
+                            </div>
+
+                            <span asp-validation-for="AcceptTerms"
+                                  class="field-validation"></span>
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn-signin register-button">
+
+                        <span>Submit Registration</span>
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+                <div class="back-login">
+                    <span>Already have an account?</span>
+
+                    <a asp-action="Login"
+                       asp-controller="Account">
+                        Sign in
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,407 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.Quotation>
+
+@{
+    ViewData["Title"] = "Quotation Management";
+    Layout = "~/Areas/Sales/Views/Shared/_SalesLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Sales & Buyer Manager</small>
+
+        <h1>Quotation Management</h1>
+
+        <p>
+            Review buyer quotation requests and manage quotation workflow.
+        </p>
+
+    </div>
+
+    <a asp-area="Sales"
+       asp-controller="Dashboard"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Dashboard
+
+    </a>
+
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+
+        <i class="bi bi-check-circle-fill me-2"></i>
+
+        @TempData["Success"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+        @TempData["Error"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+<!-- Summary -->
+
+<div class="row g-4 mb-4">
+
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon blue">
+
+                <i class="bi bi-file-earmark-text-fill"></i>
+
+            </div>
+
+            <div class="summary-content">
+
+                <span>Total</span>
+
+                <h3>
+                    @Model.Count()
+                </h3>
+
+                <small>
+                    All quotations
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon yellow">
+
+                <i class="bi bi-hourglass-split"></i>
+
+            </div>
+
+            <div class="summary-content">
+
+                <span>Requests</span>
+
+                <h3>
+                    @Model.Count(x => x.Status == "Requested")
+                </h3>
+
+                <small>
+                    Awaiting review
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon green">
+
+                <i class="bi bi-send-fill"></i>
+
+            </div>
+
+            <div class="summary-content">
+
+                <span>Sent</span>
+
+                <h3>
+                    @Model.Count(x => x.Status == "Sent")
+                </h3>
+
+                <small>
+                    Waiting for buyer
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon blue">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+            </div>
+
+            <div class="summary-content">
+
+                <span>Accepted</span>
+
+                <h3>
+                    @Model.Count(x =>
+                    x.Status == "Accepted" ||
+                    x.Status == "Converted")
+                </h3>
+
+                <small>
+                    Accepted quotations
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card dashboard-card">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-file-earmark-text-fill"></i>
+
+            All Quotations
+
+        </h5>
+
+        <span class="text-muted">
+            Total: @Model.Count()
+        </span>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+                <h5>No Quotation Requests</h5>
+
+                <p>
+                    Buyer quotation requests will appear here.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Quotation No.</th>
+
+                            <th>Buyer Company</th>
+
+                            <th>Product</th>
+
+                            <th>Qty</th>
+
+                            <th>Total</th>
+
+                            <th>Status</th>
+
+                            <th>Date</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var quotation in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        @quotation.QuotationNumber
+                                    </strong>
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+                                        @quotation.CompanyName
+                                    </strong>
+
+                                    <br />
+
+                                    <small class="text-muted">
+                                        @quotation.ContactPerson
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+                                    @quotation.ProductDescription
+                                </td>
+
+
+                                <td>
+                                    @quotation.Quantity
+                                    @quotation.Unit
+                                </td>
+
+
+                                <td>
+
+                                    @if (quotation.GrandTotal > 0)
+                                    {
+                                        @quotation.GrandTotal.ToString("N2")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            -
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    @if (quotation.Status == "Requested")
+                                    {
+                                        <span class="badge bg-secondary">
+                                            Requested
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Under Review")
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            Under Review
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Prepared")
+                                    {
+                                        <span class="badge bg-info text-dark">
+                                            Prepared
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Sent")
+                                    {
+                                        <span class="badge bg-primary">
+                                            Sent
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Accepted")
+                                    {
+                                        <span class="badge bg-success">
+                                            Accepted
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Rejected")
+                                    {
+                                        <span class="badge bg-danger">
+                                            Rejected
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Converted")
+                                    {
+                                        <span class="badge bg-success">
+                                            Converted
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Cancelled")
+                                    {
+                                        <span class="badge bg-dark">
+                                            Cancelled
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @quotation.Status
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+                                    @(quotation.CreatedAt.ToLocalTime().ToString("dd MMM yyyy"))
+                                </td>
+
+
+                                <td>
+
+                                    <a asp-area="Sales"
+                                       asp-controller="Quotation"
+                                       asp-action="Details"
+                                       asp-route-id="@quotation.Id"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        <i class="bi bi-eye"></i>
+                                        Review
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>

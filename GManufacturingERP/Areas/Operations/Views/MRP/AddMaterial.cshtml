@@ -1,0 +1,390 @@
+﻿@model GManufacturingERP.ViewModels.AddMaterialRequirementViewModel
+
+@{
+    ViewData["Title"] = "Add Material";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+
+    <div>
+        <small>Operations Manager / MRP</small>
+
+        <h1>
+            Add Material Requirement
+        </h1>
+
+        <p>
+            Add raw materials required for this production plan.
+        </p>
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="MRP"
+       asp-action="Details"
+       asp-route-id="@Model.MaterialRequirementPlanId"
+       class="btn btn-outline-primary">
+
+        <i class="bi bi-arrow-left"></i>
+        Back to MRP
+
+    </a>
+
+</div>
+
+
+<!-- Main Card -->
+<div class="card dashboard-card">
+
+    <!-- Card Header -->
+    <div class="card-header">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-box-seam"></i>
+
+            Add Material
+
+        </h5>
+
+    </div>
+
+
+    <!-- Card Body -->
+    <div class="card-body">
+
+        <!-- MRP Information -->
+        <div class="alert alert-info mb-4">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <strong>
+                        <i class="bi bi-file-earmark-text"></i>
+                        MRP Number:
+                    </strong>
+
+                    <span>
+                        @ViewBag.MRPNumber
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <strong>
+                        <i class="bi bi-boxes"></i>
+                        Planned Quantity:
+                    </strong>
+
+                    <span>
+                        @ViewBag.PlannedQuantity Pieces
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Add Material Form -->
+        <form asp-area="Operations"
+              asp-controller="MRP"
+              asp-action="AddMaterial"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+
+            <!-- Hidden MRP ID -->
+            <input asp-for="MaterialRequirementPlanId"
+                   type="hidden" />
+
+
+            <!-- Validation Summary -->
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger">
+            </div>
+
+
+            <div class="row g-4">
+
+
+                <!-- Material Name -->
+                <div class="col-md-6">
+
+                    <label asp-for="MaterialName"
+                           class="form-label">
+
+                        Material Name
+
+                    </label>
+
+                    <input asp-for="MaterialName"
+                           class="form-control"
+                           placeholder="Example: Cotton Fabric"
+                           autocomplete="off" />
+
+                    <span asp-validation-for="MaterialName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Material Category -->
+                <div class="col-md-6">
+
+                    <label asp-for="MaterialCategory"
+                           class="form-label">
+
+                        Material Category
+
+                    </label>
+
+                    <select asp-for="MaterialCategory"
+                            class="form-select">
+
+                        <option value="">
+                            Select Category
+                        </option>
+
+                        <option value="Fabric">
+                            Fabric
+                        </option>
+
+                        <option value="Trims">
+                            Trims
+                        </option>
+
+                        <option value="Accessories">
+                            Accessories
+                        </option>
+
+                        <option value="Packaging">
+                            Packaging
+                        </option>
+
+                        <option value="Chemical">
+                            Chemical
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="MaterialCategory"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Unit -->
+                <div class="col-md-4">
+
+                    <label asp-for="Unit"
+                           class="form-label">
+
+                        Unit
+
+                    </label>
+
+                    <select asp-for="Unit"
+                            class="form-select">
+
+                        <option value="">
+                            Select Unit
+                        </option>
+
+                        <option value="KG">
+                            KG
+                        </option>
+
+                        <option value="Meter">
+                            Meter
+                        </option>
+
+                        <option value="Piece">
+                            Piece
+                        </option>
+
+                        <option value="Box">
+                            Box
+                        </option>
+
+                        <option value="Liter">
+                            Liter
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="Unit"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Quantity Per Piece -->
+                <div class="col-md-4">
+
+                    <label asp-for="QuantityPerPiece"
+                           class="form-label">
+
+                        Quantity Per Piece
+
+                    </label>
+
+                    <input asp-for="QuantityPerPiece"
+                           type="number"
+                           class="form-control"
+                           step="0.0001"
+                           min="0"
+                           placeholder="Example: 0.25" />
+
+                    <span asp-validation-for="QuantityPerPiece"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Wastage Percentage -->
+                <div class="col-md-4">
+
+                    <label asp-for="WastagePercentage"
+                           class="form-label">
+
+                        Wastage Percentage
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <input asp-for="WastagePercentage"
+                               type="number"
+                               class="form-control"
+                               step="0.01"
+                               min="0"
+                               max="100"
+                               placeholder="Example: 10" />
+
+                        <span class="input-group-text">
+                            %
+                        </span>
+
+                    </div>
+
+                    <span asp-validation-for="WastagePercentage"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- Remarks -->
+                <div class="col-12">
+
+                    <label asp-for="Remarks"
+                           class="form-label">
+
+                        Remarks
+
+                    </label>
+
+                    <textarea asp-for="Remarks"
+                              class="form-control"
+                              rows="3"
+                              placeholder="Write material remarks..."></textarea>
+
+                    <span asp-validation-for="Remarks"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Calculation Information -->
+            <div class="alert alert-warning mt-4">
+
+                <div class="d-flex align-items-start">
+
+                    <i class="bi bi-calculator me-2 fs-5"></i>
+
+                    <div>
+
+                        <strong>
+                            Required Quantity Calculation
+                        </strong>
+
+                        <p class="mb-0 mt-1">
+
+                            Required Quantity =
+
+                            Planned Quantity ×
+                            Quantity Per Piece
+
+                            + Wastage
+
+                        </p>
+
+                        <small class="text-muted">
+
+                            The system will automatically calculate
+                            the final required quantity after applying
+                            the wastage percentage.
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <!-- Cancel -->
+                <a asp-area="Operations"
+                   asp-controller="MRP"
+                   asp-action="Details"
+                   asp-route-id="@Model.MaterialRequirementPlanId"
+                   class="btn btn-light">
+
+                    <i class="bi bi-x-circle"></i>
+
+                    Cancel
+
+                </a>
+
+
+                <!-- Add Material -->
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="bi bi-plus-circle"></i>
+
+                    Add Material
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

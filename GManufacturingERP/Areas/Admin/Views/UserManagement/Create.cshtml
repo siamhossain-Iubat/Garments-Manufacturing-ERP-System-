@@ -1,0 +1,183 @@
+﻿@model GManufacturingERP.ViewModels.AdminCreateUserViewModel
+
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Admin Panel / User Management</small>
+        <h1>Create Internal User</h1>
+        <p>Create an employee account and assign a system role.</p>
+    </div>
+
+    <a asp-area="Admin"
+       asp-controller="UserManagement"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Users
+    </a>
+</div>
+
+<div class="row justify-content-center">
+
+    <div class="col-xl-8 col-lg-10">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Employee Account Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <form asp-area="Admin"
+                      asp-controller="UserManagement"
+                      asp-action="Create"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="alert alert-danger">
+                    </div>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+                            <label asp-for="FullName"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="FullName"
+                                   class="form-control"
+                                   placeholder="Enter full name" />
+
+                            <span asp-validation-for="FullName"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Email"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="form-control"
+                                   placeholder="employee@example.com" />
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="PhoneNumber"
+                                   class="form-control"
+                                   placeholder="+880 1XXXXXXXXX" />
+
+                            <span asp-validation-for="PhoneNumber"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="SelectedRole"
+                                   class="form-label">
+                            </label>
+
+                            <select asp-for="SelectedRole"
+                                    class="form-select">
+
+                                <option value="">
+                                    -- Select Role --
+                                </option>
+
+                                @foreach (var role in ViewBag.Roles)
+                                {
+                                    <option value="@role">
+                                        @role
+                                    </option>
+                                }
+
+                            </select>
+
+                            <span asp-validation-for="SelectedRole"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Password"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="Password"
+                                   class="form-control"
+                                   placeholder="Enter password" />
+
+                            <span asp-validation-for="Password"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmPassword"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="ConfirmPassword"
+                                   class="form-control"
+                                   placeholder="Confirm password" />
+
+                            <span asp-validation-for="ConfirmPassword"
+                                  class="text-danger">
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        <i class="bi bi-info-circle"></i>
+                        Internal users are created as active accounts.
+                        They can log in immediately using the assigned role.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+
+                        <a asp-area="Admin"
+                           asp-controller="UserManagement"
+                           asp-action="Index"
+                           class="btn btn-light">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i>
+                            Create User
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

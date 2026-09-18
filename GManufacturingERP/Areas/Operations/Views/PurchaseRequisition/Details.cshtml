@@ -1,0 +1,435 @@
+﻿@model GManufacturingERP.Models.Entities.PurchaseRequisition
+
+@{
+    ViewData["Title"] = "Purchase Requisition Details";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+
+    <div>
+        <small>Operations / Procurement</small>
+
+        <h1>
+            Requisition Details
+        </h1>
+
+        <p>
+            Review and manage the purchase requisition.
+        </p>
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="PurchaseRequisition"
+       asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Back
+
+    </a>
+
+</div>
+
+
+<!-- Success Message -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle me-2"></i>
+
+        @TempData["SuccessMessage"]
+
+    </div>
+}
+
+
+<!-- Error Message -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-exclamation-triangle me-2"></i>
+
+        @TempData["ErrorMessage"]
+
+    </div>
+}
+
+
+<!-- Requisition Information -->
+<div class="content-card mb-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <div class="card-title mb-0">
+
+            <i class="bi bi-file-earmark-text me-2"></i>
+
+            @Model.RequisitionNumber
+
+        </div>
+
+
+        <!-- Status Badge -->
+        @if (Model.RequisitionStatus == "Approved")
+        {
+            <span class="badge bg-success">
+                Approved
+            </span>
+        }
+        else if (Model.RequisitionStatus == "Submitted")
+        {
+            <span class="badge bg-info">
+                Submitted
+            </span>
+        }
+        else if (Model.RequisitionStatus == "Rejected")
+        {
+            <span class="badge bg-danger">
+                Rejected
+            </span>
+        }
+        else
+        {
+            <span class="badge bg-warning text-dark">
+                @Model.RequisitionStatus
+            </span>
+        }
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <!-- MRP Number -->
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                MRP Number
+            </small>
+
+            <div class="fw-semibold">
+                @Model.MaterialRequirementPlan?.MRPNumber
+            </div>
+
+        </div>
+
+
+        <!-- Required Date -->
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Required Date
+            </small>
+
+            <div class="fw-semibold">
+                @Model.RequiredDate.ToString("dd MMM yyyy")
+            </div>
+
+        </div>
+
+
+        <!-- Priority -->
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Priority
+            </small>
+
+            <div class="fw-semibold">
+                @Model.Priority
+            </div>
+
+        </div>
+
+
+        <!-- Requested By -->
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Requested By
+            </small>
+
+            <div class="fw-semibold">
+                @Model.RequestedBy
+            </div>
+
+        </div>
+
+
+        <!-- Created At -->
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Created At
+            </small>
+
+            <div class="fw-semibold">
+                @Model.CreatedAt
+                .ToLocalTime()
+                .ToString("dd MMM yyyy")
+            </div>
+
+        </div>
+
+
+        <!-- Submitted At -->
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Submitted At
+            </small>
+
+            <div class="fw-semibold">
+
+                @(Model.SubmittedAt.HasValue
+                                ? Model.SubmittedAt.Value
+                                .ToLocalTime()
+                                .ToString("dd MMM yyyy")
+                                : "Not submitted")
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Remarks -->
+    @if (!string.IsNullOrWhiteSpace(Model.Remarks))
+    {
+        <div class="mt-3">
+
+            <small class="text-muted">
+                Remarks
+            </small>
+
+            <p class="mb-0">
+                @Model.Remarks
+            </p>
+
+        </div>
+    }
+
+
+    <!-- Rejection Reason -->
+    @if (!string.IsNullOrWhiteSpace(Model.RejectionReason))
+    {
+        <div class="alert alert-danger mt-3 mb-0">
+
+            <strong>
+                Rejection Reason:
+            </strong>
+
+            @Model.RejectionReason
+
+        </div>
+    }
+
+</div>
+
+
+<!-- Submitted Information -->
+@if (Model.RequisitionStatus == "Submitted")
+{
+    <div class="alert alert-info mb-4">
+
+        <i class="bi bi-hourglass-split me-2"></i>
+
+        <strong>
+            Waiting for Finance & Logistics approval
+        </strong>
+
+        <div class="mt-1">
+            This purchase requisition has been submitted
+            and is waiting for approval from the Finance &
+            Logistics Manager.
+        </div>
+
+    </div>
+}
+
+
+<!-- Requested Materials -->
+<div class="content-card mb-4">
+
+    <div class="card-title">
+
+        <i class="bi bi-box-seam me-2"></i>
+
+        Requested Materials
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Material
+                    </th>
+
+                    <th>
+                        Category
+                    </th>
+
+                    <th>
+                        Unit
+                    </th>
+
+                    <th>
+                        Requested Quantity
+                    </th>
+
+                    <th>
+                        Estimated Unit Price
+                    </th>
+
+                    <th>
+                        Estimated Total
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @if (Model.Items != null && Model.Items.Any())
+                {
+                    foreach (var item in Model.Items)
+                    {
+                        <tr>
+
+                            <td>
+                                @item.MaterialName
+                            </td>
+
+                            <td>
+                                @item.MaterialCategory
+                            </td>
+
+                            <td>
+                                @item.Unit
+                            </td>
+
+                            <td>
+                                @item.RequestedQuantity
+                            </td>
+
+                            <td>
+                                @item.EstimatedUnitPrice.ToString("N2")
+                            </td>
+
+                            <td>
+                                @item.EstimatedTotalPrice.ToString("N2")
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="6"
+                            class="text-center text-muted py-4">
+
+                            <i class="bi bi-inbox fs-4 d-block mb-2"></i>
+
+                            No materials found.
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- Action Buttons -->
+<div class="d-flex justify-content-end gap-2">
+
+
+    <!-- Draft -->
+    @if (Model.RequisitionStatus == "Draft")
+    {
+        <form asp-area="Operations"
+              asp-controller="PurchaseRequisition"
+              asp-action="Submit"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+                <i class="bi bi-send me-1"></i>
+
+                Submit Requisition
+
+            </button>
+
+        </form>
+    }
+
+
+    <!-- Submitted -->
+    @if (Model.RequisitionStatus == "Submitted")
+    {
+        <span class="text-muted align-self-center me-2">
+
+            <i class="bi bi-clock-history me-1"></i>
+
+            Waiting for Finance & Logistics approval
+
+        </span>
+    }
+
+
+    <!-- Approved -->
+    @if (Model.RequisitionStatus == "Approved")
+    {
+        <a asp-area="Finance"
+           asp-controller="PurchaseOrder"
+           asp-action="Create"
+           asp-route-requisitionId="@Model.Id"
+           class="btn btn-primary">
+
+            <i class="bi bi-cart-check me-1"></i>
+
+            Create Purchase Order
+
+        </a>
+    }
+
+
+    <!-- Rejected -->
+    @if (Model.RequisitionStatus == "Rejected")
+    {
+        <span class="text-danger align-self-center">
+
+            <i class="bi bi-x-circle me-1"></i>
+
+            Requisition Rejected
+
+        </span>
+    }
+
+</div>

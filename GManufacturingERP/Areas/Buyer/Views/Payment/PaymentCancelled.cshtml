@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Payment Cancelled";
+    Layout = "~/Areas/Buyer/Views/Shared/_BuyerLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="alert alert-warning">
+        <h4>Payment Cancelled</h4>
+        <p>You cancelled the payment process.</p>
+    </div>
+
+    <a asp-area="Buyer"
+       asp-controller="Quotation"
+       asp-action="Index"
+       class="btn btn-primary">
+        Back to Quotations
+    </a>
+</div>

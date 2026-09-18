@@ -1,0 +1,110 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.ApplicationUser>
+
+@{
+    ViewData["Title"] = "All Buyers";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Admin Panel</small>
+        <h1>All Buyers</h1>
+        <p>View all registered external buyer accounts.</p>
+    </div>
+
+    <a asp-area="Admin"
+       asp-controller="BuyerApprovals"
+       asp-action="Index"
+       class="btn btn-primary">
+        <i class="bi bi-clock-history"></i>
+        Pending Approvals
+    </a>
+</div>
+
+<div class="card dashboard-card">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Country</th>
+                        <th>Status</th>
+                        <th>Active</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var buyer in Model)
+                    {
+                        <tr>
+                            <td>@buyer.CompanyName</td>
+                            <td>@buyer.FullName</td>
+                            <td>@buyer.Email</td>
+                            <td>@buyer.Country</td>
+
+                            <td>
+                                @if (buyer.AccountStatus == "Approved")
+                                {
+                                    <span class="badge bg-success">
+                                        Approved
+                                    </span>
+                                }
+                                else if (buyer.AccountStatus == "Rejected")
+                                {
+                                    <span class="badge bg-danger">
+                                        Rejected
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        @buyer.AccountStatus
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (buyer.IsActive)
+                                {
+                                    <span class="text-success">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Yes
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                        No
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                <a asp-area="Admin"
+                                   asp-controller="BuyerApprovals"
+                                   asp-action="Details"
+                                   asp-route-id="@buyer.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i>
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+</div>

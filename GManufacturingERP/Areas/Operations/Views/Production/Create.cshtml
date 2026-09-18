@@ -1,0 +1,197 @@
+﻿@model GManufacturingERP.ViewModels.CreateProductionPlanViewModel
+
+@{
+    ViewData["Title"] = "Create Production Plan";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+        <small>Operations Manager / Production Planning</small>
+        <h1>Create Production Plan</h1>
+        <p>Prepare a manufacturing plan for the approved order.</p>
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="Production"
+       asp-action="ApprovedOrders"
+       class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Orders
+    </a>
+
+</div>
+
+<div class="card dashboard-card">
+
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="bi bi-clipboard2-plus-fill"></i>
+            Production Plan Information
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <form asp-area="Operations"
+              asp-controller="Production"
+              asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="SalesOrderId" type="hidden" />
+            <input asp-for="OrderNumber" type="hidden" />
+            <input asp-for="ProductDescription" type="hidden" />
+            <input asp-for="BuyerCompany" type="hidden" />
+            <input asp-for="OrderedQuantity" type="hidden" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger">
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Sales Order Number
+                    </label>
+
+                    <input value="@Model.OrderNumber"
+                           class="form-control"
+                           readonly />
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Buyer Company
+                    </label>
+
+                    <input value="@Model.BuyerCompany"
+                           class="form-control"
+                           readonly />
+
+                </div>
+
+                <div class="col-12">
+
+                    <label class="form-label">
+                        Product Description
+                    </label>
+
+                    <textarea class="form-control"
+                              rows="3"
+                              readonly>@Model.ProductDescription</textarea>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Ordered Quantity
+                    </label>
+
+                    <input value="@Model.OrderedQuantity Pieces"
+                           class="form-control"
+                           readonly />
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label asp-for="PlannedQuantity"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="PlannedQuantity"
+                           class="form-control" />
+
+                    <span asp-validation-for="PlannedQuantity"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label asp-for="PlannedStartDate"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="PlannedStartDate"
+                           class="form-control" />
+
+                    <span asp-validation-for="PlannedStartDate"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label asp-for="ExpectedCompletionDate"
+                           class="form-label">
+                    </label>
+
+                    <input asp-for="ExpectedCompletionDate"
+                           class="form-control" />
+
+                    <span asp-validation-for="ExpectedCompletionDate"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="col-12">
+
+                    <label asp-for="ProductionRemarks"
+                           class="form-label">
+                    </label>
+
+                    <textarea asp-for="ProductionRemarks"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Write production planning remarks..."></textarea>
+
+                </div>
+
+            </div>
+
+            <div class="alert alert-info mt-4">
+
+                <i class="bi bi-info-circle"></i>
+
+                This production plan will be submitted for
+                <strong>Admin Approval</strong>.
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <a asp-area="Operations"
+                   asp-controller="Production"
+                   asp-action="ApprovedOrders"
+                   class="btn btn-light">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Create Production Plan
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

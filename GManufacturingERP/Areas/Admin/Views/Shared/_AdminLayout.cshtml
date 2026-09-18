@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - GManufacturing ERP
+    </title>
+
+
+    <!-- BOOTSTRAP CSS -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+
+    <!-- BOOTSTRAP ICONS -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+
+    <!-- CUSTOM CSS -->
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/layout.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/dashboard.css"
+          asp-append-version="true" />
+
+</head>
+
+
+<body>
+
+    <div class="app-wrapper">
+
+
+        <!-- ========================= -->
+        <!-- SIDEBAR -->
+        <!-- ========================= -->
+
+        <aside class="sidebar">
+
+            <!-- SIDEBAR BRAND -->
+
+            <div class="sidebar-brand">
+
+                <i class="bi bi-buildings"></i>
+
+                <span>GManufacturing</span>
+
+            </div>
+
+
+            <!-- SIDEBAR MENU -->
+
+            <nav class="sidebar-menu">
+
+
+                <!-- ========================= -->
+                <!-- DASHBOARD -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="Dashboard"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+
+                    <i class="bi bi-grid-1x2-fill"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+
+                <!-- ========================= -->
+                <!-- BUYER APPROVALS -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="BuyerApprovals"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "BuyerApprovals" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+
+                    <i class="bi bi-person-check-fill"></i>
+
+                    <span>Buyer Approvals</span>
+
+                </a>
+
+
+                <!-- ========================= -->
+                <!-- PRODUCTION PLAN APPROVAL -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="ProductionPlanApprovals"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProductionPlanApprovals" ? "active" : "")">
+
+                    <i class="bi bi-clipboard-check"></i>
+
+                    <span>Production Plan Approval</span>
+
+                </a>
+
+
+                <!-- ========================= -->
+                <!-- MRP APPROVALS -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="MRPApprovals"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "MRPApprovals" ? "active" : "")">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    <span>MRP Approvals</span>
+
+                </a>
+
+
+                <!-- ========================= -->
+                <!-- PURCHASE ORDER APPROVALS -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="PurchaseOrderApprovals"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "PurchaseOrderApprovals" ? "active" : "")">
+
+                    <i class="bi bi-cart-check"></i>
+
+                    <span>PO Approvals</span>
+
+                </a>
+
+                <!-- ========================= -->
+                <!-- GRN Approvals -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="GoodsReceiptApprovals"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "GoodsReceiptApprovals" ? "active" : "")">
+
+                    <i class="bi bi-box-arrow-in-down"></i>
+
+                    <span>GRN Approvals</span>
+
+                </a>
+                <!-- ========================= -->
+                <!-- Material Issue Approvals -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="MaterialIssueApprovals"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "MaterialIssueApprovals" ? "active" : "")">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                    <span>Material Issue Approvals</span>
+
+                </a>
+                <!-- ========================= -->
+                <!-- QC Approvals -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="QualityControlApprovals"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "QualityControlApprovals" ? "active" : "")">
+
+                    <i class="bi bi-clipboard-check"></i>
+
+                    <span>QC Approvals</span>
+
+                </a>
+
+                <!-- ========================= -->
+                <!-- Delivery Approvals-->
+                <!-- ========================= -->
+                <a asp-area="Admin"
+                   asp-controller="DeliveryApprovals"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DeliveryApprovals" ? "active" : "")">
+
+                    <i class="bi bi-truck"></i>
+
+                    <span>Delivery Approvals</span>
+
+                </a>
+
+                <!-- ========================= -->
+                <!-- ALL BUYERS -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="BuyerApprovals"
+                   asp-action="AllBuyers"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "BuyerApprovals" && ViewContext.RouteData.Values["action"]?.ToString() == "AllBuyers" ? "active" : "")">
+
+                    <i class="bi bi-people-fill"></i>
+
+                    <span>All Buyers</span>
+
+                </a>
+
+
+                <!-- ========================= -->
+                <!-- USER MANAGEMENT -->
+                <!-- ========================= -->
+
+                <a asp-area="Admin"
+                   asp-controller="UserManagement"
+                   asp-action="Index"
+                   class="menu-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "UserManagement" ? "active" : "")">
+
+                    <i class="bi bi-person-gear"></i>
+
+                    <span>User Management</span>
+
+                </a>
+
+
+            </nav>
+
+        </aside>
+
+
+        <!-- ========================= -->
+        <!-- MAIN CONTENT -->
+        <!-- ========================= -->
+
+        <main class="main-content">
+
+
+            <!-- ========================= -->
+            <!-- TOPBAR -->
+            <!-- ========================= -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <h6 class="mb-0">
+                        Admin Panel
+                    </h6>
+
+                    <small>
+                        Garments Manufacturing ERP
+                    </small>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- LOGOUT -->
+                <!-- ========================= -->
+
+                <div>
+                    <form asp-area=""
+                          asp-controller="Account"
+                          asp-action="Logout"
+                          method="post"
+                          class="d-inline">
+
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit"
+                                class="btn btn-link nav-link"
+                                style="text-decoration: none;">
+
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            Logout
+
+                        </button>
+
+                    </form>
+                </div>
+
+            </header>
+
+
+            <!-- ========================= -->
+            <!-- PAGE CONTENT -->
+            <!-- ========================= -->
+
+            <section class="content-area">
+
+                @RenderBody()
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- BOOTSTRAP JAVASCRIPT -->
+    <!-- ========================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- ========================= -->
+    <!-- PAGE-SPECIFIC SCRIPTS -->
+    <!-- ========================= -->
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>

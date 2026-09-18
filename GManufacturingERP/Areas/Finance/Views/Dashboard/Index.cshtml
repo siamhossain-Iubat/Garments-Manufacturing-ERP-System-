@@ -1,0 +1,692 @@
+﻿@{
+    ViewData["Title"] = "Finance Dashboard";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+}
+
+<div class="page-header mb-4">
+
+    <div>
+
+        <small>Finance & Logistics Manager</small>
+
+        <h1>Finance Dashboard</h1>
+
+        <p>
+            Manage invoices, payments, shipments, dispatches and deliveries.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FINANCIAL SUMMARY
+     ========================================================= -->
+
+<div class="row g-4">
+
+
+    <!-- Total Invoices -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-receipt"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Total Invoices</span>
+
+                <h3>
+                    @ViewBag.TotalInvoices
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Issued Invoices -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-file-earmark-check"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Issued Invoices</span>
+
+                <h3>
+                    @ViewBag.IssuedInvoices
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Paid Invoices -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Paid Invoices</span>
+
+                <h3>
+                    @ViewBag.PaidInvoices
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Pending Invoices -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Pending Invoices</span>
+
+                <h3>
+                    @ViewBag.PendingInvoices
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     FINANCIAL AMOUNTS
+     ========================================================= -->
+
+<div class="row g-4 mt-1">
+
+
+    <!-- Total Invoiced -->
+    <div class="col-md-6 col-xl-4">
+
+        <div class="card dashboard-card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Total Invoiced Amount
+                        </small>
+
+                        <h3 class="mt-2 mb-0">
+                            ৳ @(((decimal)ViewBag.TotalInvoicedAmount).ToString("N2"))
+                        </h3>
+
+                    </div>
+
+                    <i class="bi bi-cash-stack fs-1 text-primary"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Total Paid -->
+    <div class="col-md-6 col-xl-4">
+
+        <div class="card dashboard-card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Total Paid Amount
+                        </small>
+
+                        <h3 class="mt-2 mb-0">
+                            ৳ @(((decimal)ViewBag.TotalPaidAmount).ToString("N2"))
+                        </h3>
+
+                    </div>
+
+                    <i class="bi bi-wallet2 fs-1 text-success"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Total Due -->
+    <div class="col-md-6 col-xl-4">
+
+        <div class="card dashboard-card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Total Due Amount
+                        </small>
+
+                        <h3 class="mt-2 mb-0">
+                            ৳ @(((decimal)ViewBag.TotalDueAmount).ToString("N2"))
+                        </h3>
+
+                    </div>
+
+                    <i class="bi bi-exclamation-circle fs-1 text-danger"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     LOGISTICS SUMMARY
+     ========================================================= -->
+
+<div class="row g-4 mt-1">
+
+
+    <!-- Active Shipments -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-truck"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Active Shipments</span>
+
+                <h3>
+                    @ViewBag.ActiveShipments
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Pending Dispatches -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Pending Dispatches</span>
+
+                <h3>
+                    @ViewBag.PendingDispatches
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Pending Deliveries -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-house-check"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Pending Deliveries</span>
+
+                <h3>
+                    @ViewBag.PendingDeliveries
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Completed Deliveries -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="bi bi-check2-square"></i>
+            </div>
+
+            <div class="stat-content">
+
+                <span>Completed Deliveries</span>
+
+                <h3>
+                    @ViewBag.CompletedDeliveries
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PAYMENT + LOGISTICS
+     ========================================================= -->
+
+<div class="row g-4 mt-1">
+
+
+    <!-- Pending Payments -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="card dashboard-card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Pending Payments
+                        </small>
+
+                        <h3 class="mt-2">
+                            @ViewBag.PendingPayments
+                        </h3>
+
+                    </div>
+
+                    <i class="bi bi-clock-history fs-2"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Completed Payments -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="card dashboard-card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Completed Payments
+                        </small>
+
+                        <h3 class="mt-2">
+                            @ViewBag.CompletedPayments
+                        </h3>
+
+                    </div>
+
+                    <i class="bi bi-credit-card-2-front fs-2"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Pending Packing -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="card dashboard-card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Pending Packing
+                        </small>
+
+                        <h3 class="mt-2">
+                            @ViewBag.PendingPacking
+                        </h3>
+
+                    </div>
+
+                    <i class="bi bi-box-seam fs-2"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Total Shipments -->
+    <div class="col-md-6 col-xl-3">
+
+        <div class="card dashboard-card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <small class="text-muted">
+                            Total Shipments
+                        </small>
+
+                        <h3 class="mt-2">
+                            @ViewBag.TotalShipments
+                        </h3>
+
+                    </div>
+
+                    <i class="bi bi-send fs-2"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     RECENT ACTIVITIES + QUICK ACTIONS
+     ========================================================= -->
+
+<div class="row g-4 mt-2">
+
+
+    <!-- =====================================================
+         RECENT ACTIVITIES
+         ===================================================== -->
+
+    <div class="col-lg-8">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-activity me-2"></i>
+
+                    Recent Activities
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body p-0">
+
+                @if (ViewBag.RecentActivities != null &&
+                                ViewBag.RecentActivities.Count > 0)
+                {
+                    <div class="list-group list-group-flush">
+
+                        @foreach (var activity in ViewBag.RecentActivities)
+                        {
+                            <div class="list-group-item px-4 py-3">
+
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <div>
+
+                                        <div class="fw-semibold">
+
+                                            @if (activity.Type == "Invoice")
+                                            {
+                                                <i class="bi bi-receipt me-2"></i>
+                                            }
+                                            else if (activity.Type == "Payment")
+                                            {
+                                                <i class="bi bi-credit-card me-2"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-truck me-2"></i>
+                                            }
+
+                                            @activity.Description
+
+                                        </div>
+
+                                        <small class="text-muted">
+
+                                            @activity.Reference
+
+                                        </small>
+
+                                    </div>
+
+
+                                    <div class="text-end">
+
+                                        <span class="badge bg-light text-dark">
+
+                                            @activity.Status
+
+                                        </span>
+
+                                        <br />
+
+                                        <small class="text-muted">
+
+                                            @activity.Date.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state p-5 text-center">
+
+                        <i class="bi bi-inbox"></i>
+
+                        <h5>No Recent Activities</h5>
+
+                        <p>
+                            Finance and logistics activities will appear here.
+                        </p>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         QUICK ACTIONS
+         ===================================================== -->
+
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-lightning-charge me-2"></i>
+
+                    Quick Actions
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body d-grid gap-2">
+
+
+                <!-- Invoices -->
+                <a asp-area="Finance"
+                   asp-controller="Invoice"
+                   asp-action="Index"
+                   class="btn btn-outline-primary">
+
+                    <i class="bi bi-receipt me-2"></i>
+
+                    View Invoices
+
+                </a>
+
+
+                <!-- Payments -->
+                <a asp-area="Finance"
+                   asp-controller="Payment"
+                   asp-action="Index"
+                   class="btn btn-outline-primary">
+
+                    <i class="bi bi-credit-card me-2"></i>
+
+                    View Payments
+
+                </a>
+
+
+                <!-- Shipments -->
+                <a asp-area="Finance"
+                   asp-controller="Shipment"
+                   asp-action="Index"
+                   class="btn btn-outline-primary">
+
+                    <i class="bi bi-truck me-2"></i>
+
+                    Manage Shipments
+
+                </a>
+
+
+                <!-- Dispatch -->
+                <a asp-area="Finance"
+                   asp-controller="Dispatch"
+                   asp-action="Index"
+                   class="btn btn-outline-primary">
+
+                    <i class="bi bi-box-arrow-right me-2"></i>
+
+                    Manage Dispatch
+
+                </a>
+
+
+                <!-- Delivery -->
+                <a asp-area="Finance"
+                   asp-controller="Delivery"
+                   asp-action="Index"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-house-check me-2"></i>
+
+                    Manage Deliveries
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

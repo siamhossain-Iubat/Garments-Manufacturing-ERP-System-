@@ -1,0 +1,689 @@
+﻿@model GManufacturingERP.ViewModels.SalesDashboardViewModel
+
+@{
+    ViewData["Title"] = "Sales Dashboard";
+    Layout = "~/Areas/Sales/Views/Shared/_SalesLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Sales & Buyer Manager</small>
+
+        <h1>Dashboard</h1>
+
+        <p>
+            Manage buyers, quotations, sales activities and customer orders.
+        </p>
+
+    </div>
+
+    <div class="dashboard-date">
+
+        <i class="bi bi-calendar3"></i>
+
+        @DateTime.Now.ToString("dd MMM yyyy")
+
+    </div>
+
+</div>
+
+
+<!-- Summary Cards -->
+<div class="row g-4 mb-4">
+
+    <div class="col-xl-4 col-md-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon blue">
+
+                <i class="bi bi-people-fill"></i>
+
+            </div>
+
+            <div class="summary-content">
+
+                <span>Total Buyers</span>
+
+                <h3>@Model.TotalBuyers</h3>
+
+                <small>
+                    Registered buyer companies
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-4 col-md-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon yellow">
+
+                <i class="bi bi-hourglass-split"></i>
+
+            </div>
+
+            <div class="summary-content">
+
+                <span>Pending Approvals</span>
+
+                <h3>@Model.PendingBuyers</h3>
+
+                <small>
+                    Buyers waiting for review
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-xl-4 col-md-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon green">
+
+                <i class="bi bi-person-check-fill"></i>
+
+            </div>
+
+            <div class="summary-content">
+
+                <span>Approved Buyers</span>
+
+                <h3>@Model.ApprovedBuyers</h3>
+
+                <small>
+                    Active buyer accounts
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Main Modules -->
+<div class="row g-4 mb-4">
+
+
+    <!-- Buyer Management -->
+
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card h-100">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-people-fill"></i>
+
+                    Buyer Management
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="module-placeholder">
+
+                    <i class="bi bi-building"></i>
+
+                    <div>
+
+                        <h6>
+                            Manage Buyer Companies
+                        </h6>
+
+                        <p>
+                            View buyer profiles, company information,
+                            contacts and account status.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a asp-area="Sales"
+                   asp-controller="Buyers"
+                   asp-action="Index"
+                   class="btn btn-outline-primary">
+
+                    <i class="bi bi-people"></i>
+
+                    Manage Buyers
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Quotation Management -->
+
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card h-100">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-file-earmark-text-fill"></i>
+
+                    Quotation Management
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="module-placeholder">
+
+                    <i class="bi bi-file-earmark-text"></i>
+
+                    <div>
+
+                        <h6>
+                            Manage Buyer Quotations
+                        </h6>
+
+                        <p>
+                            Review buyer quotation requests, prepare
+                            prices, send quotations and process
+                            buyer responses.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a asp-area="Sales"
+                   asp-controller="Quotation"
+                   asp-action="Index"
+                   class="btn btn-outline-primary">
+
+                    <i class="bi bi-file-earmark-text"></i>
+
+                    Manage Quotations
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Sales Orders -->
+
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card h-100">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-cart-check-fill"></i>
+
+                    Sales Orders
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="module-placeholder">
+
+                    <i class="bi bi-cart3"></i>
+
+                    <div>
+
+                        <h6>
+                            Order Management
+                        </h6>
+
+                        <p>
+                            Create, review and manage buyer sales orders
+                            and order approval workflow.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a asp-area="Sales"
+                   asp-controller="Orders"
+                   asp-action="Index"
+                   class="btn btn-outline-primary">
+
+                    <i class="bi bi-cart-check"></i>
+
+                    Manage Orders
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Quotation Workflow Information -->
+
+<div class="card dashboard-card mb-4">
+
+    <div class="card-header">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-diagram-3-fill"></i>
+
+            Sales Quotation Workflow
+
+        </h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="row g-3 align-items-center text-center">
+
+
+            <!-- Step 1 -->
+
+            <div class="col-lg">
+
+                <div class="p-3 border rounded h-100">
+
+                    <i class="bi bi-person-fill fs-3 text-primary"></i>
+
+                    <h6 class="mt-2 mb-1">
+                        Buyer Request
+                    </h6>
+
+                    <small class="text-muted">
+                        Buyer submits quotation request
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- Arrow -->
+
+            <div class="col-lg-auto d-none d-lg-block">
+
+                <i class="bi bi-arrow-right fs-4 text-muted"></i>
+
+            </div>
+
+
+            <!-- Step 2 -->
+
+            <div class="col-lg">
+
+                <div class="p-3 border rounded h-100">
+
+                    <i class="bi bi-search fs-3 text-warning"></i>
+
+                    <h6 class="mt-2 mb-1">
+                        Review
+                    </h6>
+
+                    <small class="text-muted">
+                        Sales manager reviews request
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- Arrow -->
+
+            <div class="col-lg-auto d-none d-lg-block">
+
+                <i class="bi bi-arrow-right fs-4 text-muted"></i>
+
+            </div>
+
+
+            <!-- Step 3 -->
+
+            <div class="col-lg">
+
+                <div class="p-3 border rounded h-100">
+
+                    <i class="bi bi-calculator fs-3 text-info"></i>
+
+                    <h6 class="mt-2 mb-1">
+                        Prepare
+                    </h6>
+
+                    <small class="text-muted">
+                        Set price, discount and tax
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- Arrow -->
+
+            <div class="col-lg-auto d-none d-lg-block">
+
+                <i class="bi bi-arrow-right fs-4 text-muted"></i>
+
+            </div>
+
+
+            <!-- Step 4 -->
+
+            <div class="col-lg">
+
+                <div class="p-3 border rounded h-100">
+
+                    <i class="bi bi-send-fill fs-3 text-primary"></i>
+
+                    <h6 class="mt-2 mb-1">
+                        Send
+                    </h6>
+
+                    <small class="text-muted">
+                        Send official quotation to buyer
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- Arrow -->
+
+            <div class="col-lg-auto d-none d-lg-block">
+
+                <i class="bi bi-arrow-right fs-4 text-muted"></i>
+
+            </div>
+
+
+            <!-- Step 5 -->
+
+            <div class="col-lg">
+
+                <div class="p-3 border rounded h-100">
+
+                    <i class="bi bi-check-circle-fill fs-3 text-success"></i>
+
+                    <h6 class="mt-2 mb-1">
+                        Accepted
+                    </h6>
+
+                    <small class="text-muted">
+                        Buyer accepts quotation
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- Arrow -->
+
+            <div class="col-lg-auto d-none d-lg-block">
+
+                <i class="bi bi-arrow-right fs-4 text-muted"></i>
+
+            </div>
+
+
+            <!-- Step 6 -->
+
+            <div class="col-lg">
+
+                <div class="p-3 border rounded h-100">
+
+                    <i class="bi bi-cart-check-fill fs-3 text-success"></i>
+
+                    <h6 class="mt-2 mb-1">
+                        Sales Order
+                    </h6>
+
+                    <small class="text-muted">
+                        Convert accepted quotation
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Recent Buyers -->
+
+<div class="card dashboard-card">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-person-plus-fill"></i>
+
+            Recent Buyer Registrations
+
+        </h5>
+
+        <span class="text-muted">
+
+            Latest 5 registrations
+
+        </span>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (!Model.RecentBuyers.Any())
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-people"></i>
+
+                <h5>
+                    No Buyers Found
+                </h5>
+
+                <p>
+                    No buyer has registered yet.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Company
+                            </th>
+
+                            <th>
+                                Contact Person
+                            </th>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th>
+                                Country
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Registered
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var buyer in Model.RecentBuyers)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        @buyer.CompanyName
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    @buyer.FullName
+
+                                </td>
+
+
+                                <td>
+
+                                    @buyer.Email
+
+                                </td>
+
+
+                                <td>
+
+                                    @buyer.Country
+
+                                </td>
+
+
+                                <td>
+
+                                    @if (buyer.AccountStatus == "Approved")
+                                    {
+                                        <span class="badge bg-success">
+
+                                            Approved
+
+                                        </span>
+                                    }
+                                    else if (buyer.AccountStatus == "Rejected")
+                                    {
+                                        <span class="badge bg-danger">
+
+                                            Rejected
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">
+
+                                            Pending
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    @(buyer.CreatedAt.ToLocalTime()
+                                    .ToString("dd MMM yyyy hh:mm tt"))
+
+                                </td>
+
+
+                                <td>
+
+                                    <a asp-area="Sales"
+                                       asp-controller="Buyers"
+                                       asp-action="Details"
+                                       asp-route-id="@buyer.Id"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        <i class="bi bi-eye"></i>
+
+                                        View
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>

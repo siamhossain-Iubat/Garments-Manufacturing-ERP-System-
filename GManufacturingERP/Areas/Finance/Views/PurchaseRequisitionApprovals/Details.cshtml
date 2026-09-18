@@ -1,0 +1,377 @@
+﻿@model GManufacturingERP.Models.Entities.PurchaseRequisition
+
+@{
+    ViewData["Title"] = "Purchase Requisition Review";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+        <small>Finance & Logistics / Procurement</small>
+
+        <h1>Purchase Requisition Review</h1>
+
+        <p>
+            Review the requisition before approving or rejecting it.
+        </p>
+    </div>
+
+    <a asp-area="Finance"
+       asp-controller="PurchaseRequisitionApprovals"
+       asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Back
+
+    </a>
+
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<!-- PR Information -->
+
+<div class="content-card mb-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div class="card-title mb-0">
+
+            <i class="bi bi-file-earmark-text me-2"></i>
+
+            @Model.RequisitionNumber
+
+        </div>
+
+        @if (Model.RequisitionStatus == "Submitted")
+        {
+            <span class="badge bg-info">
+                Pending Approval
+            </span>
+        }
+        else if (Model.RequisitionStatus == "Approved")
+        {
+            <span class="badge bg-success">
+                Approved
+            </span>
+        }
+        else if (Model.RequisitionStatus == "Rejected")
+        {
+            <span class="badge bg-danger">
+                Rejected
+            </span>
+        }
+        else
+        {
+            <span class="badge bg-warning text-dark">
+                @Model.RequisitionStatus
+            </span>
+        }
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                MRP Number
+            </small>
+
+            <div class="fw-semibold">
+                @Model.MaterialRequirementPlan?.MRPNumber
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Buyer Company
+            </small>
+
+            <div class="fw-semibold">
+                @Model.MaterialRequirementPlan?.BuyerCompany
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Product
+            </small>
+
+            <div class="fw-semibold">
+                @Model.MaterialRequirementPlan?.ProductDescription
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Required Date
+            </small>
+
+            <div class="fw-semibold">
+                @Model.RequiredDate.ToString("dd MMM yyyy")
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Priority
+            </small>
+
+            <div class="fw-semibold">
+                @Model.Priority
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Requested By
+            </small>
+
+            <div class="fw-semibold">
+                @Model.RequestedBy
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Created At
+            </small>
+
+            <div class="fw-semibold">
+                @Model.CreatedAt
+                .ToLocalTime()
+                .ToString("dd MMM yyyy hh:mm tt")
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Submitted At
+            </small>
+
+            <div class="fw-semibold">
+
+                @(Model.SubmittedAt.HasValue
+                                ? Model.SubmittedAt.Value
+                                .ToLocalTime()
+                                .ToString("dd MMM yyyy hh:mm tt")
+                                : "-")
+
+            </div>
+
+        </div>
+
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Remarks))
+    {
+        <hr />
+
+        <small class="text-muted">
+            Remarks
+        </small>
+
+        <p class="mb-0">
+            @Model.Remarks
+        </p>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.RejectionReason))
+    {
+        <div class="alert alert-danger mt-3 mb-0">
+
+            <strong>
+                Rejection Reason:
+            </strong>
+
+            @Model.RejectionReason
+
+        </div>
+    }
+
+</div>
+
+<!-- Materials -->
+
+<div class="content-card mb-4">
+
+    <div class="card-title">
+
+        <i class="bi bi-box-seam me-2"></i>
+
+        Requested Materials
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+                    <th>Material</th>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th>Quantity</th>
+                    <th>Estimated Unit Price</th>
+                    <th>Estimated Total</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+
+                        <td>
+                            @item.MaterialName
+                        </td>
+
+                        <td>
+                            @item.MaterialCategory
+                        </td>
+
+                        <td>
+                            @item.Unit
+                        </td>
+
+                        <td>
+                            @item.RequestedQuantity.ToString("N2")
+                        </td>
+
+                        <td>
+                            @item.EstimatedUnitPrice.ToString("N2")
+                        </td>
+
+                        <td>
+                            @item.EstimatedTotalPrice.ToString("N2")
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- Approval Actions -->
+@if (Model.RequisitionStatus == "Submitted")
+{
+    <div class="content-card">
+
+        <div class="card-title">
+            <i class="bi bi-shield-check me-2"></i>
+            Approval Decision
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+
+            <!-- Approve -->
+
+            <form asp-area="Finance"
+                  asp-controller="PurchaseRequisitionApprovals"
+                  asp-action="Approve"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Approve Requisition
+
+                </button>
+
+            </form>
+
+            <!-- Reject -->
+
+            <form asp-area="Finance"
+                  asp-controller="PurchaseRequisitionApprovals"
+                  asp-action="Reject"
+                  asp-route-id="@Model.Id"
+                  method="post"
+                  class="d-flex gap-2">
+
+                @Html.AntiForgeryToken()
+
+                <input type="text"
+                       name="rejectionReason"
+                       class="form-control"
+                       placeholder="Rejection reason"
+                       required />
+
+                <button type="submit"
+                        class="btn btn-danger">
+
+                    <i class="bi bi-x-circle me-1"></i>
+
+                    Reject
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+}
+else if (Model.RequisitionStatus == "Approved")
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle-fill me-2"></i>
+
+        This Purchase Requisition has already been approved.
+
+    </div>
+}
+else if (Model.RequisitionStatus == "Rejected")
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-x-circle-fill me-2"></i>
+
+        This Purchase Requisition has been rejected.
+
+    </div>
+}

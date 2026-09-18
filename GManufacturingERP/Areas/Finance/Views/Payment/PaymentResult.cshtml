@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Payment Result";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+
+    var status = ViewBag.Status?.ToString() ?? "Unknown";
+    var message = ViewBag.Message?.ToString()
+                  ?? "Payment processing completed.";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0 mx-auto"
+         style="max-width: 600px;">
+
+        <div class="card-body text-center p-5">
+
+            @if (status.Equals("Success",
+                        StringComparison.OrdinalIgnoreCase))
+            {
+                <i class="bi bi-check-circle-fill text-success"
+                   style="font-size: 4rem;"></i>
+
+                <h2 class="mt-3 text-success">
+                    Payment Successful
+                </h2>
+            }
+            else
+            {
+                <i class="bi bi-exclamation-circle-fill text-danger"
+                   style="font-size: 4rem;"></i>
+
+                <h2 class="mt-3 text-danger">
+                    Payment Failed
+                </h2>
+            }
+
+            <p class="text-muted mt-3">
+                @message
+            </p>
+
+            <a asp-area="Finance"
+               asp-controller="Invoice"
+               asp-action="Index"
+               class="btn btn-primary mt-3">
+
+                Back to Invoices
+
+            </a>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,201 @@
+﻿@model GManufacturingERP.Models.Entities.ApplicationUser
+
+@{
+    ViewData["Title"] = "Buyer Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Admin Panel / Buyer Management</small>
+        <h1>Buyer Details</h1>
+        <p>Review buyer company and account information.</p>
+    </div>
+
+    <a asp-area="Admin"
+       asp-controller="BuyerApprovals"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left"></i>
+        Back
+    </a>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-building"></i>
+                    Company Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="details-label">Company Name</label>
+                        <div class="details-value">
+                            @Model.CompanyName
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">Contact Person</label>
+                        <div class="details-value">
+                            @Model.FullName
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">Email</label>
+                        <div class="details-value">
+                            @Model.Email
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">Phone Number</label>
+                        <div class="details-value">
+                            @Model.PhoneNumber
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">Country</label>
+                        <div class="details-value">
+                            @Model.Country
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">Registration Date</label>
+                        <div class="details-value">
+                            @Model.CreatedAt.ToLocalTime()
+                            .ToString("dd MMM yyyy, hh:mm tt")
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="details-label">Company Address</label>
+                        <div class="details-value">
+                            @Model.CompanyAddress
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-shield-check"></i>
+                    Account Status
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <p>
+                    <strong>Email Verified:</strong>
+
+                    @if (Model.EmailConfirmed)
+                    {
+                        <span class="text-success">
+                            Yes
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">
+                            No
+                        </span>
+                    }
+                </p>
+
+                <p>
+                    <strong>Account Status:</strong>
+                    <span class="badge bg-warning text-dark">
+                        @Model.AccountStatus
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Active:</strong>
+
+                    @if (Model.IsActive)
+                    {
+                        <span class="text-success">Yes</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">No</span>
+                    }
+                </p>
+
+                @if (Model.AccountStatus == "PendingApproval")
+                {
+                    <hr />
+
+                    <form asp-area="Admin"
+                          asp-controller="BuyerApprovals"
+                          asp-action="Approve"
+                          method="post"
+                          class="mb-2">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-success w-100"
+                                onclick="return confirm('Approve this buyer account?');">
+                            <i class="bi bi-check-circle"></i>
+                            Approve Buyer
+                        </button>
+                    </form>
+
+                    <form asp-area="Admin"
+                          asp-controller="BuyerApprovals"
+                          asp-action="Reject"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <input type="hidden"
+                               name="rejectionReason"
+                               value="Rejected by Admin" />
+
+                        <button type="submit"
+                                class="btn btn-danger w-100"
+                                onclick="return confirm('Reject this buyer account?');">
+                            <i class="bi bi-x-circle"></i>
+                            Reject Buyer
+                        </button>
+                    </form>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

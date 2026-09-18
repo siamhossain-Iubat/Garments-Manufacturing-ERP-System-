@@ -1,0 +1,280 @@
+﻿@using GManufacturingERP.Models.Entities
+
+@{
+    ViewData["Title"] = "Purchase Requisition Approvals";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+
+    var pendingRequisitions =
+        ViewBag.PendingRequisitions
+        as List<PurchaseRequisition>
+        ?? new List<PurchaseRequisition>();
+
+    var historyRequisitions =
+        ViewBag.HistoryRequisitions
+        as List<PurchaseRequisition>
+        ?? new List<PurchaseRequisition>();
+}
+
+<div class="page-header">
+    <div>
+        <small>Finance & Logistics / Procurement</small>
+
+        <h1>Purchase Requisition Approvals</h1>
+
+        <p>
+            Review purchase requisitions submitted by
+            Operations & Production.
+        </p>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle me-2"></i>
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<!-- Pending -->
+<div class="content-card mb-4">
+
+    <div class="card-title">
+        <i class="bi bi-hourglass-split me-2"></i>
+        Pending Approval
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+                <tr>
+                    <th>Requisition No.</th>
+                    <th>MRP No.</th>
+                    <th>Required Date</th>
+                    <th>Priority</th>
+                    <th>Requested By</th>
+                    <th>Submitted</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (pendingRequisitions.Any())
+                {
+                    foreach (var item in pendingRequisitions)
+                    {
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    @item.RequisitionNumber
+                                </strong>
+                            </td>
+
+                            <td>
+                                @item.MaterialRequirementPlan?.MRPNumber
+                            </td>
+
+                            <td>
+                                @item.RequiredDate
+                                .ToString("dd MMM yyyy")
+                            </td>
+
+                            <td>
+                                @if (item.Priority == "Urgent")
+                                {
+                                    <span class="badge bg-danger">
+                                        Urgent
+                                    </span>
+                                }
+                                else if (item.Priority == "High")
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        High
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        Normal
+                                    </span>
+                                }
+                    </td>
+
+                    <td>
+                        @item.RequestedBy
+                    </td>
+
+                    <td>
+                        @(item.SubmittedAt.HasValue
+                                                ? item.SubmittedAt.Value
+                                                .ToLocalTime()
+                                                .ToString("dd MMM yyyy hh:mm tt")
+                                                : "-")
+                    </td>
+
+                            <td class="text-end">
+
+                                <a asp-area="Finance"
+                                   asp-controller="PurchaseRequisitionApprovals"
+                                   asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-primary">
+
+                                    <i class="bi bi-eye me-1"></i>
+                                    Review
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                                }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7"
+                            class="text-center py-5">
+
+                            <i class="bi bi-check2-circle display-5 text-success"></i>
+
+                            <h5 class="mt-3">
+                                No Pending Requisitions
+                            </h5>
+
+                            <p class="text-muted mb-0">
+                                There are no purchase requisitions
+                                waiting for approval.
+                            </p>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- History -->
+<div class="content-card">
+
+    <div class="card-title">
+        <i class="bi bi-clock-history me-2"></i>
+        Approval History
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+                <tr>
+                    <th>Requisition No.</th>
+                    <th>MRP No.</th>
+                    <th>Status</th>
+                    <th>Approved By</th>
+                    <th>Processed At</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (historyRequisitions.Any())
+                {
+                    foreach (var item in historyRequisitions)
+                    {
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    @item.RequisitionNumber
+                                </strong>
+                            </td>
+
+                            <td>
+                                @item.MaterialRequirementPlan?.MRPNumber
+                            </td>
+
+                            <td>
+
+                                @if (item.RequisitionStatus == "Approved")
+                                {
+                                    <span class="badge bg-success">
+                                        Approved
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Rejected
+                                    </span>
+                                }
+
+                    </td>
+
+                    <td>
+                        @(item.ApprovedBy ?? "-")
+                    </td>
+
+                    <td>
+                        @(item.ApprovedAt.HasValue
+                                                ? item.ApprovedAt.Value
+                                                .ToLocalTime()
+                                                .ToString("dd MMM yyyy hh:mm tt")
+                                                : "-")
+                    </td>
+
+                            <td class="text-end">
+
+                                <a asp-area="Finance"
+                                   asp-controller="PurchaseRequisitionApprovals"
+                                   asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-outline-primary">
+
+                                    <i class="bi bi-eye"></i>
+                                    View
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                                }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6"
+                            class="text-center py-4 text-muted">
+
+                            No approval history available.
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

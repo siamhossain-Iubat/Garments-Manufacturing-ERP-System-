@@ -1,0 +1,317 @@
+﻿@model GManufacturingERP.Models.Entities.Payment
+
+@{
+    ViewData["Title"] = "Payment Details";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+
+    var badgeClass = Model.Status switch
+    {
+        "Completed" => "bg-success",
+        "Pending" => "bg-warning text-dark",
+        "Failed" => "bg-danger",
+        "Cancelled" => "bg-secondary",
+        "Expired" => "bg-dark",
+        _ => "bg-secondary"
+    };
+}
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <small class="text-muted">
+            Finance & Logistics / Payment / Details
+        </small>
+
+        <h1 class="mb-1">
+            @Model.PaymentNumber
+        </h1>
+
+        <p class="text-muted mb-0">
+            SSLCOMMERZ payment transaction details
+        </p>
+
+    </div>
+
+    <span class="badge @badgeClass fs-6 px-3 py-2">
+        @Model.Status
+    </span>
+
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle me-2"></i>
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-credit-card me-2"></i>
+                    Payment Information
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Payment Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.PaymentNumber
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Invoice Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.Invoice?.InvoiceNumber
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Buyer
+                        </small>
+
+                        <div>
+                            @Model.BuyerName
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Amount
+                        </small>
+
+                        <div class="fs-4 fw-bold">
+                            ৳ @Model.Amount.ToString("N2")
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Payment Method
+                        </small>
+
+                        <div>
+                            <span class="badge bg-primary">
+                                @Model.PaymentMethod
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Currency
+                        </small>
+
+                        <div>
+                            @Model.Currency
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12">
+
+                        <small class="text-muted">
+                            Transaction ID
+                        </small>
+
+                        <div class="font-monospace">
+                            @Model.TransactionId
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Validation ID
+                        </small>
+
+                        <div class="font-monospace">
+                            @(Model.ValidationId ?? "N/A")
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Bank Transaction ID
+                        </small>
+
+                        <div class="font-monospace">
+                            @(Model.BankTransactionId ?? "N/A")
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Card Type
+                        </small>
+
+                        <div>
+                            @(Model.CardType ?? "N/A")
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Card Brand
+                        </small>
+
+                        <div>
+                            @(Model.CardBrand ?? "N/A")
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Payment Date
+                        </small>
+
+                        <div>
+                            @Model.PaymentDate.ToLocalTime()
+                            .ToString("dd MMM yyyy hh:mm tt")
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Created At
+                        </small>
+
+                        <div>
+                            @Model.CreatedAt.ToLocalTime()
+                            .ToString("dd MMM yyyy hh:mm tt")
+                        </div>
+
+                    </div>
+
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Remarks))
+                {
+                    <hr />
+
+                    <small class="text-muted">
+                        Remarks
+                    </small>
+
+                    <p class="mb-0">
+                        @Model.Remarks
+                    </p>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+                    Invoice Summary
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Grand Total</span>
+
+                    <strong>
+                        ৳ @(Model.Invoice?.GrandTotal.ToString("N2"))
+                    </strong>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span>Paid</span>
+
+                    <strong class="text-success">
+                        ৳ @(Model.Invoice?.PaidAmount.ToString("N2"))
+                    </strong>
+                </div>
+
+                <div class="d-flex justify-content-between">
+
+                    <span>Due</span>
+
+                    <strong class="text-danger">
+                        ৳ @(Model.Invoice?.DueAmount.ToString("N2"))
+                    </strong>
+
+                </div>
+
+                <hr />
+
+                <a asp-area="Finance"
+                   asp-controller="Invoice"
+                   asp-action="Details"
+                   asp-route-id="@Model.InvoiceId"
+                   class="btn btn-outline-primary w-100">
+
+                    <i class="bi bi-receipt me-2"></i>
+                    View Invoice
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

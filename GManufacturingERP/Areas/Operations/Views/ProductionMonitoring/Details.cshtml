@@ -1,0 +1,419 @@
+﻿@model GManufacturingERP.Models.Entities.ProductionMonitoring
+
+@{
+    ViewData["Title"] = "Production Monitoring Details";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <small>Operations / Production / Details</small>
+        <h1>@Model.MonitoringNumber</h1>
+        <p>Production progress and output history.</p>
+    </div>
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to List
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle me-1"></i>
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        @TempData["Error"]
+    </div>
+}
+
+<!-- Summary Cards -->
+<div class="row g-4 mb-4">
+
+    <!-- Planned Quantity -->
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <small class="text-muted">Planned Quantity</small>
+
+                <h3 class="mt-2">
+                    @Model.PlannedQuantity @Model.Unit
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Produced Quantity -->
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <small class="text-muted">Produced Quantity</small>
+
+                <h3 class="text-success mt-2">
+                    @Model.ProducedQuantity @Model.Unit
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejected Quantity -->
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <small class="text-muted">Rejected Quantity</small>
+
+                <h3 class="text-danger mt-2">
+                    @Model.RejectedQuantity @Model.Unit
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remaining Quantity -->
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <small class="text-muted">Remaining Quantity</small>
+
+                <h3 class="mt-2">
+                    @Model.RemainingQuantity @Model.Unit
+                </h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Production Information -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <!-- Production Reference -->
+            <div class="col-md-4">
+                <strong>Production Reference:</strong>
+                <p class="mb-0 mt-1">
+                    @Model.ProductionReference
+                </p>
+            </div>
+
+            <!-- Product -->
+            <div class="col-md-4">
+                <strong>Product:</strong>
+                <p class="mb-0 mt-1">
+                    @Model.ProductName
+                </p>
+            </div>
+
+            <!-- Status -->
+            <div class="col-md-4">
+                <strong>Status:</strong>
+
+                <p class="mt-1 mb-0">
+                    <span class="badge
+                        @(Model.Status == "Completed"
+                                                      ? "bg-success"
+                                                      : Model.Status == "In Progress"
+                                                          ? "bg-warning text-dark"
+                                                          : "bg-secondary")">
+
+                        @if (Model.Status == "Completed")
+                        {
+                            <i class="bi bi-check-circle me-1"></i>
+                        }
+                        else if (Model.Status == "In Progress")
+                        {
+                            <i class="bi bi-hourglass-split me-1"></i>
+                        }
+                        else
+                        {
+                            <i class="bi bi-clock me-1"></i>
+                        }
+
+                        @Model.Status
+                    </span>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+
+        <div class="d-flex flex-wrap gap-2">
+
+            <!-- Not Started -->
+            @if (Model.Status == "Not Started")
+            {
+                <a asp-action="AddProgress"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-plus-circle me-1"></i>
+
+                    Start / Add Production Progress
+
+                </a>
+            }
+
+            <!-- In Progress -->
+            @if (Model.Status == "In Progress")
+            {
+                <a asp-action="AddProgress"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-plus-circle me-1"></i>
+
+                    Add Production Progress
+
+                </a>
+
+                <span class="badge bg-warning text-dark d-flex align-items-center px-3">
+
+                    <i class="bi bi-hourglass-split me-1"></i>
+
+                    Production In Progress
+
+                </span>
+            }
+
+            <!-- Completed -->
+            @if (Model.Status == "Completed")
+            {
+                <span class="badge bg-success d-flex align-items-center px-3">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Production Completed
+
+                </span>
+
+                <a asp-area="Operations"
+                   asp-controller="QualityControl"
+                   asp-action="Create"
+                   asp-route-productionMonitoringId="@Model.Id"
+                   class="btn btn-success">
+
+                    <i class="bi bi-clipboard-check me-1"></i>
+
+                    Create QC Inspection
+
+                </a>
+            }
+
+            <!-- Back -->
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bi bi-arrow-left me-1"></i>
+
+                Back to List
+
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- Rework Production -->
+@if (ViewBag.Rework != null)
+{
+    var rework =
+        (GManufacturingERP.Models.Entities.FinishedGoodsRework)
+        ViewBag.Rework;
+
+    <div class="card border-warning shadow-sm mb-4">
+
+        <div class="card-header bg-warning-subtle">
+
+            <h5 class="mb-0">
+                <i class="bi bi-arrow-repeat me-2"></i>
+                Rework Production
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <!-- Rework Number -->
+                <div class="col-md-3">
+                    <small class="text-muted d-block">
+                        Rework Number
+                    </small>
+
+                    <strong>
+                        @rework.ReworkNumber
+                    </strong>
+                </div>
+
+                <!-- Rework Quantity -->
+                <div class="col-md-3">
+                    <small class="text-muted d-block">
+                        Rework Quantity
+                    </small>
+
+                    <strong>
+                        @rework.Quantity @rework.Unit
+                    </strong>
+                </div>
+
+                <!-- Passed -->
+                <div class="col-md-3">
+                    <small class="text-muted d-block">
+                        Passed
+                    </small>
+
+                    <strong class="text-success">
+                        @rework.PassedQuantity @rework.Unit
+                    </strong>
+                </div>
+
+                <!-- Rejected -->
+                <div class="col-md-3">
+                    <small class="text-muted d-block">
+                        Rejected
+                    </small>
+
+                    <strong class="text-danger">
+                        @rework.RejectedQuantity @rework.Unit
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="mt-3">
+
+                <span class="badge bg-warning text-dark">
+
+                    <i class="bi bi-arrow-repeat me-1"></i>
+
+                    @rework.Status
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<!-- Production Progress History -->
+<div class="card border-0 shadow-sm">
+
+    <div class="card-body">
+
+        <h5 class="mb-3">
+            <i class="bi bi-clock-history me-2"></i>
+            Production Progress History
+        </h5>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>Produced</th>
+                        <th>Rejected</th>
+                        <th>Total Produced</th>
+                        <th>Remaining</th>
+                        <th>Entered By</th>
+                        <th>Remarks</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (!Model.ProgressEntries.Any())
+                    {
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center text-muted py-4">
+
+                                <i class="bi bi-inbox fs-4 d-block mb-2"></i>
+
+                                No progress entries found.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var entry in Model.ProgressEntries
+                        .OrderByDescending(x => x.EntryDate))
+                        {
+                            <tr>
+
+                                <!-- Date -->
+                                <td>
+                                    @(entry.EntryDate
+                                                                .ToLocalTime()
+                                                                .ToString("dd MMM yyyy HH:mm"))
+                        </td>
+
+                                <!-- Produced -->
+                                <td class="text-success fw-semibold">
+                                    @entry.ProducedQuantity
+                                </td>
+
+                                <!-- Rejected -->
+                                <td class="text-danger fw-semibold">
+                                    @entry.RejectedQuantity
+                                </td>
+
+                                <!-- Total Produced -->
+                                <td>
+                                    @entry.TotalProducedAfterEntry
+                                </td>
+
+                                <!-- Remaining -->
+                                <td>
+                                    @entry.RemainingQuantityAfterEntry
+                                </td>
+
+                                <!-- Entered By -->
+                                <td>
+                                    @entry.EnteredBy
+                                </td>
+
+                                <!-- Remarks -->
+                                <td>
+                                    @entry.Remarks
+                                </td>
+
+                            </tr>
+                                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

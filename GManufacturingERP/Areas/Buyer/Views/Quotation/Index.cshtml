@@ -1,0 +1,296 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.Quotation>
+
+@{
+    ViewData["Title"] = "My Quotations";
+    Layout = "~/Areas/Buyer/Views/Shared/_BuyerLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+        <small>Buyer Portal</small>
+
+        <h1>My Quotations</h1>
+
+        <p>
+            View your quotation requests and quotations received from the sales team.
+        </p>
+    </div>
+
+    <div class="d-flex gap-2">
+
+        <a asp-area="Buyer"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           class="btn btn-outline-primary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Dashboard
+
+        </a>
+
+        <a asp-area="Buyer"
+           asp-controller="Quotation"
+           asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bi bi-plus-circle me-1"></i>
+            Request Quotation
+
+        </a>
+
+    </div>
+
+</div>
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+
+        <i class="bi bi-check-circle-fill me-2"></i>
+
+        @TempData["Success"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+        @TempData["Error"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+<div class="card dashboard-card">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-file-earmark-text-fill"></i>
+
+            My Quotation Requests
+
+        </h5>
+
+        <span class="text-muted">
+            Total: @Model.Count()
+        </span>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+                <h5>No Quotations Found</h5>
+
+                <p>
+                    You have not submitted any quotation request yet.
+                </p>
+
+                <a asp-area="Buyer"
+                   asp-controller="Quotation"
+                   asp-action="Create"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Request Your First Quotation
+
+                </a>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Quotation No.</th>
+
+                            <th>Product</th>
+
+                            <th>Quantity</th>
+
+                            <th>Grand Total</th>
+
+                            <th>Quotation Date</th>
+
+                            <th>Valid Until</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var quotation in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        @quotation.QuotationNumber
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    @quotation.ProductDescription
+                                </td>
+
+
+                                <td>
+                                    @quotation.Quantity
+                                    @quotation.Unit
+                                </td>
+
+
+                                <td>
+
+                                    @if (quotation.GrandTotal > 0)
+                                    {
+                                        <strong>
+                                            @quotation.GrandTotal.ToString("N2")
+                                        </strong>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            -
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+                                    @quotation.QuotationDate.ToString("dd MMM yyyy")
+                                </td>
+
+
+                                <td>
+                                    @quotation.ValidUntil.ToString("dd MMM yyyy")
+                                </td>
+
+
+                                <td>
+
+                                    @if (quotation.Status == "Requested")
+                                    {
+                                        <span class="badge bg-secondary">
+                                            Requested
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Under Review")
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            Under Review
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Prepared")
+                                    {
+                                        <span class="badge bg-info text-dark">
+                                            Prepared
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Sent")
+                                    {
+                                        <span class="badge bg-primary">
+                                            Sent
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Accepted")
+                                    {
+                                        <span class="badge bg-success">
+                                            Accepted
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Rejected")
+                                    {
+                                        <span class="badge bg-danger">
+                                            Rejected
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Converted")
+                                    {
+                                        <span class="badge bg-success">
+                                            Converted
+                                        </span>
+                                    }
+                                    else if (quotation.Status == "Cancelled")
+                                    {
+                                        <span class="badge bg-dark">
+                                            Cancelled
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @quotation.Status
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    <a asp-area="Buyer"
+                                       asp-controller="Quotation"
+                                       asp-action="Details"
+                                       asp-route-id="@quotation.Id"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        <i class="bi bi-eye"></i>
+                                        View
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>

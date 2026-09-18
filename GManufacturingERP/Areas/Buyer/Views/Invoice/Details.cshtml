@@ -1,0 +1,304 @@
+﻿@model GManufacturingERP.Models.Entities.Invoice
+
+@{
+    ViewData["Title"] = "Invoice Details";
+    Layout = "~/Areas/Buyer/Views/Shared/_BuyerLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold">
+                Invoice Details
+            </h2>
+
+            <p class="text-muted mb-0">
+                @Model.InvoiceNumber
+            </p>
+        </div>
+
+        <a asp-area="Buyer"
+           asp-controller="Invoice"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+
+        </a>
+
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <!-- ================================================= -->
+            <!-- INVOICE + BUYER INFORMATION -->
+            <!-- ================================================= -->
+
+            <div class="row g-4">
+
+                <!-- Invoice Information -->
+
+                <div class="col-md-6">
+
+                    <h5 class="fw-bold mb-3">
+                        Invoice Information
+                    </h5>
+
+                    <table class="table">
+
+                        <tr>
+                            <th>
+                                Invoice Number
+                            </th>
+
+                            <td>
+                                @Model.InvoiceNumber
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Invoice Date
+                            </th>
+
+                            <td>
+                                @Model.InvoiceDate.ToString(
+                                "dd MMM yyyy")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Due Date
+                            </th>
+
+                            <td>
+                                @Model.DueDate.ToString(
+                                                                "dd MMM yyyy")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Status
+                            </th>
+
+                            <td>
+
+                                @if (Model.Status == "Paid")
+                                {
+                                    <span class="badge bg-success">
+                                        Paid
+                                    </span>
+                                }
+                                else if (
+                                Model.Status ==
+                                "Partially Paid")
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        Partially Paid
+                                    </span>
+                                }
+                                else if (
+                                Model.Status ==
+                                "Issued")
+                                {
+                                    <span class="badge bg-primary">
+                                        Issued
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        @Model.Status
+                                    </span>
+                                }
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <!-- Buyer Information -->
+
+                <div class="col-md-6">
+
+                    <h5 class="fw-bold mb-3">
+                        Buyer Information
+                    </h5>
+
+                    <table class="table">
+
+                        <tr>
+                            <th>
+                                Buyer
+                            </th>
+
+                            <td>
+                                @Model.BuyerName
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Product
+                            </th>
+
+                            <td>
+                                @Model.ProductName
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Quantity
+                            </th>
+
+                            <td>
+                                @Model.Quantity
+                                @Model.Unit
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <hr />
+
+            <!-- ================================================= -->
+            <!-- PAYMENT SUMMARY -->
+            <!-- ================================================= -->
+
+            <h5 class="fw-bold mb-3">
+                Payment Summary
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-6 ms-auto">
+
+                    <table class="table">
+
+                        <tr>
+                            <th>
+                                Subtotal
+                            </th>
+
+                            <td class="text-end">
+                                ৳ @Model.Subtotal.ToString("N2")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Discount
+                            </th>
+
+                            <td class="text-end">
+                                ৳ @Model.Discount.ToString("N2")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Tax
+                            </th>
+
+                            <td class="text-end">
+                                ৳ @Model.Tax.ToString("N2")
+                            </td>
+                        </tr>
+
+                        <tr class="fw-bold">
+                            <th>
+                                Grand Total
+                            </th>
+
+                            <td class="text-end">
+                                ৳ @Model.GrandTotal.ToString("N2")
+                            </td>
+                        </tr>
+
+                        <tr class="text-success">
+                            <th>
+                                Paid Amount
+                            </th>
+
+                            <td class="text-end">
+                                ৳ @Model.PaidAmount.ToString("N2")
+                            </td>
+                        </tr>
+
+                        <tr class="text-danger fw-bold">
+                            <th>
+                                Due Amount
+                            </th>
+
+                            <td class="text-end">
+                                ৳ @Model.DueAmount.ToString("N2")
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- ================================================= -->
+            <!-- PAYMENT BUTTON -->
+            <!-- ================================================= -->
+
+            <div class="d-flex justify-content-end gap-2">
+
+                @if (
+                                (Model.Status == "Issued" ||
+                                Model.Status == "Partially Paid") &&
+                                Model.DueAmount > 0)
+                {
+                    <a asp-area="Finance"
+                       asp-controller="Payment"
+                       asp-action="Create"
+                       asp-route-invoiceId="@Model.Id"
+                       class="btn btn-success btn-lg">
+
+                        <i class="bi bi-credit-card me-2"></i>
+                        Pay Now
+
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,153 @@
+﻿@model GManufacturingERP.ViewModels.ReworkFinishedGoodsViewModel
+
+@{
+    ViewData["Title"] = "Start Rework";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header mb-4">
+    <div>
+        <small>Operations / Finished Goods / Rework</small>
+        <h1>Start Rework</h1>
+        <p class="text-muted">
+            Send rejected finished goods back to production.
+        </p>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="mb-0">Rework Information</h5>
+    </div>
+
+    <div class="card-body">
+        <form asp-action="Rework"
+              asp-controller="FinishedGoods"
+              asp-area="Operations"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   asp-for="FinishedGoodsStockId" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Product Name
+                    </label>
+
+                    <input asp-for="ProductName"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Production Reference
+                    </label>
+
+                    <input asp-for="ProductionReference"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Unit
+                    </label>
+
+                    <input asp-for="Unit"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Available Quantity
+                    </label>
+
+                    <input asp-for="AvailableQuantity"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Rework Quantity
+                    </label>
+
+                    <input asp-for="ReworkQuantity"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Quantity"
+                           class="form-label">
+                        Quantity to Rework
+                    </label>
+
+                    <input asp-for="Quantity"
+                           class="form-control"
+                           min="0.01"
+                           max="@Model.ReworkQuantity"
+                           step="0.01" />
+
+                    <span asp-validation-for="Quantity"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <div class="col-md-12">
+                    <label asp-for="Remarks"
+                           class="form-label">
+                        Remarks
+                    </label>
+
+                    <textarea asp-for="Remarks"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Enter rework reason or remarks">
+                    </textarea>
+
+                    <span asp-validation-for="Remarks"
+                          class="text-danger">
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a asp-action="Details"
+                   asp-route-id="@Model.FinishedGoodsStockId"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-warning">
+                    <i class="bi bi-arrow-repeat"></i>
+                    Start Rework
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

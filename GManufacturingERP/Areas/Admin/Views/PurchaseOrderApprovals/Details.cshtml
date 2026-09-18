@@ -1,0 +1,301 @@
+﻿@model GManufacturingERP.Models.Entities.PurchaseOrder
+
+@{
+    ViewData["Title"] = "Purchase Order Review";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Admin / Procurement</small>
+
+        <h1>Purchase Order Review</h1>
+
+        <p>
+            Review the Purchase Order before approval.
+        </p>
+
+    </div>
+
+    <a asp-area="Admin"
+       asp-controller="PurchaseOrderApprovals"
+       asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back
+
+    </a>
+
+</div>
+
+<div class="content-card mb-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div class="card-title mb-0">
+
+            <i class="bi bi-cart-check me-2"></i>
+
+            @Model.PurchaseOrderNumber
+
+        </div>
+
+        @if (Model.PurchaseOrderStatus == "Submitted")
+        {
+            <span class="badge bg-info">
+                Pending Approval
+            </span>
+        }
+        else if (Model.PurchaseOrderStatus == "Approved")
+        {
+            <span class="badge bg-success">
+                Approved
+            </span>
+        }
+        else if (Model.PurchaseOrderStatus == "Rejected")
+        {
+            <span class="badge bg-danger">
+                Rejected
+            </span>
+        }
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Requisition
+            </small>
+
+            <div class="fw-semibold">
+                @Model.PurchaseRequisition
+                ?.RequisitionNumber
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Supplier
+            </small>
+
+            <div class="fw-semibold">
+                @Model.SupplierName
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Supplier Contact
+            </small>
+
+            <div class="fw-semibold">
+                @Model.SupplierContact
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Order Date
+            </small>
+
+            <div class="fw-semibold">
+                @Model.OrderDate.ToString("dd MMM yyyy")
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Expected Delivery
+            </small>
+
+            <div class="fw-semibold">
+                @Model.ExpectedDeliveryDate
+                .ToString("dd MMM yyyy")
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <small class="text-muted">
+                Grand Total
+            </small>
+
+            <div class="fw-semibold">
+                @Model.GrandTotal.ToString("N2")
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Materials -->
+
+<div class="content-card mb-4">
+
+    <div class="card-title">
+
+        <i class="bi bi-box-seam me-2"></i>
+
+        Ordered Materials
+
+    </div>
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+
+                <tr>
+                    <th>Material</th>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+
+                        <td>
+                            @item.MaterialName
+                        </td>
+
+                        <td>
+                            @item.MaterialCategory
+                        </td>
+
+                        <td>
+                            @item.Unit
+                        </td>
+
+                        <td>
+                            @item.OrderedQuantity
+                        </td>
+
+                        <td>
+                            @item.UnitPrice.ToString("N2")
+                        </td>
+
+                        <td>
+                            @item.TotalPrice.ToString("N2")
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- Approval -->
+@if (Model.PurchaseOrderStatus == "Submitted")
+{
+    <div class="content-card">
+
+        <div class="card-title">
+
+            <i class="bi bi-shield-check me-2"></i>
+
+            Approval Decision
+
+        </div>
+
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+
+            <form asp-area="Admin"
+                  asp-controller="PurchaseOrderApprovals"
+                  asp-action="Approve"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    <i class="bi bi-check-circle me-1"></i>
+
+                    Approve Purchase Order
+
+                </button>
+
+            </form>
+
+            <form asp-area="Admin"
+                  asp-controller="PurchaseOrderApprovals"
+                  asp-action="Reject"
+                  asp-route-id="@Model.Id"
+                  method="post"
+                  class="d-flex gap-2">
+
+                @Html.AntiForgeryToken()
+
+                <input type="text"
+                       name="rejectionReason"
+                       class="form-control"
+                       placeholder="Rejection reason"
+                       required />
+
+                <button type="submit"
+                        class="btn btn-danger">
+
+                    <i class="bi bi-x-circle me-1"></i>
+
+                    Reject
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+}
+else if (Model.PurchaseOrderStatus == "Approved")
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle-fill me-2"></i>
+
+        This Purchase Order has already been approved.
+
+    </div>
+}
+else if (Model.PurchaseOrderStatus == "Rejected")
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-x-circle-fill me-2"></i>
+
+        This Purchase Order has been rejected.
+
+    </div>
+}

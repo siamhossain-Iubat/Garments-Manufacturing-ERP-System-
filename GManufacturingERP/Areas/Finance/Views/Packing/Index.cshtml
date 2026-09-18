@@ -1,0 +1,353 @@
+﻿@model IEnumerable<GManufacturingERP.ViewModels.PackingDashboardViewModel>
+
+@{
+    ViewData["Title"] = "Packing Management";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <small class="text-muted">
+            Finance & Logistics / Packing
+        </small>
+
+        <h2 class="fw-bold mt-1">
+            Packing Management
+        </h2>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-info">
+            @TempData["Info"]
+        </div>
+    }
+
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white">
+
+            <h5 class="mb-0">
+                Finished Goods Available for Packing
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+
+                    <h5 class="text-muted">
+                        No finished goods are currently available for packing.
+                    </h5>
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>Product</th>
+
+                                <th>Sales Order</th>
+
+                                <th>Ordered</th>
+
+                                <th>Available</th>
+
+                                <th>Packed</th>
+
+                                <th>Remaining</th>
+
+                                <th>Status</th>
+
+                                <th class="text-end">
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        <strong>
+                                            @item.ProductName
+                                        </strong>
+
+                                        <br />
+
+                                        <small class="text-muted">
+                                            @item.Unit
+                                        </small>
+
+                                    </td>
+
+
+                                    <td>
+                                        @item.SalesOrderNumber
+                                    </td>
+
+
+                                    <td>
+                                        @item.OrderedQuantity
+                                        @item.Unit
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+                                            @item.AvailableQuantity
+                                        </strong>
+
+                                        @item.Unit
+
+                                    </td>
+
+
+                                    <td>
+                                        @item.AlreadyPackedQuantity
+                                        @item.Unit
+                                    </td>
+
+
+                                    <td>
+                                        @item.RemainingOrderQuantity
+                                        @item.Unit
+                                    </td>
+
+
+                                    <td>
+
+                                        @if (item.IsFullyAvailable)
+                                        {
+                                            <span class="badge bg-success">
+                                                Fully Available
+                                            </span>
+                                        }
+                                        else if (item.IsPartiallyAvailable)
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                Partial Available
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Waiting
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <td class="text-end">
+
+                                        @if (item.IsFullyAvailable)
+                                        {
+                                            <a asp-action="ReadyToPack"
+                                               asp-route-id="@item.FinishedGoodsStockId"
+                                               class="btn btn-success btn-sm">
+
+                                                <i class="bi bi-box-seam"></i>
+
+                                                Ready to Pack
+
+                                            </a>
+                                        }
+                                        else if (item.IsPartiallyAvailable)
+                                        {
+                                            <button type="button"
+                                                    class="btn btn-warning btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#partialModal-@item.FinishedGoodsStockId">
+
+                                                Partial Shipment?
+
+                                            </button>
+
+
+                                            <div class="modal fade"
+                                                 id="partialModal-@item.FinishedGoodsStockId"
+                                                 tabindex="-1">
+
+                                                <div class="modal-dialog modal-dialog-centered">
+
+                                                    <div class="modal-content">
+
+                                                        <div class="modal-header">
+
+                                                            <h5 class="modal-title">
+                                                                Partial Shipment
+                                                            </h5>
+
+                                                            <button type="button"
+                                                                    class="btn-close"
+                                                                    data-bs-dismiss="modal">
+                                                            </button>
+
+                                                        </div>
+
+
+                                                        <div class="modal-body">
+
+                                                            <h5>
+                                                                @item.ProductName
+                                                            </h5>
+
+                                                            <hr />
+
+                                                            <p>
+                                                                <strong>
+                                                                    Ordered:
+                                                                </strong>
+
+                                                                @item.RemainingOrderQuantity
+                                                                @item.Unit
+                                                            </p>
+
+
+                                                            <p>
+                                                                <strong>
+                                                                    Available:
+                                                                </strong>
+
+                                                                @item.AvailableQuantity
+                                                                @item.Unit
+                                                            </p>
+
+
+                                                            <p>
+                                                                <strong>
+                                                                    Already Packed:
+                                                                </strong>
+
+                                                                @item.AlreadyPackedQuantity
+                                                                @item.Unit
+                                                            </p>
+
+
+                                                            <div class="alert alert-warning">
+
+                                                                Available quantity is less
+                                                                than remaining ordered quantity.
+
+                                                                <br /><br />
+
+                                                                <strong>
+                                                                    Do you want to allow
+                                                                    partial shipment?
+                                                                </strong>
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <div class="modal-footer">
+
+                                                            <form asp-action="PartialShipmentNo"
+                                                                  method="post">
+
+                                                                @Html.AntiForgeryToken()
+
+                                                                <input type="hidden"
+                                                                       name="id"
+                                                                       value="@item.FinishedGoodsStockId" />
+
+                                                                <button type="submit"
+                                                                        class="btn btn-secondary">
+
+                                                                    No
+
+                                                                </button>
+
+                                                            </form>
+
+
+                                                            <form asp-action="PartialShipmentYes"
+                                                                  method="post">
+
+                                                                @Html.AntiForgeryToken()
+
+                                                                <input type="hidden"
+                                                                       name="id"
+                                                                       value="@item.FinishedGoodsStockId" />
+
+                                                                <button type="submit"
+                                                                        class="btn btn-success">
+
+                                                                    Yes, Continue
+
+                                                                </button>
+
+                                                            </form>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Waiting for Stock
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

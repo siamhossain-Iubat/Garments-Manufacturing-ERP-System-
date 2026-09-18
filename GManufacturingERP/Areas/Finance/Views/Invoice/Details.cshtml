@@ -1,0 +1,492 @@
+﻿@model GManufacturingERP.Models.Entities.Invoice
+
+@{
+    ViewData["Title"] = "Invoice Details";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+
+    var badgeClass = Model.Status switch
+    {
+        "Draft" => "bg-secondary",
+        "Issued" => "bg-primary",
+        "Partially Paid" => "bg-warning text-dark",
+        "Paid" => "bg-success",
+        "Cancelled" => "bg-danger",
+        _ => "bg-secondary"
+    };
+}
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <small class="text-muted">
+            Finance & Logistics / Invoice / Details
+        </small>
+
+        <h1 class="mb-1">
+            @Model.InvoiceNumber
+        </h1>
+
+        <p class="text-muted mb-0">
+            Invoice details and financial status
+        </p>
+
+    </div>
+
+    <span class="badge @badgeClass fs-6 px-3 py-2">
+        @Model.Status
+    </span>
+
+</div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+
+        <i class="bi bi-check-circle me-2"></i>
+
+        @TempData["SuccessMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        <i class="bi bi-exclamation-triangle me-2"></i>
+
+        @TempData["ErrorMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-receipt me-2"></i>
+
+                    Invoice Information
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Invoice Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.InvoiceNumber
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Delivery Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.Delivery?.DeliveryNumber
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Sales Order
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.SalesOrder?.OrderNumber
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Buyer
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.BuyerName
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Product
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.ProductName
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Quantity
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.Quantity.ToString("N2")
+                            @Model.Unit
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <hr />
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Unit Price
+                        </small>
+
+                        <div>
+                            @Model.UnitPrice.ToString("N2")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Subtotal
+                        </small>
+
+                        <div>
+                            @Model.Subtotal.ToString("N2")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Discount
+                        </small>
+
+                        <div>
+                            @Model.Discount.ToString("N2")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Tax / VAT
+                        </small>
+
+                        <div>
+                            @Model.Tax.ToString("N2")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <div class="alert alert-primary mb-0">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+                                    Grand Total
+                                </strong>
+
+                                <strong>
+                                    @Model.GrandTotal.ToString("N2")
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <div class="alert alert-success mb-0">
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+                                    Paid Amount
+                                </strong>
+
+                                <strong>
+                                    @Model.PaidAmount.ToString("N2")
+                                </strong>
+
+                            </div>
+
+
+                            <hr />
+
+
+                            <div class="d-flex justify-content-between">
+
+                                <strong>
+                                    Due Amount
+                                </strong>
+
+                                <strong>
+                                    @Model.DueAmount.ToString("N2")
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-gear me-2"></i>
+
+                    Invoice Actions
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                @if (Model.Status == "Draft")
+                {
+                    <form asp-action="Issue"
+                          method="post"
+                          class="mb-2">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+
+                            <i class="bi bi-send me-2"></i>
+
+                            Issue Invoice
+
+                        </button>
+
+                    </form>
+
+
+                    <form asp-action="Cancel"
+                          method="post"
+                          onsubmit="return confirm('Are you sure you want to cancel this invoice?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-outline-danger w-100">
+
+                            <i class="bi bi-x-circle me-2"></i>
+
+                            Cancel Invoice
+
+                        </button>
+
+                    </form>
+                }
+
+
+                
+
+
+                @if (Model.Status == "Paid")
+                {
+                    <div class="alert alert-success mb-0">
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        This invoice has been fully paid.
+
+                    </div>
+                }
+
+
+                @if (Model.Status == "Cancelled")
+                {
+                    <div class="alert alert-danger mb-0">
+
+                        <i class="bi bi-x-circle me-2"></i>
+
+                        This invoice has been cancelled.
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-calendar me-2"></i>
+
+                    Invoice Dates
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="mb-3">
+
+                    <small class="text-muted">
+                        Invoice Date
+                    </small>
+
+                    <div>
+                        @Model.InvoiceDate.ToString("dd MMM yyyy")
+                    </div>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <small class="text-muted">
+                        Due Date
+                    </small>
+
+                    <div>
+                        @Model.DueDate.ToString("dd MMM yyyy")
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <small class="text-muted">
+                        Created By
+                    </small>
+
+                    <div>
+                        @Model.CreatedBy
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="mt-4">
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back to Invoices
+
+    </a>
+
+
+    @if (Model.Delivery != null)
+    {
+        <a asp-area="Finance"
+           asp-controller="Delivery"
+           asp-action="Details"
+           asp-route-id="@Model.DeliveryId"
+           class="btn btn-outline-primary">
+
+            <i class="bi bi-box2-heart me-1"></i>
+
+            View Delivery
+
+        </a>
+    }
+
+</div>

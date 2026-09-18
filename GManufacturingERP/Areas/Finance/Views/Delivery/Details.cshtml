@@ -1,0 +1,579 @@
+﻿```cshtml
+@model GManufacturingERP.Models.Entities.Delivery
+
+@{
+    ViewData["Title"] = "Delivery Details";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+
+    var badgeClass = Model.Status switch
+    {
+        "Pending" => "bg-warning text-dark",
+        "Approved" => "bg-primary",
+        "Delivered" => "bg-success",
+        "Cancelled" => "bg-danger",
+        "Rejected" => "bg-danger",
+        _ => "bg-secondary"
+    };
+}
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <small class="text-muted">
+            Finance & Logistics / Delivery / Details
+        </small>
+
+        <h1 class="mb-1">
+            @Model.DeliveryNumber
+        </h1>
+
+        <p class="text-muted mb-0">
+            Delivery details and confirmation
+        </p>
+
+    </div>
+
+    <span class="badge @badgeClass fs-6 px-3 py-2">
+        @Model.Status
+    </span>
+
+</div>
+
+
+<!-- Success Message -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+
+        <i class="bi bi-check-circle me-2"></i>
+
+        @TempData["SuccessMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+<!-- Error Message -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+
+        <i class="bi bi-exclamation-triangle me-2"></i>
+
+        @TempData["ErrorMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+
+    </div>
+}
+
+
+<div class="row g-4">
+
+    <!-- ========================================== -->
+    <!-- Delivery Information -->
+    <!-- ========================================== -->
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-box2-heart me-2"></i>
+
+                    Delivery Information
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <!-- Delivery Number -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Delivery Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.DeliveryNumber
+                        </div>
+
+                    </div>
+
+
+                    <!-- Dispatch Number -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Dispatch Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.Dispatch?.DispatchNumber
+                        </div>
+
+                    </div>
+
+
+                    <!-- Shipment Number -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Shipment Number
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.Dispatch?.Shipment?.ShipmentNumber
+                        </div>
+
+                    </div>
+
+
+                    <!-- Product -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Product
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.ProductName
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivered Quantity -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Delivered Quantity
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.Quantity.ToString("N2")
+                            @Model.Unit
+                        </div>
+
+                    </div>
+
+
+                    <!-- Total Cartons -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Total Cartons
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.TotalCartons
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivery Date -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Delivery Date
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.DeliveryDate.ToString("dd MMM yyyy")
+                        </div>
+
+                    </div>
+
+
+                    <!-- Receiver -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Receiver
+                        </small>
+
+                        <div class="fw-semibold">
+                            @Model.ReceiverName
+                        </div>
+
+                    </div>
+
+
+                    <!-- Receiver Phone -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Receiver Phone
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.ReceiverPhone)
+                                                        ? "Not specified"
+                                                        : Model.ReceiverPhone)
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivered By -->
+                    <div class="col-md-6">
+
+                        <small class="text-muted">
+                            Delivered By
+                        </small>
+
+                        <div>
+                            @Model.DeliveredBy
+                        </div>
+
+                    </div>
+
+
+                    <!-- Delivery Address -->
+                    <div class="col-12">
+
+                        <small class="text-muted">
+                            Delivery Address
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.DeliveryAddress)
+                                                        ? "Not specified"
+                                                        : Model.DeliveryAddress)
+                        </div>
+
+                    </div>
+
+
+                    <!-- Remarks -->
+                    <div class="col-12">
+
+                        <small class="text-muted">
+                            Remarks
+                        </small>
+
+                        <div>
+                            @(string.IsNullOrWhiteSpace(Model.Remarks)
+                                                        ? "No remarks"
+                                                        : Model.Remarks)
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- Delivery Action -->
+    <!-- ========================================== -->
+
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-check2-square me-2"></i>
+
+                    Delivery Action
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <!-- Pending -->
+                @if (Model.Status == "Pending")
+                {
+                    <div class="alert alert-warning mb-0">
+
+                        <i class="bi bi-hourglass-split me-2"></i>
+
+                        <strong>
+                            Waiting for Admin Approval
+                        </strong>
+
+                        <div class="mt-1">
+
+                            This delivery has been created and submitted
+                            to Admin for authorization.
+
+                        </div>
+
+                    </div>
+                }
+
+
+                <!-- Approved -->
+                @if (Model.Status == "Approved")
+                {
+                    <div class="alert alert-primary">
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        <strong>
+                            Admin Approved
+                        </strong>
+
+                        <div class="mt-1">
+
+                            You can now confirm the actual delivery.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Confirm Delivered -->
+                    <form asp-action="Complete"
+                          method="post"
+                          class="mb-2"
+                          onsubmit="return confirm('Confirm that this shipment has been delivered to the receiver?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-success w-100">
+
+                            <i class="bi bi-check-circle me-2"></i>
+
+                            Confirm Delivered
+
+                        </button>
+
+                    </form>
+
+
+                    <!-- Cancel Delivery -->
+                    <form asp-action="Cancel"
+                          method="post"
+                          onsubmit="return confirm('Are you sure you want to cancel this delivery?');">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <button type="submit"
+                                class="btn btn-outline-danger w-100">
+
+                            <i class="bi bi-x-circle me-2"></i>
+
+                            Cancel Delivery
+
+                        </button>
+
+                    </form>
+                }
+
+
+                <!-- Rejected -->
+                @if (Model.Status == "Rejected")
+                {
+                    <div class="alert alert-danger mb-0">
+
+                        <i class="bi bi-x-circle-fill me-2"></i>
+
+                        <strong>
+                            Delivery Rejected
+                        </strong>
+
+                        <div class="mt-1">
+
+                            Please review the rejection reason and create
+                            a corrected delivery if required.
+
+                        </div>
+
+                    </div>
+                }
+
+
+                <!-- Delivered -->
+                @if (Model.Status == "Delivered")
+                {
+                    <a asp-area="Finance"
+                       asp-controller="Invoice"
+                       asp-action="Create"
+                       asp-route-deliveryId="@Model.Id"
+                       class="btn btn-primary w-100 mb-2">
+
+                        <i class="bi bi-receipt me-2"></i>
+
+                        Create Invoice
+
+                    </a>
+
+
+                    <div class="alert alert-success mb-0">
+
+                        <i class="bi bi-check-circle me-2"></i>
+
+                        Delivery completed successfully.
+
+                    </div>
+                }
+
+
+                <!-- Cancelled -->
+                @if (Model.Status == "Cancelled")
+                {
+                    <div class="alert alert-danger mb-0">
+
+                        <i class="bi bi-x-circle me-2"></i>
+
+                        This delivery has been cancelled.
+
+                    </div>
+                }
+
+
+                <!-- Back to List -->
+                <div class="mt-3">
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary w-100">
+
+                        <i class="bi bi-arrow-left me-1"></i>
+
+                        Back to Deliveries
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================================== -->
+        <!-- Timeline -->
+        <!-- ========================================== -->
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-clock-history me-2"></i>
+
+                    Timeline
+
+                </h5>
+
+            </div>
+
+
+            <div class="card-body">
+
+                <!-- Created -->
+                <div class="mb-3">
+
+                    <small class="text-muted">
+                        Created
+                    </small>
+
+                    <div>
+                        @Model.CreatedAt
+                        .ToLocalTime()
+                        .ToString("dd MMM yyyy, hh:mm tt")
+                    </div>
+
+                </div>
+
+
+                <!-- Delivered -->
+                @if (Model.DeliveredAt.HasValue)
+                {
+                    <div>
+
+                        <small class="text-muted">
+                            Delivered
+                        </small>
+
+                        <div>
+                            @Model.DeliveredAt.Value
+                            .ToLocalTime()
+                            .ToString("dd MMM yyyy, hh:mm tt")
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- Bottom Actions -->
+<!-- ========================================== -->
+
+<div class="mt-4">
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+
+        Back to Deliveries
+
+    </a>
+
+
+    @if (Model.Dispatch != null)
+    {
+        <a asp-area="Finance"
+           asp-controller="Dispatch"
+           asp-action="Details"
+           asp-route-id="@Model.DispatchId"
+           class="btn btn-outline-primary">
+
+            <i class="bi bi-truck me-1"></i>
+
+            View Dispatch
+
+        </a>
+    }
+
+</div>
+

@@ -1,0 +1,550 @@
+﻿@model GManufacturingERP.Models.Entities.Quotation
+
+@{
+    ViewData["Title"] = "Quotation Details";
+    Layout = "~/Areas/Buyer/Views/Shared/_BuyerLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Buyer Portal</small>
+        <h1>Quotation Details</h1>
+        <p>
+            Review quotation information and take action.
+        </p>
+    </div>
+
+    <a asp-area="Buyer"
+       asp-controller="Quotation"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left me-1"></i>
+        My Quotations
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["Success"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["Error"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert">
+        </button>
+    </div>
+}
+
+<div class="row g-4">
+
+    <!-- Main Quotation -->
+    <div class="col-lg-8">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    @Model.QuotationNumber
+                </h5>
+
+                @if (Model.Status == "Requested")
+                {
+                    <span class="badge bg-secondary">
+                        Requested
+                    </span>
+                }
+                else if (Model.Status == "Under Review")
+                {
+                    <span class="badge bg-warning text-dark">
+                        Under Review
+                    </span>
+                }
+                else if (Model.Status == "Prepared")
+                {
+                    <span class="badge bg-info text-dark">
+                        Prepared
+                    </span>
+                }
+                else if (Model.Status == "Sent")
+                {
+                    <span class="badge bg-primary">
+                        Sent
+                    </span>
+                }
+                else if (Model.Status == "AcceptedPendingPayment")
+                {
+                    <span class="badge bg-warning text-dark">
+                        Accepted - Payment Pending
+                    </span>
+                }
+                else if (Model.Status == "Accepted")
+                {
+                    <span class="badge bg-success">
+                        Accepted
+                    </span>
+                }
+                else if (Model.Status == "Rejected")
+                {
+                    <span class="badge bg-danger">
+                        Rejected
+                    </span>
+                }
+                else if (Model.Status == "Converted")
+                {
+                    <span class="badge bg-success">
+                        Converted
+                    </span>
+                }
+                else if (Model.Status == "Cancelled")
+                {
+                    <span class="badge bg-dark">
+                        Cancelled
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">
+                        @Model.Status
+                    </span>
+                }
+
+            </div>
+
+            <div class="card-body">
+
+                <!-- Product Information -->
+                <h6 class="text-primary mb-3">
+                    Product Information
+                </h6>
+
+                <div class="row g-3 mb-4">
+
+                    <div class="col-12">
+                        <label class="text-muted small">
+                            Product Description
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.ProductDescription
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">
+                            Quantity
+                        </label>
+
+                        <div class="fw-semibold">
+                            @Model.Quantity @Model.Unit
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">
+                            Required Delivery
+                        </label>
+
+                        <div class="fw-semibold">
+                            @(Model.RequiredDeliveryDate?.ToString("dd MMM yyyy") ?? "-")
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Pricing Information -->
+                @if (Model.GrandTotal > 0)
+                {
+                    <hr />
+
+                    <h6 class="text-primary mb-3">
+                        Pricing Information
+                    </h6>
+
+                    <div class="table-responsive">
+                        <table class="table">
+
+                            <tr>
+                                <td>Unit Price</td>
+                                <td class="text-end">
+                                    @Model.UnitPrice.ToString("N2")
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Quantity</td>
+                                <td class="text-end">
+                                    @Model.Quantity
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Subtotal</td>
+                                <td class="text-end">
+                                    @Model.Subtotal.ToString("N2")
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Discount</td>
+                                <td class="text-end text-danger">
+                                    - @Model.Discount.ToString("N2")
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Tax</td>
+                                <td class="text-end">
+                                    @Model.Tax.ToString("N2")
+                                </td>
+                            </tr>
+
+                            <tr class="table-light">
+                                <th>
+                                    Grand Total
+                                </th>
+
+                                <th class="text-end fs-5">
+                                    @Model.GrandTotal.ToString("N2") BDT
+                                </th>
+                            </tr>
+
+                        </table>
+                    </div>
+
+                    <!-- Advance Payment Terms -->
+                    <div class="card mt-3">
+
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-credit-card me-2"></i>
+                                Advance Payment Terms
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <p>
+                                <strong>Quotation Total:</strong>
+                                @Model.GrandTotal.ToString("N2") BDT
+                            </p>
+
+                            <p>
+                                <strong>Advance Percentage:</strong>
+                                @Model.AdvancePaymentPercentage%
+                            </p>
+
+                            <p>
+                                <strong>Advance Amount:</strong>
+                                @Model.AdvancePaymentAmount.ToString("N2") BDT
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+
+                                @if (Model.Status == "AcceptedPendingPayment")
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        Accepted - Payment Pending
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        @Model.Status
+                                    </span>
+                                }
+                            </p>
+
+                            @if (Model.Status == "Sent")
+                            {
+                                <div class="alert alert-info">
+                                    Please review the quotation and advance
+                                    payment terms before accepting.
+                                </div>
+                            }
+                            else if (Model.Status == "AcceptedPendingPayment")
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-circle me-2"></i>
+                                    Quotation accepted. Advance payment is pending.
+                                </div>
+
+                                <a asp-area="Buyer"
+                                   asp-controller="Payment"
+                                   asp-action="Advance"
+                                   asp-route-quotationId="@Model.Id"
+                                   class="btn btn-primary">
+                                    <i class="bi bi-credit-card me-1"></i>
+                                    Pay Advance
+                                </a>
+                            }
+                            else if (Model.Status == "Accepted")
+                            {
+                                <div class="alert alert-success">
+                                    Quotation accepted and ready for
+                                    Sales Order processing.
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                }
+
+                <!-- Terms & Conditions -->
+                @if (!string.IsNullOrWhiteSpace(Model.TermsAndConditions))
+                {
+                    <hr />
+
+                    <h6 class="text-primary">
+                        Terms & Conditions
+                    </h6>
+
+                    <p class="text-muted">
+                        @Model.TermsAndConditions
+                    </p>
+                }
+
+                <!-- Remarks -->
+                @if (!string.IsNullOrWhiteSpace(Model.Remarks))
+                {
+                    <hr />
+
+                    <h6 class="text-primary">
+                        Remarks
+                    </h6>
+
+                    <p class="text-muted">
+                        @Model.Remarks
+                    </p>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Buyer / Shipping / Action -->
+    <div class="col-lg-4">
+
+        <!-- Buyer Information -->
+        <div class="card dashboard-card mb-4">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-person-vcard"></i>
+                    Buyer Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <p class="mb-2">
+                    <strong>Company:</strong>
+                    @Model.CompanyName
+                </p>
+
+                <p class="mb-2">
+                    <strong>Contact:</strong>
+                    @Model.ContactPerson
+                </p>
+
+                <p class="mb-2">
+                    <strong>Email:</strong>
+                    @Model.BuyerEmail
+                </p>
+
+                <p class="mb-0">
+                    <strong>Phone:</strong>
+                    @(Model.BuyerPhone ?? "-")
+                </p>
+
+            </div>
+        </div>
+
+        <!-- Shipping -->
+        <div class="card dashboard-card mb-4">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-truck"></i>
+                    Shipping
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <p class="mb-2">
+                    <strong>Country:</strong>
+                    @(Model.ShippingCountry ?? "-")
+                </p>
+
+                <p class="mb-0">
+                    <strong>Address:</strong><br />
+                    @(Model.ShippingAddress ?? "-")
+                </p>
+
+            </div>
+        </div>
+
+        <!-- Quotation Action -->
+        @if (Model.Status == "Sent")
+        {
+            <div class="card dashboard-card">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-check2-square"></i>
+                        Quotation Action
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    @if (Model.ValidUntil.Date >= DateTime.Today)
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-1"></i>
+
+                            This quotation is valid until
+                            <strong>
+                                @Model.ValidUntil.ToString("dd MMM yyyy")
+                            </strong>.
+                        </div>
+
+                        <form asp-area="Buyer"
+                              asp-controller="Quotation"
+                              asp-action="Accept"
+                              method="post"
+                              class="mb-2">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.Id" />
+
+                            <button type="submit"
+                                    class="btn btn-success w-100"
+                                    onclick="return confirm('Do you accept these quotation terms?');">
+
+                                <i class="bi bi-check-circle me-1"></i>
+                                Accept Quotation
+                            </button>
+                        </form>
+
+                        <form asp-area="Buyer"
+                              asp-controller="Quotation"
+                              asp-action="Reject"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.Id" />
+
+                            <button type="submit"
+                                    class="btn btn-outline-danger w-100"
+                                    onclick="return confirm('Are you sure you want to reject this quotation?');">
+
+                                <i class="bi bi-x-circle me-1"></i>
+                                Reject Quotation
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger mb-0">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            This quotation has expired.
+                        </div>
+                    }
+
+                </div>
+            </div>
+        }
+
+        <!-- Accepted - Payment Pending -->
+        @if (Model.Status == "AcceptedPendingPayment")
+        {
+            <div class="card dashboard-card">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-credit-card"></i>
+                        Advance Payment
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-circle me-2"></i>
+                        You have accepted this quotation.
+                        Advance payment is pending.
+                    </div>
+
+                    <p>
+                        <strong>Amount Due:</strong>
+                        @Model.AdvancePaymentAmount.ToString("N2") BDT
+                    </p>
+
+                    <a asp-area="Buyer"
+                       asp-controller="Payment"
+                       asp-action="Advance"
+                       asp-route-quotationId="@Model.Id"
+                       class="btn btn-primary w-100">
+                        <i class="bi bi-credit-card me-1"></i>
+                        Pay Advance
+                    </a>
+
+                </div>
+            </div>
+        }
+
+        <!-- Accepted -->
+        @if (Model.Status == "Accepted")
+        {
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                You have accepted this quotation.
+                The sales team can now convert it into a Sales Order.
+            </div>
+        }
+
+        <!-- Converted -->
+        @if (Model.Status == "Converted")
+        {
+            <div class="alert alert-success">
+                <i class="bi bi-cart-check-fill me-2"></i>
+
+                This quotation has been converted into a Sales Order.
+
+                @if (Model.SalesOrderId.HasValue)
+                {
+                    <div class="mt-2">
+                        Sales Order ID:
+                        <strong>#@Model.SalesOrderId</strong>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>

@@ -1,0 +1,234 @@
+﻿@model GManufacturingERP.Models.Entities.FinishedGoodsStock
+
+@{
+    ViewData["Title"] = "Finished Goods Details";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">
+                <i class="bi bi-box-seam"></i>
+                Finished Goods Details
+            </h2>
+            <p class="text-muted mb-0">
+                Stock information and transaction history
+            </p>
+        </div>
+
+        <a asp-area="Operations"
+           asp-controller="FinishedGoods"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back
+        </a>
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted">Product Name</small>
+                    <h5 class="fw-bold mt-2">
+                        @Model.ProductName
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted">Ordered Quantity</small>
+                    <h3 class="fw-bold text-primary mt-2">
+                        @Model.OrderedQuantity
+                    </h3>
+                    <small>@Model.Unit</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted">Available Quantity</small>
+                    <h3 class="fw-bold text-success mt-2">
+                        @Model.AvailableQuantity
+                    </h3>
+                    <small>@Model.Unit</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted">Rework Quantity</small>
+                    <h3 class="fw-bold text-warning mt-2">
+                        @Model.ReworkQuantity
+                    </h3>
+                    <small>@Model.Unit</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted">Reserved Quantity</small>
+                    <h4 class="fw-bold text-warning mt-2">
+                        @Model.ReservedQuantity
+                    </h4>
+                    <small>@Model.Unit</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted">Production Reference</small>
+                    <h5 class="fw-bold mt-2">
+                        @(Model.ProductionReference ?? "-")
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <small class="text-muted">Location</small>
+                    <h5 class="fw-bold mt-2">
+                        @(Model.Location ?? "Not Set")
+                    </h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @if (Model.ReworkQuantity > 0)
+    {
+        <div class="card border-warning shadow-sm mb-4">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="fw-bold text-warning mb-1">
+                        <i class="bi bi-arrow-repeat"></i>
+                        Rework Required
+                    </h5>
+                    <p class="mb-0 text-muted">
+                        @Model.ReworkQuantity @Model.Unit requires rework.
+                    </p>
+                </div>
+
+                <a asp-action="Rework"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-warning">
+                    Start Rework
+                </a>
+            </div>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-clock-history"></i>
+                Transaction History
+            </h5>
+        </div>
+
+        <div class="card-body">
+
+            @if (!Model.Transactions.Any())
+            {
+                <div class="text-center py-4 text-muted">
+                    No transactions found.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Transaction Type</th>
+                                <th>Reference</th>
+                                <th>Quantity In</th>
+                                <th>Quantity Out</th>
+                                <th>Balance</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var transaction in Model.Transactions)
+                            {
+                                <tr>
+                                    <td>
+                                        @transaction.TransactionDate
+                                        .ToLocalTime()
+                                        .ToString("dd MMM yyyy hh:mm tt")
+                                    </td>
+
+                                    <td>
+                                        @if (transaction.TransactionType == "FG_RECEIPT")
+                                        {
+                                            <span class="badge bg-success">
+                                                FG Receipt
+                                            </span>
+                                        }
+                                        else if (transaction.TransactionType == "REWORK_ISSUE")
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                Rework Issue
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @transaction.TransactionType
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="fw-semibold">
+                                        @transaction.ReferenceNumber
+                                    </td>
+
+                                    <td class="text-success fw-bold">
+                                        +@transaction.QuantityIn
+                                    </td>
+
+                                    <td class="text-danger fw-bold">
+                                        -@transaction.QuantityOut
+                                    </td>
+
+                                    <td class="fw-bold">
+                                        @transaction.BalanceAfter
+                                    </td>
+
+                                    <td>
+                                        @(transaction.Remarks ?? "-")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,142 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.Shipment>
+
+@{
+    ViewData["Title"] = "Shipment Management";
+    Layout = "~/Areas/Finance/Views/Shared/_FinanceLayout.cshtml";
+}
+
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <small class="text-muted">Finance & Logistics / Shipment</small>
+        <h1 class="mb-1">Shipment Management</h1>
+        <p class="text-muted mb-0">
+            Manage packed goods shipment and delivery status.
+        </p>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle me-2"></i>
+        @TempData["SuccessMessage"]
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        @TempData["ErrorMessage"]
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0">
+            <i class="bi bi-truck me-2"></i>
+            Shipment List
+        </h5>
+    </div>
+
+    <div class="card-body p-0">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-truck fs-1 text-muted"></i>
+                <h5 class="mt-3">No Shipments Found</h5>
+                <p class="text-muted">
+                    Create a shipment from a completed packing record.
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Shipment No.</th>
+                            <th>Packing No.</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Cartons</th>
+                            <th>Shipment Date</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var badgeClass = item.Status switch
+                            {
+                                "Draft" => "bg-secondary",
+                                "Ready for Dispatch" => "bg-warning text-dark",
+                                "Dispatched" => "bg-primary",
+                                "In Transit" => "bg-info text-dark",
+                                "Delivered" => "bg-success",
+                                "Cancelled" => "bg-danger",
+                                _ => "bg-secondary"
+                            };
+
+                            <tr>
+                                <td>
+                                    <strong>@item.ShipmentNumber</strong>
+                                </td>
+
+                                <td>
+                                    @if (item.Packing != null)
+                                    {
+                                        @item.Packing.PackingNumber
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </td>
+
+                                <td>@item.ProductName</td>
+
+                                <td>
+                                    @item.Quantity.ToString("N2")
+                                    @item.Unit
+                                </td>
+
+                                <td>@item.TotalCartons</td>
+
+                                <td>
+                                    @item.ShipmentDate.ToString("dd MMM yyyy")
+                                </td>
+
+                                <td>
+                                    <span class="badge @badgeClass">
+                                        @item.Status
+                                    </span>
+                                </td>
+
+                                <td class="text-end">
+                                    <a asp-area="Finance"
+                                       asp-controller="Shipment"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                        Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

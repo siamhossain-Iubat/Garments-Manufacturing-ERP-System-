@@ -1,0 +1,320 @@
+﻿@model GManufacturingERP.Models.Entities.SalesOrder
+
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "~/Areas/Sales/Views/Shared/_SalesLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+        <small>Sales & Buyer Manager / Sales Orders</small>
+
+        <h1>Order Details</h1>
+
+        <p>
+            Review buyer order information and approval status.
+        </p>
+    </div>
+
+    <a asp-area="Sales"
+       asp-controller="Orders"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left"></i>
+        Back to Orders
+    </a>
+
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="row g-4">
+
+    <!-- Order Information -->
+    <div class="col-lg-8">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-cart-check-fill"></i>
+                    @Model.OrderNumber
+                </h5>
+
+                @if (Model.OrderStatus == "Approved")
+                {
+                    <span class="badge bg-success">
+                        Approved
+                    </span>
+                }
+                else if (Model.OrderStatus == "Rejected")
+                {
+                    <span class="badge bg-danger">
+                        Rejected
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">
+                        Pending
+                    </span>
+                }
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Order Number
+                        </label>
+
+                        <div class="details-value">
+                            @Model.OrderNumber
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Submitted Date
+                        </label>
+
+                        <div class="details-value">
+                            @Model.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="details-label">
+                            Product Description
+                        </label>
+
+                        <div class="details-value">
+                            @Model.ProductDescription
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Quantity
+                        </label>
+
+                        <div class="details-value">
+                            @Model.Quantity @Model.Unit
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Required Delivery Date
+                        </label>
+
+                        <div class="details-value">
+                            @(Model.RequiredDeliveryDate?
+                                                        .ToString("dd MMM yyyy") ?? "-")
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Shipping Country
+                        </label>
+
+                        <div class="details-value">
+                            @Model.ShippingCountry
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="details-label">
+                            Shipping Address
+                        </label>
+
+                        <div class="details-value">
+                            @Model.ShippingAddress
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="details-label">
+                            Special Instructions
+                        </label>
+
+                        <div class="details-value">
+                            @(string.IsNullOrWhiteSpace(Model.SpecialInstructions)
+                                                        ? "-"
+                                                        : Model.SpecialInstructions)
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Buyer Information -->
+    <div class="col-lg-4">
+
+        <div class="card dashboard-card">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-building"></i>
+                    Buyer Information
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label class="details-label">
+                        Company Name
+                    </label>
+
+                    <div class="details-value">
+                        @Model.CompanyName
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="details-label">
+                        Contact Person
+                    </label>
+
+                    <div class="details-value">
+                        @Model.ContactPerson
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="details-label">
+                        Email
+                    </label>
+
+                    <div class="details-value">
+                        @Model.BuyerEmail
+                    </div>
+                </div>
+
+                <div>
+                    <label class="details-label">
+                        Phone
+                    </label>
+
+                    <div class="details-value">
+                        @Model.BuyerPhone
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Approval Section -->
+<div class="card dashboard-card mt-4">
+
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="bi bi-shield-check"></i>
+            Order Review & Approval
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        @if (Model.OrderStatus == "Pending")
+        {
+            <form method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div class="mb-4">
+
+                    <label for="salesRemarks"
+                           class="form-label">
+                        Sales Remarks
+                    </label>
+
+                    <textarea id="salesRemarks"
+                          name="salesRemarks"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Write review remarks or rejection reason..."></textarea>
+
+                </div>
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            formaction="@Url.Action("Approve", "Orders", new { area = "Sales" })"
+                            name="id"
+                            value="@Model.Id"
+                            class="btn btn-success">
+
+                        <i class="bi bi-check-circle-fill"></i>
+                        Approve Order
+
+                    </button>
+
+                    <button type="submit"
+                            formaction="@Url.Action("Reject", "Orders", new { area = "Sales" })"
+                            name="id"
+                            value="@Model.Id"
+                            class="btn btn-danger">
+
+                        <i class="bi bi-x-circle-fill"></i>
+                        Reject Order
+
+                    </button>
+
+                </div>
+
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-info mb-0">
+
+                <i class="bi bi-info-circle"></i>
+
+                This order has already been
+                <strong>@Model.OrderStatus</strong>.
+
+                @if (!string.IsNullOrWhiteSpace(Model.SalesRemarks))
+                {
+                    <br />
+                    <strong>Sales Remarks:</strong>
+                    @Model.SalesRemarks
+                }
+
+            </div>
+        }
+
+    </div>
+
+</div>

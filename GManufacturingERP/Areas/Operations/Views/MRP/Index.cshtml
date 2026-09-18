@@ -1,0 +1,250 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.MaterialRequirementPlan>
+
+@{
+    ViewData["Title"] = "Material Requirement Planning";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+
+        <small>Operations Manager</small>
+
+        <h1>
+            Material Requirement Planning
+        </h1>
+
+        <p>
+            Calculate and manage raw material requirements.
+        </p>
+
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="MRP"
+       asp-action="ProductionPlans"
+       class="btn btn-primary">
+
+        <i class="bi bi-plus-circle"></i>
+        Create MRP
+
+    </a>
+
+</div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+
+        <i class="bi bi-check-circle-fill"></i>
+
+        @TempData["SuccessMessage"]
+
+    </div>
+}
+
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+
+        <i class="bi bi-exclamation-triangle-fill"></i>
+
+        @TempData["ErrorMessage"]
+
+    </div>
+}
+
+
+<div class="card dashboard-card">
+
+    <div class="card-header d-flex justify-content-between">
+
+        <h5 class="mb-0">
+
+            <i class="bi bi-box-seam-fill"></i>
+
+            All Material Requirement Plans
+
+        </h5>
+
+        <span class="text-muted">
+
+            Total: @Model.Count()
+
+        </span>
+
+    </div>
+
+
+    <div class="card-body">
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-box-seam"></i>
+
+                <h5>
+                    No MRP Found
+                </h5>
+
+                <p>
+                    Create an MRP from an approved production plan.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>MRP Number</th>
+                            <th>Production Plan</th>
+                            <th>Product</th>
+                            <th>Buyer</th>
+                            <th>Quantity</th>
+                            <th>Materials</th>
+                            <th>Status</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var mrp in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        @mrp.MRPNumber
+                                    </strong>
+                                </td>
+
+
+                                <td>
+                                    @mrp.ProductionPlan?.PlanNumber
+                                </td>
+
+
+                                <td>
+                                    @mrp.ProductDescription
+                                </td>
+
+
+                                <td>
+                                    @mrp.BuyerCompany
+                                </td>
+
+
+                                <td>
+                                    @mrp.PlannedQuantity Pieces
+                                </td>
+
+
+                                <td>
+                                    @mrp.MaterialItems.Count
+                                </td>
+
+
+                                <td>
+
+                                    @if (mrp.MRPStatus == "Draft")
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            Draft
+                                        </span>
+                                    }
+                                    else if (mrp.MRPStatus == "Submitted")
+                                    {
+                                        <span class="badge bg-info text-dark">
+                                            Submitted
+                                        </span>
+                                    }
+                                    else if (mrp.MRPStatus == "Approved")
+                                    {
+                                        <span class="badge bg-success">
+                                            Approved
+                                        </span>
+                                    }
+                                    else if (mrp.MRPStatus == "Rejected")
+                                    {
+                                        <span class="badge bg-danger">
+                                            Rejected
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @mrp.MRPStatus
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <td>
+
+                                    <a asp-area="Operations"
+                                       asp-controller="MRP"
+                                       asp-action="Details"
+                                       asp-route-id="@mrp.Id"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        <i class="bi bi-eye"></i>
+                                        View
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        setTimeout(function () {
+
+            const alerts =
+                document.querySelectorAll('.alert');
+
+            alerts.forEach(function (alert) {
+
+                const alertInstance =
+                    bootstrap.Alert.getOrCreateInstance(alert);
+
+                alertInstance.close();
+
+            });
+
+        }, 5000);
+
+    </script>
+
+}

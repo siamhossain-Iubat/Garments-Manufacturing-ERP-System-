@@ -1,0 +1,113 @@
+﻿@model IEnumerable<GManufacturingERP.Models.Entities.SalesOrder>
+
+@{
+    ViewData["Title"] = "Approved Sales Orders";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+
+    <div>
+        <small>Operations Manager / Production Planning</small>
+        <h1>Approved Sales Orders</h1>
+        <p>Select an approved order to create a production plan.</p>
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="Production"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+        <i class="bi bi-arrow-left"></i>
+        Production Plans
+    </a>
+
+</div>
+
+<div class="card dashboard-card">
+
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="bi bi-check2-square"></i>
+            Orders Ready for Production Planning
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+
+                <i class="bi bi-cart-x"></i>
+
+                <h5>No Approved Orders</h5>
+
+                <p>
+                    Approved sales orders will appear here.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Order Number</th>
+                            <th>Buyer Company</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Delivery Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <strong>@order.OrderNumber</strong>
+                                </td>
+
+                                <td>@order.CompanyName</td>
+
+                                <td>@order.ProductDescription</td>
+
+                                <td>
+                                    @order.Quantity @order.Unit
+                                </td>
+
+                                <td>
+                                    @(order.RequiredDeliveryDate?
+                                                                .ToString("dd MMM yyyy") ?? "-")
+                        </td>
+
+                                <td>
+                                    <a asp-area="Operations"
+                                       asp-controller="Production"
+                                       asp-action="Create"
+                                       asp-route-salesOrderId="@order.Id"
+                                       class="btn btn-sm btn-primary">
+                                        <i class="bi bi-plus-circle"></i>
+                                        Create Plan
+                                    </a>
+                                </td>
+
+                            </tr>
+                                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+</div>

@@ -1,0 +1,201 @@
+﻿@model GManufacturingERP.ViewModels.CreatePurchaseRequisitionViewModel
+
+@{
+    ViewData["Title"] = "Create Purchase Requisition";
+    Layout = "~/Areas/Operations/Views/Shared/_OperationsLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Operations / Procurement</small>
+        <h1>Create Purchase Requisition</h1>
+        <p>Create a material purchase request from the selected MRP.</p>
+    </div>
+
+    <a asp-area="Operations"
+       asp-controller="PurchaseRequisition"
+       asp-action="SelectMRP"
+       class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>
+        Back
+    </a>
+</div>
+
+<form asp-area="Operations"
+      asp-controller="PurchaseRequisition"
+      asp-action="Create"
+      method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly"
+         class="alert alert-danger"></div>
+
+    <input asp-for="MaterialRequirementPlanId" type="hidden" />
+
+    <div class="content-card mb-4">
+        <div class="card-title">
+            <i class="bi bi-clipboard-data me-2"></i>
+            MRP Information
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">MRP Number</label>
+                <input asp-for="MRPNumber"
+                       class="form-control"
+                       readonly />
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Buyer Company</label>
+                <input asp-for="BuyerCompany"
+                       class="form-control"
+                       readonly />
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Product Description</label>
+                <input asp-for="ProductDescription"
+                       class="form-control"
+                       readonly />
+            </div>
+        </div>
+    </div>
+
+    <div class="content-card mb-4">
+        <div class="card-title">
+            <i class="bi bi-file-earmark-text me-2"></i>
+            Requisition Information
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="RequiredDate"
+                       class="form-label">
+                    Required Date
+                </label>
+
+                <input asp-for="RequiredDate"
+                       type="date"
+                       class="form-control" />
+
+                <span asp-validation-for="RequiredDate"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Priority"
+                       class="form-label">
+                    Priority
+                </label>
+
+                <select asp-for="Priority"
+                        class="form-select">
+                    <option value="Normal">Normal</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Remarks"
+                       class="form-label">
+                    Remarks
+                </label>
+
+                <input asp-for="Remarks"
+                       class="form-control"
+                       placeholder="Optional remarks" />
+            </div>
+        </div>
+    </div>
+
+    <div class="content-card mb-4">
+        <div class="card-title">
+            <i class="bi bi-box-seam me-2"></i>
+            Required Materials
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Category</th>
+                        <th>Unit</th>
+                        <th>Requested Quantity</th>
+                        <th>Estimated Unit Price</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (int i = 0; i < Model.Items.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <input asp-for="Items[i].MaterialName"
+                                       class="form-control"
+                                       readonly />
+                            </td>
+
+                            <td>
+                                <input asp-for="Items[i].MaterialCategory"
+                                       class="form-control"
+                                       readonly />
+                            </td>
+
+                            <td>
+                                <input asp-for="Items[i].Unit"
+                                       class="form-control"
+                                       readonly />
+                            </td>
+
+                            <td>
+                                <input asp-for="Items[i].RequestedQuantity"
+                                       class="form-control"
+                                       type="number"
+                                       step="0.01"
+                                       min="0" />
+                            </td>
+
+                            <td>
+                                <input asp-for="Items[i].EstimatedUnitPrice"
+                                       class="form-control"
+                                       type="number"
+                                       step="0.01"
+                                       min="0" />
+                            </td>
+
+                            <td>
+                                <input asp-for="Items[i].Remarks"
+                                       class="form-control"
+                                       placeholder="Optional" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+        <a asp-area="Operations"
+           asp-controller="PurchaseRequisition"
+           asp-action="SelectMRP"
+           class="btn btn-light border">
+            Cancel
+        </a>
+
+        <button type="submit"
+                class="btn btn-primary">
+            <i class="bi bi-save me-1"></i>
+            Save Draft
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

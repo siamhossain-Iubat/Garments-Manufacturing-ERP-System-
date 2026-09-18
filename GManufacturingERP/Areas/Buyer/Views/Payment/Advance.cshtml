@@ -1,0 +1,130 @@
+﻿@model GManufacturingERP.ViewModels.AdvancePaymentViewModel
+
+@{
+    ViewData["Title"] = "Advance Payment";
+    Layout = "~/Areas/Buyer/Views/Shared/_BuyerLayout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-credit-card me-2"></i>
+                        Advance Payment
+                    </h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["Error"]
+                        </div>
+                    }
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Quotation Summary</h5>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-5 text-muted">
+                                Quotation Number
+                            </div>
+                            <div class="col-sm-7 fw-semibold">
+                                @Model.QuotationNumber
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-5 text-muted">
+                                Quotation Total
+                            </div>
+                            <div class="col-sm-7 fw-semibold">
+                                @Model.QuotationTotal.ToString("N2") BDT
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-5 text-muted">
+                                Advance Payment
+                            </div>
+                            <div class="col-sm-7 fw-semibold">
+                                @Model.AdvancePaymentPercentage%
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-primary">
+                        <div class="text-muted small">
+                            Amount to Pay
+                        </div>
+
+                        <h3 class="mb-0 fw-bold">
+                            @Model.AdvancePaymentAmount.ToString("N2")
+                            BDT
+                        </h3>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Important:</strong>
+                        Your Sales Order will be created after
+                        successful server-side payment validation.
+                    </div>
+
+                    <hr />
+
+                    <form asp-area="Buyer"
+                          asp-controller="Payment"
+                          asp-action="Initiate"
+                          method="post"
+                          id="advancePaymentForm">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="quotationId"
+                               value="@Model.QuotationId" />
+
+                        <button type="submit"
+                                class="btn btn-primary btn-lg w-100"
+                                id="payButton">
+                            <i class="bi bi-lock-fill me-2"></i>
+                            Pay with SSLCommerz
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a asp-area="Buyer"
+                           asp-controller="Quotation"
+                           asp-action="Details"
+                           asp-route-id="@Model.QuotationId"
+                           class="btn btn-outline-secondary">
+                            Back to Quotation
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document
+            .getElementById("advancePaymentForm")
+            .addEventListener("submit", function () {
+                const button =
+                    document.getElementById("payButton");
+
+                button.disabled = true;
+                button.innerHTML =
+                    '<span class="spinner-border spinner-border-sm me-2"></span>' +
+                    'Redirecting to SSLCommerz...';
+            });
+    </script>
+}

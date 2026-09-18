@@ -1,0 +1,149 @@
+﻿@model IEnumerable<GManufacturingERP.ViewModels.UserManagementViewModel>
+
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div>
+        <small>Admin Panel</small>
+        <h1>User Management</h1>
+        <p>Manage internal system users and their roles.</p>
+    </div>
+
+    <a asp-area="Admin"
+       asp-controller="UserManagement"
+       asp-action="Create"
+       class="btn btn-primary">
+        <i class="bi bi-person-plus-fill"></i>
+        Create User
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card dashboard-card">
+
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="bi bi-people-fill"></i>
+            Internal Users
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="bi bi-people"></i>
+                <h5>No Internal Users Found</h5>
+                <p>Create an internal employee account to get started.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@user.FullName</strong>
+                                </td>
+
+                                <td>@user.Email</td>
+
+                                <td>@user.PhoneNumber</td>
+
+                                <td>
+                                    <span class="badge bg-primary">
+                                        @user.Role
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                        <span class="badge bg-success">
+                                            Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">
+                                            Inactive
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @user.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")
+                                </td>
+
+                                <td>
+                                    <form asp-area="Admin"
+                                          asp-controller="UserManagement"
+                                          asp-action="ToggleStatus"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@user.Id" />
+
+                                        @if (user.IsActive)
+                                        {
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Deactivate this user?');">
+                                                <i class="bi bi-person-x"></i>
+                                                Deactivate
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-success"
+                                                    onclick="return confirm('Activate this user?');">
+                                                <i class="bi bi-person-check"></i>
+                                                Activate
+                                            </button>
+                                        }
+
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+</div>
