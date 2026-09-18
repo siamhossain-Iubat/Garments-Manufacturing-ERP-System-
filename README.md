@@ -90,7 +90,24 @@ Invoice & Payment
 ```
 
 This is a high-level overview; actual process order and approval requirements may vary by transaction and status.
+## 🚀 Live Demo
 
+🔗 **Live Website:** [GManufacturing ERP](https://gmanufacturingerp.runasp.net)
+
+## 💻 Technologies Used
+
+- ASP.NET Core MVC (.NET 8)
+- C#
+- Entity Framework Core
+- Microsoft SQL Server
+- Bootstrap
+- HTML, CSS, JavaScript
+
+## 📌 Project Overview
+
+GManufacturing ERP is a web-based Garments Manufacturing
+ERP System designed to manage sales, production, inventory,
+finance, and logistics operations.
 ## Screenshots
 
 ### Login Page
