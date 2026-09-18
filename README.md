@@ -92,7 +92,7 @@ Invoice & Payment
 This is a high-level overview; actual process order and approval requirements may vary by transaction and status.
 ## 🚀 Live Demo
 
-🔗 **Live Website:** [GManufacturing ERP](https://gmanufacturingerp.runasp.net)
+🔗 **Live Website:** [GManufacturing ERP](http://gmanufacturingerp.runasp.net/)
 
 ## 💻 Technologies Used
 
